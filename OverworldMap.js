@@ -127,46 +127,7 @@ window.OverworldMaps = {
             }),
         }, 
         walls: {
-            // Converted coordinates (divided by 16)
-            [utils.asGridCoords(28, 27)]: true,  // was 448, 432
-            [utils.asGridCoords(29, 27)]: true,  // was 464, 432
-            [utils.asGridCoords(30, 27)]: true,  // was 480, 432
-            [utils.asGridCoords(31, 27)]: true,  // was 496, 432
-            [utils.asGridCoords(32, 27)]: true,  // was 512, 432
-            [utils.asGridCoords(33, 27)]: true,  // was 528, 432
-            [utils.asGridCoords(34, 27)]: true,  // was 544, 432
-            [utils.asGridCoords(35, 27)]: true,  // was 560, 432
-            [utils.asGridCoords(35, 28)]: true,  // was 560, 448
-            [utils.asGridCoords(35, 29)]: true,  // was 560, 464
-            [utils.asGridCoords(35, 30)]: true,  // was 560, 480
-            [utils.asGridCoords(35, 31)]: true,  // was 560, 496
-            [utils.asGridCoords(35, 32)]: true,  // was 560, 512
-            [utils.asGridCoords(35, 33)]: true,  // was 560, 528
-            [utils.asGridCoords(35, 34)]: true,  // was 560, 544
-            [utils.asGridCoords(35, 35)]: true,  // was 560, 560
-            [utils.asGridCoords(34, 35)]: true,  // was 544, 560
-            [utils.asGridCoords(33, 35)]: true,  // was 528, 560
-            [utils.asGridCoords(32, 35)]: true,  // was 512, 560
-            [utils.asGridCoords(31, 35)]: true,  // was 496, 560
-            [utils.asGridCoords(30, 35)]: true,  // was 480, 560
-            [utils.asGridCoords(29, 35)]: true,  // was 464, 560
-            [utils.asGridCoords(28, 35)]: true,  // was 448, 560
-            [utils.asGridCoords(27, 35)]: true,  // was 432, 560
-            [utils.asGridCoords(27, 34)]: true,  // was 432, 544
-            [utils.asGridCoords(27, 33)]: true,  // was 432, 528
-            [utils.asGridCoords(27, 32)]: true,  // was 432, 512
-            [utils.asGridCoords(27, 31)]: true,  // was 432, 496
-            [utils.asGridCoords(27, 30)]: true,  // was 432, 480
-            [utils.asGridCoords(26, 30)]: true,  // was 416, 480
-            [utils.asGridCoords(26, 29)]: true,  // was 416, 464
-            [utils.asGridCoords(26, 28)]: true,  // was 416, 448
-            [utils.asGridCoords(26, 27)]: true,  // was 416, 432
-            [utils.asGridCoords(26, 26)]: true,  // was 416, 416
-            [utils.asGridCoords(26, 25)]: true,  // was 416, 400
-            [utils.asGridCoords(26, 24)]: true,  // was 416, 384
-            [utils.asGridCoords(26, 23)]: true,  // was 416, 368
-            [utils.asGridCoords(26, 22)]: true,  // was 416, 352
-            [utils.asGridCoords(27, 21)]: true,  // was 432, 336
+            
         }
     },
 }

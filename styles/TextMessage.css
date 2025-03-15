@@ -10,8 +10,15 @@
     color: var(--menu-font-color);
   }
   .TextMessage_p {
-    margin: 0;
-    font-size: 12px;
+    opacity: 0;
+  }
+  .TextMessage span {
+    display: inline-block;
+    margin-right: 4px;
+  }
+  .TextMessage span.releaved {
+    display: inline-block;
+    margin-right: 4px;
   }
   .TextMessage_button {
     margin: 0;

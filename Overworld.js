@@ -90,28 +90,33 @@ class Overworld {
         // Get the cameraPerson for reference
         const cameraPerson = this.map.gameObjects.ben;
         
-        // Calculate where the target point should be on screen
-        const targetScreenX = centerX;  // We want the target at the center of screen
-        const targetScreenY = centerY;
-        
-        // Calculate the world position of the target (adjusted for camera)
+        // Calculate where the target coordinates are on the screen
+        // First, get the offset from camera to screen center
         const cameraOffsetX = utils.withGrid(10.5) - cameraPerson.x;
         const cameraOffsetY = utils.withGrid(6) - cameraPerson.y;
+        
+        // Then, calculate where our target would be on screen currently
+        const targetScreenX = x + cameraOffsetX;
+        const targetScreenY = y + cameraOffsetY;
         
         // Reset any existing transformations
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
         
-        // Apply transformation: translate to target position, scale around that point
-        this.ctx.translate(
-            targetScreenX - (x + cameraOffsetX) * zoomScale + (x + cameraOffsetX),
-            targetScreenY - (y + cameraOffsetY) * zoomScale + (y + cameraOffsetY)
-        );
+        // Calculate the translation needed to center the target
+        const translationX = centerX - targetScreenX * zoomScale;
+        const translationY = centerY - targetScreenY * zoomScale;
+        
+        // Apply transformations: first translate to place target at center, then scale
+        this.ctx.translate(translationX + (targetScreenX * (zoomScale - 1)), 
+                          translationY + (targetScreenY * (zoomScale - 1)));
         this.ctx.scale(zoomScale, zoomScale);
         
         // Mark as zoomed
         this.originalCameraSettings.isZoomed = true;
         
         console.log(`Zoomed to position: x=${x}, y=${y} with scale ${zoomScale}`);
+        console.log(`Target screen position: ${targetScreenX}, ${targetScreenY}`);
+        console.log(`Applied translation: ${translationX}, ${translationY}`);
         
         // If duration is provided, automatically reset zoom after specified seconds
         if (duration) {
@@ -154,6 +159,6 @@ class Overworld {
         
         // Now that cutscene is done, zoom to position
         console.log("Cutscene complete, starting zoom effect");
-        this.zoomToPosition(528, 448, 5);
+        //this.zoomToPosition(628, 448, 5);
     }
 }
