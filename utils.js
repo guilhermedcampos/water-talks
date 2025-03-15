@@ -28,6 +28,19 @@ const utils = {
         return { x, y };
     },
 
+    getOppositeDirection(direction) {
+        switch(direction) {
+            case "up":
+                return "down";
+            case "down":
+                return "up";
+            case "left":
+                return "right";
+            case "right":
+                return "left";
+        }
+    },
+
     emitEvent(name, detail) {
         const event = new CustomEvent(name, {
             detail

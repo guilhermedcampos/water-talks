@@ -46,6 +46,14 @@ class Overworld {
         step();
     }
 
+    bindActionInput() {
+        new KeyPressListener("Enter", () => {
+            // Is there a person here to interact with?
+            this.map.checkForActionCutscene();
+        });
+    }
+
+
     // Add new method that zooms the camera to a (x,y) position with optional duration (in seconds)
     zoomToPosition(x, y, duration) {
         // Store original camera settings
@@ -144,6 +152,8 @@ class Overworld {
         
         this.directionInput = new DirectionInput();
         this.directionInput.init();
+
+        this.bindActionInput();
 
         // Start the game loop
         this.startGameLoop();

@@ -14,6 +14,8 @@ class GameObject {
 
         this.behaviorLoop = config.behaviorLoop || [];
         this.behaviorIndex = 0;
+
+        this.talking = config.talking || [];
     }
 
     // Mount the game object to the map

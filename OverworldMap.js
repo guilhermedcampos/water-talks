@@ -65,6 +65,18 @@ class OverworldMap {
 
     }
 
+    checkForActionCutscene() {
+        const hero = this.gameObjects["ben"];
+        const nextCoords = utils.nextPosition(hero.x, hero.y, hero.direction);
+        const match = Object.values(this.gameObjects).find(object => {
+            return object.x === nextCoords.x && object.y === nextCoords.y;
+        });
+        console.log("Match", match);
+        if (!this.isCutscenePlaying && match && match.talking.length) {
+            this.startCutscene(match.talking[0].events);
+        }
+    }
+
     // Returns true if the space is taken
     isSpaceTaken(currentX, currentY, direction) {
         const {x,y} = utils.nextPosition(currentX, currentY, direction);
@@ -125,6 +137,28 @@ window.OverworldMaps = {
                 y: utils.withGrid(5), 
                 src: "images/characters/people/ben.png"
             }),
+            // friend: new Person({
+            //     isPlayerControlled: false,
+            //     x: utils.withGrid(29),
+            //     y: utils.withGrid(32),
+            //     src: "images/characters/people/ben.png",
+            //     behaviorLoop: [
+            //         { type: "walk", direction: "up", duration: 2000 },
+            //         { type: "stand", direction: "left", time: 7000 },
+            //         { type: "walk", direction: "left", duration: 800 },
+            //         { type: "stand", direction: "down", time: 7000 },
+            //         { type: "walk", direction: "down", duration: 800 },
+            //         { type: "walk", direction: "right", duration: 800 },
+            //     ],
+            //     talking: [
+            //         {
+            //             events: [
+            //                 { type: "textMessage", text: "Hello, Ben!", faceHero: "friend" },
+            //                 { type: "textMessage", text: "How are you doing?" }
+            //             ]
+            //         }
+            //     ]
+            // }),
         }, 
         walls: {
             
