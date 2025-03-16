@@ -580,8 +580,8 @@ class OverworldMap {
         ).length;
         
         if (remainingCoagulants === 0) {
-            // All coagulants collected, keep the objective to return to operator
-            this.updateObjective("Return to the operator to learn about sedimentation");
+            // All coagulants collected, now direct player to return to operator
+            this.updateObjective("Return to the operator to discuss coagulation");
             
             // Update the operator's dialogue for the next phase
             if (this.gameObjects["operator"]) {
@@ -590,13 +590,17 @@ class OverworldMap {
                     text: "Talk",
                     action: "startCutscene",
                     events: [
-                        { type: "textMessage", text: "Perfect! The coagulants are now neutralizing charges on suspended particles.", faceHero: "operator" },
-                        { type: "textMessage", text: "Now we need to initiate sedimentation. The flocs formed by coagulation are heavier than water and will begin to settle." },
-                        { type: "textMessage", text: "This process naturally separates solids from the liquid, creating clearer water at the top." },
+                        { type: "textMessage", text: "Excellent! The coagulants are now in the water.", faceHero: "operator" },
+                        { type: "textMessage", text: "Observe as the coagulants work their magic, binding the tiny impurities into flocs." },
+                        { type: "textMessage", text: "These larger clusters are easier to remove in subsequent treatment stages, ensuring our water becomes ever purer." },
                         { 
                             type: "custom",
                             action: (map) => {
-                                map.updateObjective("Sedimentation: Allow particles to settle");
+                                // Transform coagulants into flocs
+                                map.transformCoagulantsToFlocs();
+                                
+                                // Update objective to observe floc formation
+                                map.updateObjective("Floc Formation: Observe the growth of flocs and inform the operator");
                             }
                         }
                     ]
@@ -631,8 +635,188 @@ class OverworldMap {
                 this.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = {...newDialogue}; // Left
             }
         } else {
-            // Still show "Return to operator" while mixing coagulants
-            this.updateObjective(`Return to the operator (${remainingCoagulants} coagulants left to mix)`);
+            // Update objective to show how many coagulants are left to mix
+            this.updateObjective(`Mix coagulants: ${remainingCoagulants} remaining`);
+        }
+    }
+
+    // Update the transformCoagulantsToFlocs method
+    transformCoagulantsToFlocs() {
+        // Use the same positions where coagulants were
+        const flocPositions = [
+            { x: 32.5, y: 15 },
+            { x: 25.5, y: 20 },
+            { x: 32.5, y: 18 },
+            { x: 26.5, y: 16 },
+            { x: 30.5, y: 19 }
+        ];
+        
+        // Create floc objects at these positions
+        for (let i = 0; i < flocPositions.length; i++) {
+            const position = flocPositions[i];
+            
+            // Add floc object to gameObjects
+            this.gameObjects[`floc${i+1}`] = new Person({
+                x: utils.withGrid(position.x),
+                y: utils.withGrid(position.y),
+                src: "images/waterAssets/flocks.png", 
+                behaviorLoop: [
+                    { type: "stand", direction: "down", time: 999999 }
+                ]
+            });
+            
+            // Different button events depending on if this is the first floc
+            if (i === 0) {
+                // First floc shows the text message
+                this.buttonSpaces[utils.asGridCoords(position.x, position.y)] = {
+                    text: "Observe",
+                    action: "startCutscene",
+                    events: [
+                        { 
+                            type: "custom",
+                            action: (map) => {
+                                // Set a flag to indicate we've shown the first floc message
+                                map.observedFirstFloc = true;
+                                // Track this floc as observed
+                                map.observeFloc(`floc${i+1}`, position.x, position.y);
+                            }
+                        }
+                    ]
+                };
+            } else {
+                // Other flocs skip the text message
+                this.buttonSpaces[utils.asGridCoords(position.x, position.y)] = {
+                    text: "Observe",
+                    action: "startCutscene",
+                    events: [
+                        { 
+                            type: "custom",
+                            action: (map) => {
+                                // Track this floc as observed without showing text
+                                map.observeFloc(`floc${i+1}`, position.x, position.y);
+                            }
+                        }
+                    ]
+                };
+            }
+        }
+    }
+
+    // Add new method to track floc observations
+    observeFloc(flocId, x, y) {
+        // Initialize observed flocs tracking if needed
+        if (!this.observedFlocs) {
+            this.observedFlocs = {};
+        }
+        
+        // Mark this floc as observed
+        this.observedFlocs[flocId] = true;
+        
+        // Remove the observe button
+        delete this.buttonSpaces[utils.asGridCoords(x, y)];
+        
+        // Count observed flocs
+        const observedCount = Object.keys(this.observedFlocs).length;
+        const totalFlocs = Object.keys(this.gameObjects).filter(key => key.startsWith("floc")).length;
+        
+        if (observedCount === totalFlocs) {
+            // All flocs observed, update objective
+            this.updateObjective("Report your observations to the operator");
+            
+            // Update operator dialogue for the sedimentation phase
+            if (this.gameObjects["operator"]) {
+                const newDialogue = {
+                    text: "Talk",
+                    action: "startCutscene",
+                    events: [
+                        { type: "textMessage", text: "What do you observe about the flocs?", faceHero: "operator" },
+                        { type: "textMessage", text: "Yes, excellent! The particles have clumped together into visible flocs." },
+                        { type: "textMessage", text: "Great! Your work is complete for this stage of water treatment." },
+                        { type: "textMessage", text: "Now, follow me to the sedimentation area where we'll observe how these flocs settle." },
+                        { 
+                            type: "custom",
+                            action: (map) => {
+                                map.updateObjective("Follow the operator to the sedimentation area");
+                                
+                                // Get the operator object
+                                const operator = map.gameObjects["operator"];
+                                
+                                // Ensure any ongoing behavior is stopped
+                                operator.behaviorLoop = [];
+                                
+                                // Define the walking path to coordinates (27.5, 21)
+                                operator.behaviorLoop = [
+                                    { type: "walk", direction: "down", time: 1200 },
+                                    { type: "walk", direction: "down", time: 1200 },
+                                    { type: "walk", direction: "down", time: 1200 },
+                                    { type: "walk", direction: "down", time: 1200 },
+                                    { type: "walk", direction: "down", time: 1200 },
+                                    { type: "walk", direction: "down", time: 1200 },
+                                    { type: "walk", direction: "down", time: 1200 },
+                                    { type: "walk", direction: "down", time: 1200 },
+                                    // Stop at destination
+                                    { type: "stand", direction: "up", time: 999999 }
+                                ];
+                                
+                                console.log("Setting operator behavior loop:", operator.behaviorLoop);
+                                
+                                // Make sure any existing behavior is canceled
+                                if (operator.behaviorLoopTimeout) {
+                                    clearTimeout(operator.behaviorLoopTimeout);
+                                    operator.behaviorLoopTimeout = null;
+                                }
+                                
+                                // Force operator to start behavior immediately
+                                operator.doBehaviorEvent(map);
+                                
+                                // Add a button at the destination that appears after the operator arrives
+                                setTimeout(() => {
+                                    console.log("Adding Continue button at destination");
+                                    
+                                    // Add new button at the destination
+                                    map.buttonSpaces[utils.asGridCoords(27.5, 20)] = {
+                                        text: "Continue",
+                                        action: "startCutscene",
+                                        events: [
+                                            { type: "textMessage", text: "Now we'll observe sedimentation, where the flocs settle to the bottom." },
+                                            { type: "textMessage", text: "This is how we remove most of the impurities from our water." },
+                                            { 
+                                                type: "custom",
+                                                action: (map) => {
+                                                    map.updateObjective("Sedimentation: Watch as particles settle");
+                                                }
+                                            }
+                                        ]
+                                    };
+                                    
+                                    // Update objective text to indicate the player can interact with the operator
+                                    map.updateObjective("Speak with the operator about sedimentation");
+                                }, 9000); // Approximate time for operator to reach destination (~1200ms * 7 steps)
+                            }
+                        }
+                    ]
+                };
+                
+                // Update operator button spaces
+                const operatorX = this.gameObjects["operator"].x / 16;
+                const operatorY = this.gameObjects["operator"].y / 16;
+                
+                // Clear existing operator button spaces
+                Object.keys(this.buttonSpaces).forEach(key => {
+                    if (key.includes(operatorX) || key.includes(operatorY)) {
+                        delete this.buttonSpaces[key];
+                    }
+                });
+                
+                // Add new dialogue button spaces
+                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY - 1)] = {...newDialogue};
+                this.buttonSpaces[utils.asGridCoords(operatorX + 1, operatorY)] = {...newDialogue};
+                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY + 1)] = {...newDialogue};
+                this.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = {...newDialogue};
+            }
+        } else {
+            // Update objective with progress
+            this.updateObjective(`Observe flocs: ${observedCount}/${totalFlocs} observed`);
         }
     }
 }
@@ -994,7 +1178,7 @@ window.OverworldMaps = {
                             map.addCoagulants(5);
                             
                             // Update objective to direct player back to operator immediately
-                            map.updateObjective("Return to the operator to discuss coagulation");
+                            map.updateObjective("Mix coagulants: ${remainingCoagulants} remaining");
                             
                             // Disable the faucet button after use
                             delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
