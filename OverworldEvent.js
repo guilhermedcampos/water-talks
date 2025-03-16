@@ -73,7 +73,23 @@ class OverworldEvent {
     }
 
     changeMap(resolve) {
-        this.map.overworld.startMap(window.OverworldMaps[this.event.map]);
+        // Use the spawnpoint defined in the map config if no specific coordinates are given
+        const targetMap = window.OverworldMaps[this.event.map];
+        
+        // Start the new map
+        this.map.overworld.startMap(targetMap, {
+            x: this.event.x || targetMap.spawnpoint.x,
+            y: this.event.y || targetMap.spawnpoint.y,
+            direction: this.event.direction
+        });
+        
+        resolve();
+    }
+
+    custom(resolve) {
+        if (this.event.action) {
+            this.event.action(this.map);
+        }
         resolve();
     }
         

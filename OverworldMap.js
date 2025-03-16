@@ -361,13 +361,29 @@ class OverworldMap {
         // Start showing the flush messages immediately
         this.showFlushMessages(messages);
 
-        // Wait 3 seconds after messages start typing before changing the map
+        // Wait for flush messages to finish before changing the map
+        // We need to calculate total wait time based on messages length and display time
+        const messagesTime = messages.length * 4000; // ~4 seconds per message (typing + pause)
+        
         setTimeout(() => {
             // Ensure the button is removed before loading the new map
             this.removeButton();
+            
+            // Update the objective before changing maps
+            this.updateObjective("Find where the water goes");
+            
+            // Change to Level1 map
             const newEvent = [ { type: "changeMap", map: "Level1" } ];
             this.startCutscene(newEvent);
-        }, 3000);
+            
+            // After map change has completed, update the objective again
+            setTimeout(() => {
+                // The map reference has changed, so we need to access it through overworld
+                if (this.overworld && this.overworld.map) {
+                    this.overworld.map.updateObjective("Talk to the Water Treatment Operator");
+                }
+            }, 1000); // Give time for map to load
+        }, messagesTime);
     }
 
     // Add method to create objective panel
@@ -430,6 +446,47 @@ class OverworldMap {
     updateObjective(text) {
         if (this.objectiveText) {
             this.objectiveText.textContent = text;
+        }
+    }
+
+    // Add this method to check if all debris has been collected
+    checkDebrisCollected() {
+        // Check if all three debris objects are gone
+        const debrisCount = Object.keys(this.gameObjects).filter(key => 
+            key.startsWith("debris")
+        ).length;
+        
+        if (debrisCount === 0) {
+            // All debris collected, update objective
+            this.updateObjective("Return to the operator");
+            
+            // Update the operator's dialogue to acknowledge completion
+            if (this.gameObjects["operator"]) {
+                // Add a "talk" button space at the operator position with new dialogue
+                this.buttonSpaces[utils.asGridCoords(27.5, 15)] = {
+                    text: "Talk",
+                    action: "startCutscene",
+                    events: [
+                        { type: "textMessage", text: "Excellent work! You've cleaned up all the visible debris.", faceHero: "operator" },
+                        { type: "textMessage", text: "This is just the first step in water treatment." },
+                        { type: "textMessage", text: "Next, we need to filter out smaller particles that aren't visible to the naked eye." },
+                        { 
+                            type: "custom",
+                            action: (map) => {
+                                map.updateObjective("Filtration Station: Learn about water filtration");
+                            }
+                        }
+                    ]
+                };
+                
+                // Update all other operator button spaces with the same dialogue
+                this.buttonSpaces[utils.asGridCoords(27.5, 17)] = {...this.buttonSpaces[utils.asGridCoords(27.5, 15)]};
+                this.buttonSpaces[utils.asGridCoords(26.5, 16)] = {...this.buttonSpaces[utils.asGridCoords(27.5, 15)]};
+                this.buttonSpaces[utils.asGridCoords(28.5, 16)] = {...this.buttonSpaces[utils.asGridCoords(27.5, 15)]};
+            }
+        } else {
+            // Update how many pieces of debris are left
+            this.updateObjective(`Surface Sweep: ${debrisCount} pieces of debris remaining`);
         }
     }
 }
@@ -557,22 +614,44 @@ window.OverworldMaps = {
                 y: utils.withGrid(5), 
                 src: "images/characters/people/mainCharacter.png"
             }),
-            /*
-            guide: new Person({
-                x: utils.withGrid(7),
-                y: utils.withGrid(8),
-                src: "images/characters/people/mainCharacter.png", 
-                talking: [
-                    {
-                        events: [
-                            { type: "textMessage", text: "Welcome to the water treatment system!", faceHero: "guide" },
-                            { type: "textMessage", text: "This is where all the water goes after you flush." },
-                            { type: "textMessage", text: "Let's explore how water treatment works." }
-                        ]
-                    }
+            
+            // Update the operator in the Level1 map
+            operator: new Person({
+                x: utils.withGrid(27.5),
+                y: utils.withGrid(16),
+                src: "images/characters/people/mainCharacter.png",
+                // Make the operator stand still by using a simple behavior loop
+                // with only one standing direction for a very long time
+                behaviorLoop: [
+                    { type: "stand", direction: "down", time: 999999 }
+                ],
+                // Remove the talking property so it doesn't automatically trigger
+            }),
+            // Add water debris items that float on the water
+            debris1: new Person({
+                x: utils.withGrid(28.5),
+                y: utils.withGrid(18),
+                src: "images/characters/objects/water_debris1.png", // Create 32x32 debris image
+                behaviorLoop: [
+                    { type: "stand", direction: "down", time: 999999 }
                 ]
             }),
-            */
+            debris2: new Person({
+                x: utils.withGrid(31.5),
+                y: utils.withGrid(19),
+                src: "images/characters/objects/water_debris2.png", // Create another debris image
+                behaviorLoop: [
+                    { type: "stand", direction: "down", time: 999999 }
+                ]
+            }),
+            debris3: new Person({
+                x: utils.withGrid(25.5),
+                y: utils.withGrid(20),
+                src: "images/characters/objects/water_debris3.png", // Create a third debris image
+                behaviorLoop: [
+                    { type: "stand", direction: "down", time: 999999 }
+                ]
+            })
         },
         walls: {
             [utils.asGridCoords(23.5, 10)]: true, // 368 160
@@ -678,17 +757,137 @@ window.OverworldMaps = {
             [utils.asGridCoords(34.5, 18)]: true,  // 544  288
         },
         cutSceneSpaces: {
-            [utils.asGridCoords(5, 5)]: [
+            // Update the spawn point cutscene to guide player to the operator
+            [utils.asGridCoords(29.5, 13)]: [
                 {
                     events: [
                         { type: "textMessage", text: "You've arrived at the water treatment facility." },
-                        { type: "textMessage", text: "Follow the path to learn about water treatment." }
+                        { type: "textMessage", text: "Find the operator to learn about water treatment." }
                     ]
                 }
             ]
         },
         buttonSpaces: {
-            // You can add interactive buttons in this level if needed
+            // Additional button spaces if needed
+            [utils.asGridCoords(27.5, 15)]: {
+                text: "Talk",
+                action: "startCutscene",
+                events: [
+                    { type: "textMessage", text: "Welcome to the water treatment facility!", faceHero: "operator" },
+                    { type: "textMessage", text: "I'm the operator here. Did you know that your toilet flush travels through an extensive sewer system to get here?" },
+                    { type: "textMessage", text: "The water you flush goes through multiple treatment stages before it's returned to the environment." },
+                    { type: "textMessage", text: "Welcome, brave traveler! Our first task is to cleanse this reservoir of visible impurities." },
+                    { type: "textMessage", text: "Please, collect and dispose of any floating debris or trash contaminating these waters." },
+                    // Update objective after conversation
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            map.updateObjective("Surface Sweep: Remove visible debris from the reservoir");
+                        }
+                    }
+                ]
+            },
+            // Add additional button spaces for the north, east, and west positions
+            [utils.asGridCoords(27.5, 17)]: {
+                text: "Talk",
+                action: "startCutscene",
+                events: [
+                    // Same events as above
+                    { type: "textMessage", text: "Welcome to the water treatment facility!", faceHero: "operator" },
+                    { type: "textMessage", text: "I'm the operator here. Did you know that your toilet flush travels through an extensive sewer system to get here?" },
+                    { type: "textMessage", text: "The water you flush goes through multiple treatment stages before it's returned to the environment." },
+                    { type: "textMessage", text: "Welcome, brave traveler! Our first task is to cleanse this reservoir of visible impurities." },
+                    { type: "textMessage", text: "Please, collect and dispose of any floating debris or trash contaminating these waters." },
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            map.updateObjective("Surface Sweep: Remove visible debris from the reservoir");
+                        }
+                    }
+                ]
+            },
+            [utils.asGridCoords(26.5, 16)]: {
+                text: "Talk",
+                action: "startCutscene",
+                events: [
+                    // Same events as above
+                    { type: "textMessage", text: "Welcome to the water treatment facility!", faceHero: "operator" },
+                    { type: "textMessage", text: "I'm the operator here. Did you know that your toilet flush travels through an extensive sewer system to get here?" },
+                    { type: "textMessage", text: "The water you flush goes through multiple treatment stages before it's returned to the environment." },
+                    { type: "textMessage", text: "Welcome, brave traveler! Our first task is to cleanse this reservoir of visible impurities." },
+                    { type: "textMessage", text: "Please, collect and dispose of any floating debris or trash contaminating these waters." },
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            map.updateObjective("Surface Sweep: Remove visible debris from the reservoir");
+                        }
+                    }
+                ]
+            },
+            [utils.asGridCoords(28.5, 16)]: {
+                text: "Talk",
+                action: "startCutscene",
+                events: [
+                    // Same events as above
+                    { type: "textMessage", text: "Welcome to the water treatment facility!", faceHero: "operator" },
+                    { type: "textMessage", text: "I'm the operator here. Did you know that your toilet flush travels through an extensive sewer system to get here?" },
+                    { type: "textMessage", text: "The water you flush goes through multiple treatment stages before it's returned to the environment." },
+                    { type: "textMessage", text: "Welcome, brave traveler! Our first task is to cleanse this reservoir of visible impurities." },
+                    { type: "textMessage", text: "Please, collect and dispose of any floating debris or trash contaminating these waters." },
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            map.updateObjective("Surface Sweep: Remove visible debris from the reservoir");
+                        }
+                    }
+                ]
+            },
+            // NEW: Add button spaces for the debris items
+            [utils.asGridCoords(28.5, 17)]: {
+                text: "Collect",
+                action: "startCutscene",
+                events: [
+                    { type: "textMessage", text: "You collected a plastic bottle!" },
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            // Remove the debris object
+                            delete map.gameObjects["debris1"];
+                            
+                            // Check if all debris is collected
+                            map.checkDebrisCollected();
+                        }
+                    }
+                ]
+            },
+            [utils.asGridCoords(31.5, 18)]: {
+                text: "Collect",
+                action: "startCutscene",
+                events: [
+                    { type: "textMessage", text: "You collected a plastic bag!" },
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            delete map.gameObjects["debris2"];
+                            map.checkDebrisCollected();
+                        }
+                    }
+                ]
+            },
+            [utils.asGridCoords(25.5, 19)]: {
+                text: "Collect",
+                action: "startCutscene",
+                events: [
+                    { type: "textMessage", text: "You collected a food wrapper!" },
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            delete map.gameObjects["debris3"];
+                            map.checkDebrisCollected();
+                        }
+                    }
+                ]
+            }
         }
     },
 }
