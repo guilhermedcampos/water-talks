@@ -547,7 +547,7 @@ window.OverworldMaps = {
         lowerSrc: "images/maps/Level1Lower.png", 
         upperSrc: "images/maps/Level1Upper.png", 
         spawnpoint: { // 464 208
-            x: utils.withGrid(29),
+            x: utils.withGrid(29.5),
             y: utils.withGrid(13),
         },
         gameObjects: {
@@ -575,85 +575,107 @@ window.OverworldMaps = {
             */
         },
         walls: {
-            [utils.asGridCoords(25, 14)]: true,
-            [utils.asGridCoords(24, 14)]: true,
-            [utils.asGridCoords(24, 15)]: true,
-            [utils.asGridCoords(24, 13)]: true,
-            [utils.asGridCoords(24, 12)]: true,
-            [utils.asGridCoords(24, 11)]: true,
-            [utils.asGridCoords(24, 10)]: true,
-            [utils.asGridCoords(25, 10)]: true,
-            [utils.asGridCoords(26, 10)]: true,
-            [utils.asGridCoords(27, 10)]: true, // 432 160
-            [utils.asGridCoords(28, 10)]: true, // 448 160
-            [utils.asGridCoords(29, 10)]: true, // 464 160
-            [utils.asGridCoords(30, 10)]: true, // 480 160
-            [utils.asGridCoords(31, 10)]: true, // 496 160
-            [utils.asGridCoords(32, 10)]: true, // 512 160
-            [utils.asGridCoords(33, 10)]: true, // 528 160
-            [utils.asGridCoords(34, 10)]: true, // 544 160
-            [utils.asGridCoords(35, 10)]: true, // 560 160
-            [utils.asGridCoords(36, 10)]: true, // 576 160
-            [utils.asGridCoords(37, 10)]: true, // 592 160
-            [utils.asGridCoords(38, 10)]: true, // 608 160
-            [utils.asGridCoords(38, 11)]: true, // 608 176
-            [utils.asGridCoords(38, 12)]: true, // 608 192
-            [utils.asGridCoords(38, 13)]: true, // 608 208
-            [utils.asGridCoords(38, 14)]: true, // 608 224
-            [utils.asGridCoords(38, 15)]: true, // 608 240
-            [utils.asGridCoords(38, 16)]: true, // 608 256
-            [utils.asGridCoords(38, 17)]: true, // 608 272
-            [utils.asGridCoords(38, 18)]: true, // 608 288
-            [utils.asGridCoords(38, 19)]: true, // 608 304
-            [utils.asGridCoords(38, 20)]: true, // 608 320
-            [utils.asGridCoords(38, 21)]: true, // 608 336
-            [utils.asGridCoords(38, 22)]: true, // 608 352
-            [utils.asGridCoords(37, 22)]: true, // 592 352
-            [utils.asGridCoords(36, 22)]: true, // 576 352
-            [utils.asGridCoords(35, 22)]: true, // 560 352
-            [utils.asGridCoords(34, 22)]: true, // 544 352
-            [utils.asGridCoords(33, 22)]: true, // 528 352
-            [utils.asGridCoords(32, 22)]: true, // 512 352
-            [utils.asGridCoords(31, 22)]: true, // 496 352
-            [utils.asGridCoords(30, 22)]: true, // 480 352
-            [utils.asGridCoords(29, 22)]: true, // 464 352
-            [utils.asGridCoords(28, 22)]: true, // 448 352
-            [utils.asGridCoords(27, 22)]: true, // 432 352
-            [utils.asGridCoords(26, 22)]: true, // 416 352
-            [utils.asGridCoords(25, 22)]: true, // 400 352
-            [utils.asGridCoords(24, 22)]: true, // 384 352
-            [utils.asGridCoords(23, 22)]: true, // 368 352
-            [utils.asGridCoords(22, 22)]: true, // 352 352
-            [utils.asGridCoords(22, 21)]: true, // 352 336
-            [utils.asGridCoords(22, 20)]: true, // 352 320
-            [utils.asGridCoords(22, 19)]: true, // 352 304
-            [utils.asGridCoords(22, 18)]: true, // 352 288
-            [utils.asGridCoords(22, 17)]: true, // 352 272
-            [utils.asGridCoords(22, 16)]: true, // 352 256
-            [utils.asGridCoords(22, 15)]: true, // 352 240
-            [utils.asGridCoords(22, 14)]: true, // 352 224
-            [utils.asGridCoords(22, 13)]: true, // 352 208
-            [utils.asGridCoords(22, 12)]: true, // 352 192
-            [utils.asGridCoords(22, 11)]: true, // 352 176
-            [utils.asGridCoords(22, 10)]: true, // 352 160
-            [utils.asGridCoords(29, 11)]: true,  // 464 176
-            [utils.asGridCoords(39, 11)]: true,  // 560  176
-            [utils.asGridCoords(39, 12)]: true,  // 560  192
-            [utils.asGridCoords(40, 12)]: true,  // 576  192
-            [utils.asGridCoords(40, 13)]: true,  // 576  208
-            [utils.asGridCoords(41, 13)]: true,  // 592  208
-            [utils.asGridCoords(41, 14)]: true,  // 592  224
-            [utils.asGridCoords(41, 15)]: true,  // 592  240
-            [utils.asGridCoords(41, 16)]: true,  // 592  256
-            [utils.asGridCoords(41, 17)]: true,  // 592  272
-            [utils.asGridCoords(41, 18)]: true,  // 592  288
-            [utils.asGridCoords(41, 19)]: true,  // 592  304
-            [utils.asGridCoords(41, 20)]: true,  // 592  320
-            [utils.asGridCoords(41, 21)]: true,  // 592  336
-            [utils.asGridCoords(40, 21)]: true,  // 576  336
-            [utils.asGridCoords(40, 20)]: true,  // 576  320
-            [utils.asGridCoords(39, 20)]: true,  // 560  320
-
+            [utils.asGridCoords(23.5, 10)]: true, // 368 160
+            [utils.asGridCoords(25.5, 14)]: true,
+            [utils.asGridCoords(24.5, 14)]: true,
+            [utils.asGridCoords(24.5, 15)]: true,
+            [utils.asGridCoords(24.5, 13)]: true,
+            [utils.asGridCoords(24.5, 12)]: true,
+            [utils.asGridCoords(24.5, 11)]: true,
+            [utils.asGridCoords(24.5, 10)]: true,
+            [utils.asGridCoords(25.5, 10)]: true,
+            [utils.asGridCoords(26.5, 10)]: true,
+            [utils.asGridCoords(27.5, 10)]: true, // 432 160
+            [utils.asGridCoords(28.5, 10)]: true, // 448 160
+            [utils.asGridCoords(29.5, 10)]: true, // 464 160
+            [utils.asGridCoords(30.5, 10)]: true, // 480 160
+            [utils.asGridCoords(31.5, 10)]: true, // 496 160
+            [utils.asGridCoords(32.5, 10)]: true, // 512 160
+            [utils.asGridCoords(33.5, 10)]: true, // 528 160
+            [utils.asGridCoords(34.5, 10)]: true, // 544 160
+            [utils.asGridCoords(35.5, 10)]: true, // 560 160
+            [utils.asGridCoords(36.5, 10)]: true, // 576 160
+            [utils.asGridCoords(37.5, 10)]: true, // 592 160
+            [utils.asGridCoords(38.5, 10)]: true, // 608 160
+            [utils.asGridCoords(38.5, 11)]: true, // 608 176
+            [utils.asGridCoords(38.5, 12)]: true, // 608 192
+            [utils.asGridCoords(38.5, 13)]: true, // 608 208
+            [utils.asGridCoords(38.5, 14)]: true, // 608 224
+            [utils.asGridCoords(38.5, 15)]: true, // 608 240
+            [utils.asGridCoords(38.5, 16)]: true, // 608 256
+            [utils.asGridCoords(38.5, 17)]: true, // 608 272
+            [utils.asGridCoords(38.5, 18)]: true, // 608 288
+            [utils.asGridCoords(38.5, 19)]: true, // 608 304
+            [utils.asGridCoords(38.5, 20)]: true, // 608 320
+            [utils.asGridCoords(38.5, 21)]: true, // 608 336
+            [utils.asGridCoords(38.5, 22)]: true, // 608 352
+            [utils.asGridCoords(37.5, 22)]: true, // 592 352
+            [utils.asGridCoords(36.5, 22)]: true, // 576 352
+            [utils.asGridCoords(35.5, 22)]: true, // 560 352
+            [utils.asGridCoords(34.5, 22)]: true, // 544 352
+            [utils.asGridCoords(33.5, 22)]: true, // 528 352
+            [utils.asGridCoords(32.5, 22)]: true, // 512 352
+            [utils.asGridCoords(31.5, 22)]: true, // 496 352
+            [utils.asGridCoords(30.5, 22)]: true, // 480 352
+            [utils.asGridCoords(29.5, 22)]: true, // 464 352
+            [utils.asGridCoords(28.5, 22)]: true, // 448 352
+            [utils.asGridCoords(27.5, 22)]: true, // 432 352
+            [utils.asGridCoords(26.5, 22)]: true, // 416 352
+            [utils.asGridCoords(25.5, 22)]: true, // 400 352
+            [utils.asGridCoords(24.5, 22)]: true, // 384 352
+            [utils.asGridCoords(23.5, 22)]: true, // 368 352
+            [utils.asGridCoords(22.5, 22)]: true, // 352 352
+            [utils.asGridCoords(22.5, 21)]: true, // 352 336
+            [utils.asGridCoords(22.5, 20)]: true, // 352 320
+            [utils.asGridCoords(22.5, 19)]: true, // 352 304
+            [utils.asGridCoords(22.5, 18)]: true, // 352 288
+            [utils.asGridCoords(22.5, 17)]: true, // 352 272
+            [utils.asGridCoords(22.5, 16)]: true, // 352 256
+            [utils.asGridCoords(22.5, 15)]: true, // 352 240
+            [utils.asGridCoords(22.5, 14)]: true, // 352 224
+            [utils.asGridCoords(22.5, 13)]: true, // 352 208
+            [utils.asGridCoords(22.5, 12)]: true, // 352 192
+            [utils.asGridCoords(22.5, 11)]: true, // 352 176
+            [utils.asGridCoords(22.5, 10)]: true, // 352 160
+            [utils.asGridCoords(29.5, 11)]: true,  // 464 176
+            [utils.asGridCoords(39.5, 11)]: true,  // 560  176
+            [utils.asGridCoords(39.5, 12)]: true,  // 560  192
+            [utils.asGridCoords(40.5, 12)]: true,  // 576  192
+            [utils.asGridCoords(40.5, 13)]: true,  // 576  208
+            [utils.asGridCoords(41.5, 13)]: true,  // 592  208
+            [utils.asGridCoords(41.5, 14)]: true,  // 592  224
+            [utils.asGridCoords(41.5, 15)]: true,  // 592  240
+            [utils.asGridCoords(41.5, 18)]: true,  // 592  288
+            [utils.asGridCoords(41.5, 16)]: true,  // 592  256
+            [utils.asGridCoords(41.5, 18)]: true,  // 592  288
+            [utils.asGridCoords(41.5, 17)]: true,  // 592  272
+            [utils.asGridCoords(41.5, 19)]: true,  // 592  304
+            [utils.asGridCoords(41.5, 20)]: true,  // 592  320
+            [utils.asGridCoords(41.5, 21)]: true,  // 592  336
+            [utils.asGridCoords(40.5, 21)]: true,  // 576  336
+            [utils.asGridCoords(40.5, 20)]: true,  // 576  320
+            [utils.asGridCoords(39.5, 20)]: true,  // 560  320
+            [utils.asGridCoords(35.5, 12)]: true,  // 560  192
+            [utils.asGridCoords(35.5, 11)]: true,  // 560  176
+            [utils.asGridCoords(36.5, 11)]: true,  // 576  176
+            [utils.asGridCoords(36.5, 13)]: true,  // 576  208
+            [utils.asGridCoords(37.5, 11)]: true,  // 592  176
+            [utils.asGridCoords(37.5, 12)]: true,  // 592  192
+            [utils.asGridCoords(37.5, 13)]: true,  // 592  208
+            [utils.asGridCoords(37.5, 14)]: true,  // 592  224
+            [utils.asGridCoords(37.5, 15)]: true,  // 592  240
+            [utils.asGridCoords(37.5, 16)]: true,  // 592  256
+            [utils.asGridCoords(37.5, 17)]: true,  // 592  272
+            [utils.asGridCoords(37.5, 18)]: true,  // 592  288
+            [utils.asGridCoords(37.5, 19)]: true,  // 592  304
+            [utils.asGridCoords(37.5, 20)]: true,  // 592  320
+            [utils.asGridCoords(37.5, 21)]: true,  // 592  336
+            [utils.asGridCoords(36.5, 21)]: true,  // 576  336
+            [utils.asGridCoords(35.5, 20)]: true,  // 560  320
+            [utils.asGridCoords(36.5, 20)]: true,  // 576  320
+            [utils.asGridCoords(36.5, 18)]: true,  // 576  288
+            [utils.asGridCoords(35.5, 18)]: true,  // 560  288
+            [utils.asGridCoords(34.5, 18)]: true,  // 544  288
         },
         cutSceneSpaces: {
             [utils.asGridCoords(5, 5)]: [
