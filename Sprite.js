@@ -7,27 +7,17 @@ class Sprite {
       this.image.onload = () => {
         this.isLoaded = true;
       }
-  
-      //Shadow
-      this.shadow = new Image();
-      this.useShadow = true; //config.useShadow || false
-      if (this.useShadow) {
-        this.shadow.src = "images/characters/shadow.png";
-      }
-      this.shadow.onload = () => {
-        this.isShadowLoaded = true;
-      }
-  
+
       //Configure Animation & Initial State
       this.animations = config.animations || {
-        "idle-down" : [ [0,0] ],
-        "idle-right": [ [0,1] ],
-        "idle-up"   : [ [0,2] ],
-        "idle-left" : [ [0,3] ],
-        "walk-down" : [ [1,0],[0,0],[3,0],[0,0], ],
-        "walk-right": [ [1,1],[0,1],[3,1],[0,1], ],
-        "walk-up"   : [ [1,2],[0,2],[3,2],[0,2], ],
-        "walk-left" : [ [1,3],[0,3],[3,3],[0,3], ]
+        "idle-down" : [ [5,3] ],
+        "idle-right": [ [5,0] ],
+        "idle-up"   : [ [5,1] ],
+        "idle-left" : [ [5,2] ],
+        "walk-down" : [ [0,3],[1,3],[2,3],[3,3],[4,3],[5,3] ],
+        "walk-right": [ [0,0],[1,0],[2,0],[3,0],[4,0],[5,0] ],
+        "walk-up"   : [ [0,1],[1,1],[2,1],[3,1],[4,1],[5,1]],
+        "walk-left" : [ [0,2],[1,2],[2,2],[3,2],[4,2],[5,2] ],
       }
       this.currentAnimation = "idle-right"; // config.currentAnimation || "idle-down";
       this.currentAnimationFrame = 0;
@@ -74,9 +64,7 @@ class Sprite {
     draw(ctx, cameraPerson) {
       const x = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x;
       const y = this.gameObject.y - 16 + utils.withGrid(6) - cameraPerson.y;
-  
-      this.isShadowLoaded && ctx.drawImage(this.shadow, x, y + 2);
-  
+
   
       const [frameX, frameY] = this.frame;
   
