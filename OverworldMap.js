@@ -358,10 +358,16 @@ class OverworldMap {
     
     // Public callback method for the "Flush" button.
     flushButtonCallbackHandler(messages) {
+        // Start showing the flush messages immediately
         this.showFlushMessages(messages);
-        const newEvent = [ { type: "changeMap", map: "Level1" } ];
-        this.startCutscene(newEvent); 
-        // 464 208
+
+        // Wait 3 seconds after messages start typing before changing the map
+        setTimeout(() => {
+            // Ensure the button is removed before loading the new map
+            this.removeButton();
+            const newEvent = [ { type: "changeMap", map: "Level1" } ];
+            this.startCutscene(newEvent);
+        }, 3000);
     }
 
     // Add method to create objective panel
@@ -540,9 +546,9 @@ window.OverworldMaps = {
     Level1: {
         lowerSrc: "images/maps/Level1Lower.png", 
         upperSrc: "images/maps/Level1Upper.png", 
-        spawnpoint: {
-            x: utils.withGrid(5),
-            y: utils.withGrid(5), 
+        spawnpoint: { // 464 208
+            x: utils.withGrid(29),
+            y: utils.withGrid(13),
         },
         gameObjects: {
             ben: new Person({
