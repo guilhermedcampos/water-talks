@@ -16,6 +16,9 @@ class OverworldMap {
         
         // Store spawnpoint coordinates if provided
         this.spawnpoint = config.spawnpoint || null;
+        
+        // Create objective UI panel
+        this.createObjectivePanel();
     }
 
     // Draw the lower layer
@@ -181,6 +184,11 @@ class OverworldMap {
                 } else {
                     this[buttonConfig.callback]();
                 }
+            } else if (
+                buttonConfig.action === "custom" && 
+                typeof buttonConfig.callback === "function"
+            ) {
+                buttonConfig.callback(this);
             }
             
             // Remove button after clicking
@@ -350,6 +358,69 @@ class OverworldMap {
     flushButtonCallbackHandler(messages) {
         this.showFlushMessages(messages);
     }
+
+    // Add method to create objective panel
+    createObjectivePanel() {
+        // First, find the game container
+        const gameContainer = document.querySelector('.game-container');
+        if (!gameContainer) {
+            console.error("Game container not found!");
+            return;
+        }
+        
+        // Remove existing panel if there is one
+        if (document.querySelector('.objective-panel')) {
+            document.querySelector('.objective-panel').remove();
+        }
+        
+        // Create objective panel element
+        const objectivePanel = document.createElement("div");
+        objectivePanel.classList.add("objective-panel");
+        
+        // Style the panel
+        objectivePanel.style.position = "absolute"; // Use absolute positioning relative to game container
+        objectivePanel.style.top = "10px";
+        objectivePanel.style.right = "10px";
+        objectivePanel.style.backgroundColor = "rgba(255, 255, 255, 0.85)";
+        objectivePanel.style.border = "4px solid #3c3c54"; // Thinner border to fit in game container
+        objectivePanel.style.borderRadius = "0px";  // Pixelated look
+        objectivePanel.style.padding = "6px";
+        objectivePanel.style.minWidth = "90px";
+        objectivePanel.style.zIndex = "100";
+        objectivePanel.style.transform = "scale(0.25)"; // Scale down to fit game container
+        objectivePanel.style.transformOrigin = "top right"; // Scale from top right corner
+        
+        // Add header
+        const header = document.createElement("div");
+        header.textContent = "Mission:";
+        header.style.fontSize = "25px";
+        header.style.color = "#3c3c54";
+        header.style.marginBottom = "4px";
+        header.style.fontFamily = "'Pixelify Sans', sans-serif";
+        objectivePanel.appendChild(header);
+        
+        // Add objective text
+        const objectiveText = document.createElement("div");
+        objectiveText.textContent = "Flush the toilet";
+        objectiveText.style.fontSize = "25px";
+        objectiveText.style.color = "#3c3c54";
+        objectiveText.style.fontFamily = "'Pixelify Sans', sans-serif";
+        objectivePanel.appendChild(objectiveText);
+        
+        // Add panel to game container (not body)
+        gameContainer.appendChild(objectivePanel);
+        
+        // Store reference to update later
+        this.objectivePanel = objectivePanel;
+        this.objectiveText = objectiveText;
+    }
+    
+    // Method to update objective text
+    updateObjective(text) {
+        if (this.objectiveText) {
+            this.objectiveText.textContent = text;
+        }
+    }
 }
 
 // Maps
@@ -441,14 +512,7 @@ window.OverworldMaps = {
 
         },
         cutSceneSpaces: {
-            [utils.asGridCoords(44, 28)]: [
-                {
-                    events: [
-                        // { type: "changeMap", text: "Olá! Pronto para embarcar numa missão para proteger as águas de Portugal?" },
-  
-                    ]
-                }
-            ]
+            
         },
         // Refactored buttonSpaces: the callback is now a string key
         buttonSpaces: {
@@ -456,6 +520,7 @@ window.OverworldMaps = {
                 text: "Flush",
                 action: "custom",
                 callback: "flushButtonCallbackHandler",
+
                 messages: [
                     "Every drop counts... but where does it go?",
                     "Every day, Lisbon treats over 550 million liters of water...",
@@ -463,6 +528,82 @@ window.OverworldMaps = {
                     "What you waste ... must be cleaned."
                 ]
             }
+        }
+    },
+    
+    // New Level1 map
+    Level1: {
+        lowerSrc: "images/maps/Level1.png", // Your Level1 map image
+        upperSrc: "images/maps/Level1Upper.png", // If you have an upper layer for this map, otherwise use an empty image
+        spawnpoint: {
+            x: utils.withGrid(5),
+            y: utils.withGrid(5), 
+        },
+        gameObjects: {
+            ben: new Person({
+                isPlayerControlled: true,
+                x: utils.withGrid(5),
+                y: utils.withGrid(5), 
+                src: "images/characters/people/ben.png"
+            }),
+            // Add any NPCs or objects for the Level1 map
+            guide: new Person({
+                x: utils.withGrid(7),
+                y: utils.withGrid(8),
+                src: "images/characters/people/guide.png", // Update with your actual image path
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Welcome to the water treatment system!", faceHero: "guide" },
+                            { type: "textMessage", text: "This is where all the water goes after you flush." },
+                            { type: "textMessage", text: "Let's explore how water treatment works." }
+                        ]
+                    }
+                ]
+            }),
+        },
+        walls: {
+            // Add appropriate walls for your Level1 map
+            // Example boundary walls:
+            [utils.asGridCoords(3, 3)]: true,
+            [utils.asGridCoords(4, 3)]: true,
+            [utils.asGridCoords(5, 3)]: true,
+            [utils.asGridCoords(6, 3)]: true,
+            [utils.asGridCoords(7, 3)]: true,
+            
+            [utils.asGridCoords(3, 4)]: true,
+            [utils.asGridCoords(7, 4)]: true,
+            
+            [utils.asGridCoords(3, 5)]: true,
+            [utils.asGridCoords(7, 5)]: true,
+            
+            [utils.asGridCoords(3, 6)]: true,
+            [utils.asGridCoords(7, 6)]: true,
+            
+            [utils.asGridCoords(3, 7)]: true,
+            [utils.asGridCoords(7, 7)]: true,
+            
+            [utils.asGridCoords(3, 8)]: true,
+            [utils.asGridCoords(7, 8)]: true,
+            
+            [utils.asGridCoords(3, 9)]: true,
+            [utils.asGridCoords(4, 9)]: true,
+            [utils.asGridCoords(5, 9)]: true,
+            [utils.asGridCoords(6, 9)]: true,
+            [utils.asGridCoords(7, 9)]: true,
+        },
+        cutSceneSpaces: {
+            [utils.asGridCoords(5, 5)]: [
+                {
+                    events: [
+                        { type: "textMessage", text: "You've arrived at the water treatment facility." },
+                        { type: "textMessage", text: "Follow the path to learn about water treatment." }
+                    ]
+                }
+            ]
+        },
+        buttonSpaces: {
+            // You can add interactive buttons in this level if needed
         }
     },
 }

@@ -71,4 +71,9 @@ class OverworldEvent {
         // Initialize the text message at the game container
         msg.init(document.querySelector(".game-container"))
     }
+
+    changeMap(resolve) {
+    }
+        
+
 }
