@@ -550,7 +550,7 @@ class OverworldMap {
             });
             
             // Add button space for collecting the coagulant
-            this.buttonSpaces[utils.asGridCoords(position.x, position.y-0.5)] = {
+            this.buttonSpaces[utils.asGridCoords(position.x, position.y)] = {
                 text: "Mix",
                 action: "startCutscene",
                 events: [
@@ -561,7 +561,7 @@ class OverworldMap {
                             delete map.gameObjects[`coagulant${i+1}`];
                             
                             // Remove this button space
-                            delete map.buttonSpaces[utils.asGridCoords(position.x, position.y-0.5)];
+                            delete map.buttonSpaces[utils.asGridCoords(position.x, position.y)];
                             
                             // Check if all coagulants have been mixed
                             map.checkCoagulantsCollected();
