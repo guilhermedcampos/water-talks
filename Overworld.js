@@ -153,14 +153,17 @@ class Overworld {
         }
     }
 
+    startMap(mapConfig) {
+        this.map = new OverworldMap(mapConfig);
+        this.map.overworld = this;
+        this.map.mountObjects();
+
+    }
+
     async init() {
         console.log("Initializing Overworld...");
 
-        // Create a new instance of the OverworldMap class
-        this.map = new OverworldMap(window.OverworldMaps.Bathroom);
-        
-        // Mount the game objects to the map
-        this.map.mountObjects();
+        this.startMap(window.OverworldMaps.Bathroom);
         
         this.directionInput = new DirectionInput();
         this.directionInput.init();

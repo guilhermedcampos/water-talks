@@ -73,6 +73,8 @@ class OverworldEvent {
     }
 
     changeMap(resolve) {
+        this.map.overworld.startMap(window.OverworldMaps[this.event.map]);
+        resolve();
     }
         
 

@@ -1,5 +1,6 @@
 class OverworldMap {
     constructor(config) {
+        this.overworld = null;  // Reference to the overworld
         this.gameObjects = config.gameObjects;  // Game objects
         this.walls = config.walls || {};    // Walls
         this.cutSceneSpaces = config.cutSceneSpaces || {}; // Cutscene spaces
@@ -352,11 +353,15 @@ class OverworldMap {
                 
             }, 1500); // Wait 1.5 seconds for fade in to complete
         }, 50); // Initial slight delay
+
     }
     
     // Public callback method for the "Flush" button.
     flushButtonCallbackHandler(messages) {
         this.showFlushMessages(messages);
+        const newEvent = [ { type: "changeMap", map: "Level1" } ];
+        this.startCutscene(newEvent); 
+        // 464 208
     }
 
     // Add method to create objective panel
@@ -533,8 +538,8 @@ window.OverworldMaps = {
     
     // New Level1 map
     Level1: {
-        lowerSrc: "images/maps/Level1.png", // Your Level1 map image
-        upperSrc: "images/maps/Level1Upper.png", // If you have an upper layer for this map, otherwise use an empty image
+        lowerSrc: "images/maps/Level1Lower.png", 
+        upperSrc: "images/maps/Level1Upper.png", 
         spawnpoint: {
             x: utils.withGrid(5),
             y: utils.withGrid(5), 
@@ -550,7 +555,7 @@ window.OverworldMaps = {
             guide: new Person({
                 x: utils.withGrid(7),
                 y: utils.withGrid(8),
-                src: "images/characters/people/guide.png", // Update with your actual image path
+                src: "images/characters/people/ben.png", 
                 talking: [
                     {
                         events: [
@@ -563,34 +568,7 @@ window.OverworldMaps = {
             }),
         },
         walls: {
-            // Add appropriate walls for your Level1 map
-            // Example boundary walls:
-            [utils.asGridCoords(3, 3)]: true,
-            [utils.asGridCoords(4, 3)]: true,
-            [utils.asGridCoords(5, 3)]: true,
-            [utils.asGridCoords(6, 3)]: true,
-            [utils.asGridCoords(7, 3)]: true,
-            
-            [utils.asGridCoords(3, 4)]: true,
-            [utils.asGridCoords(7, 4)]: true,
-            
-            [utils.asGridCoords(3, 5)]: true,
-            [utils.asGridCoords(7, 5)]: true,
-            
-            [utils.asGridCoords(3, 6)]: true,
-            [utils.asGridCoords(7, 6)]: true,
-            
-            [utils.asGridCoords(3, 7)]: true,
-            [utils.asGridCoords(7, 7)]: true,
-            
-            [utils.asGridCoords(3, 8)]: true,
-            [utils.asGridCoords(7, 8)]: true,
-            
-            [utils.asGridCoords(3, 9)]: true,
-            [utils.asGridCoords(4, 9)]: true,
-            [utils.asGridCoords(5, 9)]: true,
-            [utils.asGridCoords(6, 9)]: true,
-            [utils.asGridCoords(7, 9)]: true,
+           
         },
         cutSceneSpaces: {
             [utils.asGridCoords(5, 5)]: [
