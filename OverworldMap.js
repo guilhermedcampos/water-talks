@@ -170,8 +170,17 @@ class OverworldMap {
         button.addEventListener("click", () => {
             if (buttonConfig.action === "startCutscene" && buttonConfig.events) {
                 this.startCutscene(buttonConfig.events);
-            } else if (buttonConfig.action === "custom" && typeof buttonConfig.callback === "function") {
-                buttonConfig.callback(this); // Pass the map reference
+            } else if (
+                buttonConfig.action === "custom" && 
+                typeof buttonConfig.callback === "string" && 
+                typeof this[buttonConfig.callback] === "function"
+            ) {
+                // Pass messages if defined
+                if (buttonConfig.messages) {
+                    this[buttonConfig.callback](buttonConfig.messages);
+                } else {
+                    this[buttonConfig.callback]();
+                }
             }
             
             // Remove button after clicking
@@ -232,6 +241,115 @@ class OverworldMap {
             }
         });
     }
+
+    // Helper: Types out a message character by character.
+    typeText(message, textContainer, typingSound, typingSpeed, callback) {
+        textContainer.innerHTML = "";
+        let i = 0;
+        // Start the typing sound immediately
+        typingSound.currentTime = 0;
+        typingSound.play();
+        
+        const typing = setInterval(() => {
+            if (i < message.length) {
+                textContainer.innerHTML += message.charAt(i);
+                i++;
+            } else {
+                clearInterval(typing);
+                // Stop typing sound when done
+                typingSound.pause();
+                typingSound.currentTime = 0;
+                setTimeout(() => {
+                    callback();
+                }, 2000); // Wait 2 seconds after message is complete
+            }
+        }, typingSpeed);
+    }
+
+    // Displays the series of flush messages with fade in/out effects
+    showFlushMessages(messages) {
+        // Use provided messages, or fallback to a default if not set
+        messages = messages || [
+            "Every drop counts... but where does it go?",
+            "Every day, Lisbon treats over 550 million liters of water...",
+            "From your home to the treatment plant, every flush tells a story...",
+            "What you waste ... must be cleaned."
+        ];
+        
+        // Create fade overlay element
+        const fadeOverlay = document.createElement("div");
+        fadeOverlay.style.position = "fixed";
+        fadeOverlay.style.top = "0";
+        fadeOverlay.style.left = "0";
+        fadeOverlay.style.width = "100%";
+        fadeOverlay.style.height = "100%";
+        fadeOverlay.style.backgroundColor = "black";
+        fadeOverlay.style.opacity = "0";
+        fadeOverlay.style.transition = "opacity 1.5s ease";
+        fadeOverlay.style.zIndex = "1000";
+        document.body.appendChild(fadeOverlay);
+        
+        // Create the typing sound element
+        const typingSound = new Audio("sounds/typing.mp3");
+        typingSound.loop = true;
+        typingSound.volume = 0.5;
+        
+        // Trigger fade in
+        setTimeout(() => {
+            fadeOverlay.style.opacity = "1";
+            
+            // After fade is complete, show text messages
+            setTimeout(() => {
+                // Create text container element
+                const textContainer = document.createElement("div");
+                textContainer.style.position = "fixed";
+                textContainer.style.top = "50%";
+                textContainer.style.left = "50%";
+                textContainer.style.transform = "translate(-50%, -50%)";
+                textContainer.style.width = "80%";
+                textContainer.style.maxWidth = "800px";
+                textContainer.style.color = "white";
+                textContainer.style.fontFamily = "'Pixelify Sans', sans-serif";
+                textContainer.style.fontSize = "24px";
+                textContainer.style.lineHeight = "1.6";
+                textContainer.style.textAlign = "center";
+                textContainer.style.zIndex = "1001";
+                document.body.appendChild(textContainer);
+                
+                const typingSpeed = 50;
+                // Recursive function to display messages in sequence
+                const showMessages = (index) => {
+                    if (index < messages.length) {
+                        this.typeText(messages[index], textContainer, typingSound, typingSpeed, () => {
+                            showMessages(index + 1);
+                        });
+                    } else {
+                        // All messages are shown – fade out text and overlay
+                        setTimeout(() => {
+                            textContainer.style.transition = "opacity 1.5s ease";
+                            textContainer.style.opacity = "0";
+                            fadeOverlay.style.opacity = "0";
+                            
+                            // Remove elements after fade out
+                            setTimeout(() => {
+                                document.body.removeChild(textContainer);
+                                document.body.removeChild(fadeOverlay);
+                            }, 1500);
+                        }, 1000);
+                    }
+                };
+                
+                // Start showing messages
+                showMessages(0);
+                
+            }, 1500); // Wait 1.5 seconds for fade in to complete
+        }, 50); // Initial slight delay
+    }
+    
+    // Public callback method for the "Flush" button.
+    flushButtonCallbackHandler(messages) {
+        this.showFlushMessages(messages);
+    }
 }
 
 // Maps
@@ -251,28 +369,6 @@ window.OverworldMaps = {
                 y: utils.withGrid(5), 
                 src: "images/characters/people/ben.png"
             }),
-            // friend: new Person({
-            //     isPlayerControlled: false,
-            //     x: utils.withGrid(29),
-            //     y: utils.withGrid(32),
-            //     src: "images/characters/people/ben.png",
-            //     behaviorLoop: [
-            //         { type: "walk", direction: "up", duration: 2000 },
-            //         { type: "stand", direction: "left", time: 7000 },
-            //         { type: "walk", direction: "left", duration: 800 },
-            //         { type: "stand", direction: "down", time: 7000 },
-            //         { type: "walk", direction: "down", duration: 800 },
-            //         { type: "walk", direction: "right", duration: 800 },
-            //     ],
-            //     talking: [
-            //         {
-            //             events: [
-            //                 { type: "textMessage", text: "Hello, Ben!", faceHero: "friend" },
-            //                 { type: "textMessage", text: "How are you doing?" }
-            //             ]
-            //         }
-            //     ]
-            // }),
         }, 
         walls: {
             // Horizontal walls (top)
@@ -354,116 +450,18 @@ window.OverworldMaps = {
                 }
             ]
         },
-        // Add button spaces
+        // Refactored buttonSpaces: the callback is now a string key
         buttonSpaces: {
             [utils.asGridCoords(53.5, 30)]: {
                 text: "Flush",
                 action: "custom",
-                callback: function(map) {
-                    // Create fade to black effect
-                    const fadeOverlay = document.createElement("div");
-                    fadeOverlay.style.position = "fixed";
-                    fadeOverlay.style.top = "0";
-                    fadeOverlay.style.left = "0";
-                    fadeOverlay.style.width = "100%";
-                    fadeOverlay.style.height = "100%";
-                    fadeOverlay.style.backgroundColor = "black";
-                    fadeOverlay.style.opacity = "0";
-                    fadeOverlay.style.transition = "opacity 1.5s ease";
-                    fadeOverlay.style.zIndex = "1000";
-                    document.body.appendChild(fadeOverlay);
-                    
-                    // Create audio element for typing sound
-                    const typingSound = new Audio("sounds/typing.mp3");
-                    typingSound.loop = true;  // Enable looping
-                    typingSound.volume = 0.5; // Set volume to 50%
-                    
-                    // Trigger fade in
-                    setTimeout(() => {
-                        fadeOverlay.style.opacity = "1";
-                        
-                        // After fade is complete, show typing text messages
-                        setTimeout(() => {
-                            // Create text container
-                            const textContainer = document.createElement("div");
-                            textContainer.style.position = "fixed";
-                            textContainer.style.top = "50%";
-                            textContainer.style.left = "50%";
-                            textContainer.style.transform = "translate(-50%, -50%)";
-                            textContainer.style.width = "80%";
-                            textContainer.style.maxWidth = "800px";
-                            textContainer.style.color = "white";
-                            textContainer.style.fontFamily = "'Pixelify Sans', sans-serif";
-                            textContainer.style.fontSize = "24px";
-                            textContainer.style.lineHeight = "1.6";
-                            textContainer.style.textAlign = "center";
-                            textContainer.style.zIndex = "1001";
-                            document.body.appendChild(textContainer);
-                            
-                            // Array of messages to type out
-                            const messages = [
-                                "Every drop counts... but where does it go?",
-                                "Every day, Lisbon treats over 550 million liters of water...",
-                                "From your home to the treatment plant, every flush tells a story...",
-                                "What you waste ... must be cleaned."
-                            ];
-                            
-                            // Function to type out text character by character
-                            const typeText = (message, index, callback) => {
-                                textContainer.innerHTML = "";
-                                let i = 0;
-                                const typingSpeed = 50; // milliseconds per character
-                                
-                                // Start playing typing sound when typing begins
-                                typingSound.currentTime = 0;
-                                typingSound.play();
-                                
-                                const typing = setInterval(() => {
-                                    if (i < message.length) {
-                                        textContainer.innerHTML += message.charAt(i);
-                                        i++;
-                                    } else {
-                                        clearInterval(typing);
-                                        
-                                        // Stop typing sound when the entire message is displayed
-                                        typingSound.pause();
-                                        typingSound.currentTime = 0;
-                                        
-                                        setTimeout(() => {
-                                            callback();
-                                        }, 2000); // Wait 2 seconds after typing completes
-                                    }
-                                }, typingSpeed);
-                            };
-                            
-                            // Function to handle each message sequentially
-                            const showMessages = (messageIndex) => {
-                                if (messageIndex < messages.length) {
-                                    typeText(messages[messageIndex], messageIndex, () => {
-                                        showMessages(messageIndex + 1);
-                                    });
-                                } else {
-                                    // All messages shown, fade out
-                                    setTimeout(() => {
-                                        textContainer.style.transition = "opacity 1.5s ease";
-                                        textContainer.style.opacity = "0";
-                                        fadeOverlay.style.opacity = "0";
-                                        
-                                        // Remove DOM elements after fade out
-                                        setTimeout(() => {
-                                            document.body.removeChild(textContainer);
-                                            document.body.removeChild(fadeOverlay);
-                                        }, 1500);
-                                    }, 1000);
-                                }
-                            };
-                            
-                            // Start showing messages
-                            showMessages(0);
-                            
-                        }, 1500); // Wait for fade in to complete
-                    }, 50);
-                }
+                callback: "flushButtonCallbackHandler",
+                messages: [
+                    "Every drop counts... but where does it go?",
+                    "Every day, Lisbon treats over 550 million liters of water...",
+                    "From your home to the treatment plant, every flush tells a story...",
+                    "What you waste ... must be cleaned."
+                ]
             }
         }
     },
