@@ -62,6 +62,11 @@ class OverworldEvent {
             obj.direction = utils.getOppositeDirection(this.map.gameObjects["ben"].direction);
         }
 
+        // Choose a random NPC talking sound from npcTalking1.mp3 to npcTalking3.mp3
+        const soundIndex = Math.floor(Math.random() * 3) + 1;
+        const npcSound = new Audio(`sounds/npcTalking${soundIndex}.mp3`);
+        npcSound.play();
+
         // Create a new text message
         const msg = new TextMessage({
             text: this.event.text,
@@ -69,7 +74,7 @@ class OverworldEvent {
         });
         
         // Initialize the text message at the game container
-        msg.init(document.querySelector(".game-container"))
+        msg.init(document.querySelector(".game-container"));
     }
 
     changeMap(resolve) {

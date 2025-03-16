@@ -20,6 +20,7 @@ class OverworldMap {
         
         // Create objective UI panel
         this.createObjectivePanel();
+        this.talkedToOperator = false; // Add flag here
     }
 
     // Draw the lower layer
@@ -101,12 +102,17 @@ class OverworldMap {
         const hero = this.gameObjects["ben"];
         const buttonMatch = this.buttonSpaces[`${hero.x},${hero.y}`];
         
+        // If this is a debris collect button and operator hasn't been talked to, then do not show it:
+        if (buttonMatch && buttonMatch.text === "Collect" && !this.talkedToOperator) {
+            return;
+        }
+                
         // Remove any existing button if we moved away
         if (!buttonMatch && this.activeButton) {
             this.removeButton();
             return;
         }
-        
+                
         // Show the button if we're at a trigger space and no button is active
         if (buttonMatch && !this.activeButton) {
             this.showButton(buttonMatch);
@@ -777,7 +783,7 @@ window.OverworldMaps = {
             
             // Update the operator in the Level1 map
             operator: new Person({
-                x: utils.withGrid(28.5),
+                x: utils.withGrid(27.5),
                 y: utils.withGrid(13),
                 src: "images/characters/people/operator.png",
                 // Make the operator stand still by using a simple behavior loop
@@ -931,6 +937,7 @@ window.OverworldMaps = {
                     { 
                         type: "custom",
                         action: (map) => {
+                            map.talkedToOperator = true;
                             map.updateObjective("Surface Sweep: Remove visible debris from the reservoir");
                         }
                     }
