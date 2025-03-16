@@ -449,7 +449,7 @@ window.OverworldMaps = {
                 isPlayerControlled: true,
                 x: utils.withGrid(7),
                 y: utils.withGrid(5), 
-                src: "images/characters/people/ben.png"
+                src: "images/characters/people/mainCharacter.png"
             }),
         }, 
         walls: {
@@ -555,13 +555,13 @@ window.OverworldMaps = {
                 isPlayerControlled: true,
                 x: utils.withGrid(5),
                 y: utils.withGrid(5), 
-                src: "images/characters/people/ben.png"
+                src: "images/characters/people/mainCharacter.png"
             }),
             // Add any NPCs or objects for the Level1 map
             guide: new Person({
                 x: utils.withGrid(7),
                 y: utils.withGrid(8),
-                src: "images/characters/people/ben.png", 
+                src: "images/characters/people/mainCharacter.png", 
                 talking: [
                     {
                         events: [
