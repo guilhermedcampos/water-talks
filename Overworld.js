@@ -38,6 +38,9 @@ class Overworld {
             // Draw the upper layer
             this.map.drawUpperImage(this.ctx, cameraPerson);
 
+            // Call this in your game update loop or after player movement
+            this.map.checkForButtonTrigger();
+
             // Request the next frame
             requestAnimationFrame(() => {
                 step();

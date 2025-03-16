@@ -3,6 +3,7 @@ class OverworldMap {
         this.gameObjects = config.gameObjects;  // Game objects
         this.walls = config.walls || {};    // Walls
         this.cutSceneSpaces = config.cutSceneSpaces || {}; // Cutscene spaces
+        this.buttonSpaces = config.buttonSpaces || {}; // Button trigger spaces
 
         this.lowerImage = new Image();
         this.lowerImage.src = config.lowerSrc;  // Floor, Walls, tiles, etc
@@ -11,6 +12,7 @@ class OverworldMap {
         this.upperImage.src = config.upperSrc;  // Tree tops, Terraces etc
 
         this.isCutscenePlaying = false;
+        this.activeButton = null; // Track if a button is currently active
         
         // Store spawnpoint coordinates if provided
         this.spawnpoint = config.spawnpoint || null;
@@ -85,6 +87,93 @@ class OverworldMap {
         if (!this.isCutscenePlaying && match) {
             this.startCutscene(match[0].events);
         }
+        
+        // Also check for button spaces
+        this.checkForButtonTrigger();
+    }
+    
+    // New method to check if character is near a button trigger
+    checkForButtonTrigger() {
+        const hero = this.gameObjects["ben"];
+        const buttonMatch = this.buttonSpaces[`${hero.x},${hero.y}`];
+        
+        // Remove any existing button if we moved away
+        if (!buttonMatch && this.activeButton) {
+            this.removeButton();
+            return;
+        }
+        
+        // Show the button if we're at a trigger space and no button is active
+        if (buttonMatch && !this.activeButton) {
+            this.showButton(buttonMatch);
+        }
+    }
+    
+    // Add a method to show the button
+    showButton(buttonConfig) {
+        // Create button element
+        const button = document.createElement("button");
+        button.innerText = buttonConfig.text || "Interact";
+        button.classList.add("game-button");
+        
+        // Get the hero for positioning
+        const hero = this.gameObjects["ben"];
+        
+        // Style the button
+        button.style.position = "absolute";
+        
+        // Position the button above the character
+        // We need to calculate screen position based on game coordinates
+        // This assumes your game is centered in the viewport
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        // Center of the screen
+        const centerX = viewportWidth / 2;
+        const centerY = viewportHeight / 2;
+        
+        button.style.left = `${centerX}px`;
+        button.style.bottom = `${centerY + 50}px`; // Position above character
+        button.style.transform = "translateX(-50%)";
+        
+        // Minimal white with black border styling
+        button.style.padding = "8px 12px";
+        button.style.backgroundColor = "white";
+        button.style.color = "black";
+        button.style.border = "2px solid black";
+        button.style.borderRadius = "0px"; // Square corners for pixel look
+        button.style.cursor = "pointer";
+        
+        // Pixelify Sans font styling
+        button.style.fontFamily = "'Pixelify Sans', sans-serif";
+        button.style.fontSize = "14px";
+        button.style.letterSpacing = "1px";
+        button.style.textTransform = "uppercase";
+        button.style.fontWeight = "bold";
+        
+        // Add click event
+        button.addEventListener("click", () => {
+            if (buttonConfig.action === "startCutscene" && buttonConfig.events) {
+                this.startCutscene(buttonConfig.events);
+            } else if (buttonConfig.action === "custom" && typeof buttonConfig.callback === "function") {
+                buttonConfig.callback();
+            }
+            
+            // Remove button after clicking
+            this.removeButton();
+        });
+        
+        // Add to DOM
+        document.body.appendChild(button);
+        this.activeButton = button;
+    }
+    
+    // Remove the button
+    removeButton() {
+        if (this.activeButton) {
+            document.body.removeChild(this.activeButton);
+            this.activeButton = null;
+        }
     }
 
     // Returns true if the space is taken
@@ -137,8 +226,8 @@ window.OverworldMaps = {
         upperSrc: "images/maps/BathroomUpper.png",
         // Add spawnpoint property
         spawnpoint: {
-            x: utils.withGrid(28),
-            y: utils.withGrid(29), 
+            x: utils.withGrid(49.5),
+            y: utils.withGrid(24), 
         },
         gameObjects: {
             ben: new Person({
@@ -182,6 +271,14 @@ window.OverworldMaps = {
                     ]
                 }
             ]
+        },
+        // Add button spaces
+        buttonSpaces: {
+            [utils.asGridCoords(53.5, 30)]: {
+                text: "Flush",
+                action: "startCutscene",
+            
+            }
         }
     },
 }
