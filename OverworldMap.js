@@ -474,31 +474,179 @@ class OverworldMap {
             
             // Update the operator's dialogue to acknowledge completion
             if (this.gameObjects["operator"]) {
-                // Add a "talk" button space at the operator position with new dialogue
-                this.buttonSpaces[utils.asGridCoords(27.5, 15)] = {
+                // Define the new dialogue for the operator
+                const newDialogue = {
                     text: "Talk",
                     action: "startCutscene",
                     events: [
                         { type: "textMessage", text: "Excellent work! You've cleaned up all the visible debris.", faceHero: "operator" },
-                        { type: "textMessage", text: "This is just the first step in water treatment." },
-                        { type: "textMessage", text: "Next, we need to filter out smaller particles that aren't visible to the naked eye." },
+                        { type: "textMessage", text: "With the surface cleared, we must now address the finer particles suspended within." },
+                        { type: "textMessage", text: "Introduce coagulants into the water; they will neutralize the charges of these particles, causing them to clump together into larger aggregates known as flocs." },
                         { 
                             type: "custom",
                             action: (map) => {
-                                map.updateObjective("Filtration Station: Learn about water filtration");
+                                map.updateObjective("Coagulation Initiation: Add coagulants to the water to begin the flocculation process.");
                             }
                         }
                     ]
                 };
                 
-                // Update other operator button spaces with the same dialogue
-                this.buttonSpaces[utils.asGridCoords(27.5, 17)] = { ...this.buttonSpaces[utils.asGridCoords(27.5, 15)] };
-                this.buttonSpaces[utils.asGridCoords(26.5, 16)] = { ...this.buttonSpaces[utils.asGridCoords(27.5, 15)] };
-                this.buttonSpaces[utils.asGridCoords(28.5, 16)] = { ...this.buttonSpaces[utils.asGridCoords(27.5, 15)] };
+                // Clear any existing button spaces around the operator
+                delete this.buttonSpaces[utils.asGridCoords(27.5, 12)];
+                delete this.buttonSpaces[utils.asGridCoords(28.5, 13)];
+                delete this.buttonSpaces[utils.asGridCoords(27.5, 14)];
+                delete this.buttonSpaces[utils.asGridCoords(26.5, 13)];
+                
+                // Add new dialogue button spaces around the operator
+                // Use the operator's current position to determine where to place the buttons
+                const operatorX = this.gameObjects["operator"].x / 16; // Convert from pixels to grid
+                const operatorY = this.gameObjects["operator"].y / 16;
+                
+                console.log("Updating operator dialogue at position:", operatorX, operatorY);
+                
+                // Add talk buttons in all four directions around the operator
+                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY - 1)] = {...newDialogue}; // Above
+                this.buttonSpaces[utils.asGridCoords(operatorX + 1, operatorY)] = {...newDialogue}; // Right
+                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY + 1)] = {...newDialogue}; // Below
+                this.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = {...newDialogue}; // Left
+                
+                console.log("Updated button spaces:", this.buttonSpaces);
             }
         } else {
             // Update objective to show how many debris are left
             this.updateObjective(`Surface Sweep: ${debrisCount} pieces of debris remaining`);
+        }
+    }
+
+    // Add coagulant objects at random positions within the water area
+    addCoagulants(count) {
+        // Define the water area bounds (where coagulants can appear)
+        const waterArea = {
+            minX: 23.5,
+            maxX: 37.5,
+            minY: 14,
+            maxY: 21
+        };
+        
+        // Create the specified number of coagulant objects
+        for (let i = 1; i <= count; i++) {
+            // Generate random position within water area
+            const randomX = waterArea.minX + Math.random() * (waterArea.maxX - waterArea.minX);
+            const randomY = waterArea.minY + Math.random() * (waterArea.maxY - waterArea.minY);
+            
+            // Round to nearest 0.5 to align with grid
+            const x = Math.round(randomX * 2) / 2;
+            const y = Math.round(randomY * 2) / 2;
+            
+            // Ensure we don't place objects too close to existing objects or walls
+            const isTooClose = Object.values(this.gameObjects).some(obj => {
+                const distance = Math.sqrt(
+                    Math.pow(obj.x/16 - x, 2) + 
+                    Math.pow(obj.y/16 - y, 2)
+                );
+                return distance < 2; // Keep objects at least 2 grid cells apart
+            });
+            
+            // If the position is too close to something, try again
+            if (isTooClose) {
+                i--; // Retry this iteration
+                continue;
+            }
+            
+            // Add coagulant object to gameObjects
+            this.gameObjects[`coagulant${i}`] = new Person({
+                x: utils.withGrid(x),
+                y: utils.withGrid(y),
+                src: "images/waterAssets/coagulant.png",
+                behaviorLoop: [
+                    { type: "stand", direction: "down", time: 999999 }
+                ]
+            });
+            
+            // Add button space for collecting the coagulant
+            this.buttonSpaces[utils.asGridCoords(x, y-0.5)] = { // Position button slightly above the object
+                text: "Mix",
+                action: "startCutscene",
+                events: [
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            // Remove this coagulant object
+                            delete map.gameObjects[`coagulant${i}`];
+                            
+                            // Remove this button space
+                            delete map.buttonSpaces[utils.asGridCoords(x, y-0.5)];
+                            
+                            // Check if all coagulants have been mixed
+                            map.checkCoagulantsCollected();
+                        }
+                    }
+                ]
+            };
+        }
+    }
+
+    // Add method to check if all coagulants have been mixed
+    checkCoagulantsCollected() {
+        // Count remaining coagulants
+        const remainingCoagulants = Object.keys(this.gameObjects).filter(key => 
+            key.startsWith("coagulant")
+        ).length;
+        
+        if (remainingCoagulants === 0) {
+            // All coagulants collected, update objective
+            this.updateObjective("Return to the operator for the next step");
+            
+            // Update the operator's dialogue for the next phase
+            if (this.gameObjects["operator"]) {
+                // Define the new dialogue for the operator
+                const newDialogue = {
+                    text: "Talk",
+                    action: "startCutscene",
+                    events: [
+                        { type: "textMessage", text: "Perfect! The coagulants are now neutralizing charges on suspended particles.", faceHero: "operator" },
+                        { type: "textMessage", text: "Now we need to initiate sedimentation. The flocs formed by coagulation are heavier than water and will begin to settle." },
+                        { type: "textMessage", text: "This process naturally separates solids from the liquid, creating clearer water at the top." },
+                        { 
+                            type: "custom",
+                            action: (map) => {
+                                map.updateObjective("Sedimentation: Allow particles to settle");
+                            }
+                        }
+                    ]
+                };
+                
+                // Clear existing operator button spaces
+                Object.keys(this.buttonSpaces).forEach(key => {
+                    const coords = key.split(",");
+                    const x = parseFloat(coords[0]);
+                    const y = parseFloat(coords[1]);
+                    
+                    // If this button space is near the operator, remove it
+                    const operatorX = this.gameObjects["operator"].x / 16;
+                    const operatorY = this.gameObjects["operator"].y / 16;
+                    const distance = Math.sqrt(
+                        Math.pow(x - operatorX, 2) + 
+                        Math.pow(y - operatorY, 2)
+                    );
+                    
+                    if (distance < 1.5) {
+                        delete this.buttonSpaces[key];
+                    }
+                });
+                
+                // Add new dialogue button spaces around the operator
+                const operatorX = this.gameObjects["operator"].x / 16;
+                const operatorY = this.gameObjects["operator"].y / 16;
+                
+                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY - 1)] = {...newDialogue}; // Above
+                this.buttonSpaces[utils.asGridCoords(operatorX + 1, operatorY)] = {...newDialogue}; // Right
+                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY + 1)] = {...newDialogue}; // Below
+                this.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = {...newDialogue}; // Left
+            }
+        } else {
+            // Update objective with remaining count
+            this.updateObjective(`Mix coagulants: ${remainingCoagulants} remaining`);
         }
     }
 }
@@ -616,8 +764,8 @@ window.OverworldMaps = {
         lowerSrc: "images/maps/Level1Lower.png", 
         upperSrc: "images/maps/Level1Upper.png", 
         spawnpoint: { // 464 208
-            x: utils.withGrid(29.5),
-            y: utils.withGrid(13),
+            x: utils.withGrid(30.5),
+            y: utils.withGrid(14),
         },
         gameObjects: {
             ben: new Person({
@@ -629,7 +777,7 @@ window.OverworldMaps = {
             
             // Update the operator in the Level1 map
             operator: new Person({
-                x: utils.withGrid(27.5),
+                x: utils.withGrid(28.5),
                 y: utils.withGrid(13),
                 src: "images/characters/people/operator.png",
                 // Make the operator stand still by using a simple behavior loop
@@ -777,7 +925,7 @@ window.OverworldMaps = {
                     { type: "textMessage", text: "Welcome to the water treatment facility!", faceHero: "operator" },
                     { type: "textMessage", text: "I'm the operator here. Did you know that your toilet flush travels through an extensive sewer system to get here?" },
                     { type: "textMessage", text: "The water you flush goes through multiple treatment stages before it's returned to the environment." },
-                    { type: "textMessage", text: "Welcome, brave traveler! Our first task is to cleanse this reservoir of visible impurities." },
+                    { type: "textMessage", text: "Your first task is to cleanse this reservoir of visible impurities." },
                     { type: "textMessage", text: "Please, collect and dispose of any floating debris or trash contaminating these waters." },
                     // Update objective after conversation
                     { 
@@ -793,12 +941,14 @@ window.OverworldMaps = {
                 text: "Collect",
                 action: "startCutscene",
                 events: [
-                    { type: "textMessage", text: "You collected a plastic bottle!" },
                     { 
                         type: "custom",
                         action: (map) => {
                             // Remove the debris object
                             delete map.gameObjects["debris1"];
+                            
+                            // Remove the wall at this position to ensure it's not blocking
+                            map.removeWall(utils.withGrid(28.5), utils.withGrid(18));
                             
                             // Check if all debris is collected
                             map.checkDebrisCollected();
@@ -810,11 +960,16 @@ window.OverworldMaps = {
                 text: "Collect",
                 action: "startCutscene",
                 events: [
-                    { type: "textMessage", text: "You collected a plastic bag!" },
                     { 
                         type: "custom",
                         action: (map) => {
+                            // Remove the debris object
                             delete map.gameObjects["debris2"];
+                            
+                            // Remove the wall at this position to ensure it's not blocking
+                            map.removeWall(utils.withGrid(31.5), utils.withGrid(19));
+                            
+                            // Check if all debris is collected
                             map.checkDebrisCollected();
                         }
                     }
@@ -824,12 +979,38 @@ window.OverworldMaps = {
                 text: "Collect",
                 action: "startCutscene",
                 events: [
-                    { type: "textMessage", text: "You collected a food wrapper!" },
                     { 
                         type: "custom",
                         action: (map) => {
+                            // Remove the debris object
                             delete map.gameObjects["debris3"];
+                            
+                            // Remove the wall at this position to ensure it's not blocking
+                            map.removeWall(utils.withGrid(25.5), utils.withGrid(20));
+                            
+                            // Check if all debris is collected
                             map.checkDebrisCollected();
+                        }
+                    }
+                ]
+            },
+            // Add a new button space for the faucet
+            [utils.asGridCoords(34.5, 12)]: {
+                text: "Add Coagulants",
+                action: "startCutscene",
+                events: [
+                    { type: "textMessage", text: "You've activated the coagulant dispenser!" },
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            // Add 5 coagulant objects randomly in the water area
+                            map.addCoagulants(5);
+                            
+                            // Update objective
+                            map.updateObjective("Mix the coagulants: Find and stir all coagulants into the water");
+                            
+                            // Disable the faucet button after use
+                            delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
                         }
                     }
                 ]
