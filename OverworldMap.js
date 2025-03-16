@@ -618,8 +618,8 @@ window.OverworldMaps = {
             // Update the operator in the Level1 map
             operator: new Person({
                 x: utils.withGrid(27.5),
-                y: utils.withGrid(16),
-                src: "images/characters/people/mainCharacter.png",
+                y: utils.withGrid(13),
+                src: "images/characters/people/operator.png",
                 // Make the operator stand still by using a simple behavior loop
                 // with only one standing direction for a very long time
                 behaviorLoop: [
@@ -756,20 +756,9 @@ window.OverworldMaps = {
             [utils.asGridCoords(35.5, 18)]: true,  // 560  288
             [utils.asGridCoords(34.5, 18)]: true,  // 544  288
         },
-        cutSceneSpaces: {
-            // Update the spawn point cutscene to guide player to the operator
-            [utils.asGridCoords(29.5, 13)]: [
-                {
-                    events: [
-                        { type: "textMessage", text: "You've arrived at the water treatment facility." },
-                        { type: "textMessage", text: "Find the operator to learn about water treatment." }
-                    ]
-                }
-            ]
-        },
         buttonSpaces: {
             // Additional button spaces if needed
-            [utils.asGridCoords(27.5, 15)]: {
+            [utils.asGridCoords(28.5, 13)]: {
                 text: "Talk",
                 action: "startCutscene",
                 events: [
@@ -779,61 +768,6 @@ window.OverworldMaps = {
                     { type: "textMessage", text: "Welcome, brave traveler! Our first task is to cleanse this reservoir of visible impurities." },
                     { type: "textMessage", text: "Please, collect and dispose of any floating debris or trash contaminating these waters." },
                     // Update objective after conversation
-                    { 
-                        type: "custom",
-                        action: (map) => {
-                            map.updateObjective("Surface Sweep: Remove visible debris from the reservoir");
-                        }
-                    }
-                ]
-            },
-            // Add additional button spaces for the north, east, and west positions
-            [utils.asGridCoords(27.5, 17)]: {
-                text: "Talk",
-                action: "startCutscene",
-                events: [
-                    // Same events as above
-                    { type: "textMessage", text: "Welcome to the water treatment facility!", faceHero: "operator" },
-                    { type: "textMessage", text: "I'm the operator here. Did you know that your toilet flush travels through an extensive sewer system to get here?" },
-                    { type: "textMessage", text: "The water you flush goes through multiple treatment stages before it's returned to the environment." },
-                    { type: "textMessage", text: "Welcome, brave traveler! Our first task is to cleanse this reservoir of visible impurities." },
-                    { type: "textMessage", text: "Please, collect and dispose of any floating debris or trash contaminating these waters." },
-                    { 
-                        type: "custom",
-                        action: (map) => {
-                            map.updateObjective("Surface Sweep: Remove visible debris from the reservoir");
-                        }
-                    }
-                ]
-            },
-            [utils.asGridCoords(26.5, 16)]: {
-                text: "Talk",
-                action: "startCutscene",
-                events: [
-                    // Same events as above
-                    { type: "textMessage", text: "Welcome to the water treatment facility!", faceHero: "operator" },
-                    { type: "textMessage", text: "I'm the operator here. Did you know that your toilet flush travels through an extensive sewer system to get here?" },
-                    { type: "textMessage", text: "The water you flush goes through multiple treatment stages before it's returned to the environment." },
-                    { type: "textMessage", text: "Welcome, brave traveler! Our first task is to cleanse this reservoir of visible impurities." },
-                    { type: "textMessage", text: "Please, collect and dispose of any floating debris or trash contaminating these waters." },
-                    { 
-                        type: "custom",
-                        action: (map) => {
-                            map.updateObjective("Surface Sweep: Remove visible debris from the reservoir");
-                        }
-                    }
-                ]
-            },
-            [utils.asGridCoords(28.5, 16)]: {
-                text: "Talk",
-                action: "startCutscene",
-                events: [
-                    // Same events as above
-                    { type: "textMessage", text: "Welcome to the water treatment facility!", faceHero: "operator" },
-                    { type: "textMessage", text: "I'm the operator here. Did you know that your toilet flush travels through an extensive sewer system to get here?" },
-                    { type: "textMessage", text: "The water you flush goes through multiple treatment stages before it's returned to the environment." },
-                    { type: "textMessage", text: "Welcome, brave traveler! Our first task is to cleanse this reservoir of visible impurities." },
-                    { type: "textMessage", text: "Please, collect and dispose of any floating debris or trash contaminating these waters." },
                     { 
                         type: "custom",
                         action: (map) => {

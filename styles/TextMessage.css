@@ -1,37 +1,58 @@
 .TextMessage {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 36px;
-    padding: 4px;
-    background: var(--menu-background);
-    border-top: 1px solid var(--menu-border-color);
-    color: var(--menu-font-color);
-  }
-  .TextMessage_p {
-    margin: 0;
-    font-size: 12px;
-  }
-  .TextMessage span {
-    display: inline-block;
-    margin-right: 4px;
-  }
-  .TextMessage span.releaved {
-    display: inline-block;
-    margin-right: 4px;
-  }
-  .TextMessage_button {
-    margin: 0;
-    font-size: 8px;  
-    padding:0;
-    -webkit-appearance: none;
-    background:none;
-    border:0;
-    font-family: inherit;
-    cursor: pointer;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48px; /* Increased height for better readability */
+  padding: 8px 12px;
+  background: white; /* Changed to white like the buttons */
+  border-top: 4px solid #3c3c54; /* Thicker border to match buttons */
+  color: #3c3c54; /* Changed text color to match button text */
+  font-family: 'Pixelify Sans', sans-serif; /* Match button font */
+}
+
+.TextMessage_p {
+  margin: 0;
+  font-size: 16px; /* Larger font size */
+  letter-spacing: 0.5px; /* Add letter spacing for pixel font */
+  line-height: 1.4;
+}
+
+.TextMessage span {
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.TextMessage span.releaved {
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.TextMessage_button {
+  margin: 0;
+  font-size: 12px; /* Larger button text */
+  padding: 4px 12px; /* Add padding to make button more clickable */
+  -webkit-appearance: none;
+  background: white; /* Match button style */
+  border: 2px solid #3c3c54; /* Add border to match */
+  border-radius: 0px; /* Square corners for pixel look */
+  color: #3c3c54; /* Match button text color */
+  font-family: 'Pixelify Sans', sans-serif;
+  font-weight: bold; /* Make text bold like buttons */
+  text-transform: uppercase; /* Match text style */
+  cursor: pointer;
   
-    position: absolute;
-    right: 2px;
-    bottom: 0;
-  }
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  
+  /* Add hover effects */
+  transition: all 0.2s ease;
+}
+
+/* Add hover effect for skip button */
+.TextMessage_button:hover {
+  background-color: #3c3c54;
+  color: white;
+  border-color: white;
+}
