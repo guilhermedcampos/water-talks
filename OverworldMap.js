@@ -451,10 +451,22 @@ class OverworldMap {
 
     // Add this method to check if all debris has been collected
     checkDebrisCollected() {
-        // Check if all three debris objects are gone
-        const debrisCount = Object.keys(this.gameObjects).filter(key => 
+        // Remove collect button spaces for debris that have been collected
+        if (!this.gameObjects["debris1"]) {
+            delete this.buttonSpaces[utils.asGridCoords(28.5, 17)];
+        }
+        if (!this.gameObjects["debris2"]) {
+            delete this.buttonSpaces[utils.asGridCoords(31.5, 18)];
+        }
+        if (!this.gameObjects["debris3"]) {
+            delete this.buttonSpaces[utils.asGridCoords(25.5, 19)];
+        }
+        
+        // Check remaining debris count
+        const debrisKeys = Object.keys(this.gameObjects).filter(key =>
             key.startsWith("debris")
-        ).length;
+        );
+        const debrisCount = debrisKeys.length;
         
         if (debrisCount === 0) {
             // All debris collected, update objective
@@ -479,13 +491,13 @@ class OverworldMap {
                     ]
                 };
                 
-                // Update all other operator button spaces with the same dialogue
-                this.buttonSpaces[utils.asGridCoords(27.5, 17)] = {...this.buttonSpaces[utils.asGridCoords(27.5, 15)]};
-                this.buttonSpaces[utils.asGridCoords(26.5, 16)] = {...this.buttonSpaces[utils.asGridCoords(27.5, 15)]};
-                this.buttonSpaces[utils.asGridCoords(28.5, 16)] = {...this.buttonSpaces[utils.asGridCoords(27.5, 15)]};
+                // Update other operator button spaces with the same dialogue
+                this.buttonSpaces[utils.asGridCoords(27.5, 17)] = { ...this.buttonSpaces[utils.asGridCoords(27.5, 15)] };
+                this.buttonSpaces[utils.asGridCoords(26.5, 16)] = { ...this.buttonSpaces[utils.asGridCoords(27.5, 15)] };
+                this.buttonSpaces[utils.asGridCoords(28.5, 16)] = { ...this.buttonSpaces[utils.asGridCoords(27.5, 15)] };
             }
         } else {
-            // Update how many pieces of debris are left
+            // Update objective to show how many debris are left
             this.updateObjective(`Surface Sweep: ${debrisCount} pieces of debris remaining`);
         }
     }
@@ -631,7 +643,7 @@ window.OverworldMaps = {
             debris1: new Person({
                 x: utils.withGrid(28.5),
                 y: utils.withGrid(18),
-                src: "images/characters/objects/water_debris1.png", // Create 32x32 debris image
+                src: "images/waterAssets/bottle.png", 
                 behaviorLoop: [
                     { type: "stand", direction: "down", time: 999999 }
                 ]
@@ -639,7 +651,7 @@ window.OverworldMaps = {
             debris2: new Person({
                 x: utils.withGrid(31.5),
                 y: utils.withGrid(19),
-                src: "images/characters/objects/water_debris2.png", // Create another debris image
+                src: "images/waterAssets/box.png", // Create another debris image
                 behaviorLoop: [
                     { type: "stand", direction: "down", time: 999999 }
                 ]
@@ -647,7 +659,7 @@ window.OverworldMaps = {
             debris3: new Person({
                 x: utils.withGrid(25.5),
                 y: utils.withGrid(20),
-                src: "images/characters/objects/water_debris3.png", // Create a third debris image
+                src: "images/waterAssets/wheel.png", // Create a third debris image
                 behaviorLoop: [
                     { type: "stand", direction: "down", time: 999999 }
                 ]
