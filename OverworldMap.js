@@ -518,45 +518,25 @@ class OverworldMap {
         }
     }
 
-    // Add coagulant objects at random positions within the water area
+    // Replace the random addCoagulants method with this fixed-position version
     addCoagulants(count) {
-        // Define the water area bounds (where coagulants can appear)
-        const waterArea = {
-            minX: 23.5,
-            maxX: 37.5,
-            minY: 14,
-            maxY: 21
-        };
+        // Define fixed positions for coagulants in the water
+        const coagulantPositions = [
+            { x: 32.5, y: 15 },
+            { x: 25.5, y: 20 },
+            { x: 32.5, y: 18 },
+            { x: 26.5, y: 16 },
+            { x: 30.5, y: 19 }
+        ];
         
-        // Create the specified number of coagulant objects
-        for (let i = 1; i <= count; i++) {
-            // Generate random position within water area
-            const randomX = waterArea.minX + Math.random() * (waterArea.maxX - waterArea.minX);
-            const randomY = waterArea.minY + Math.random() * (waterArea.maxY - waterArea.minY);
-            
-            // Round to nearest 0.5 to align with grid
-            const x = Math.round(randomX * 2) / 2;
-            const y = Math.round(randomY * 2) / 2;
-            
-            // Ensure we don't place objects too close to existing objects or walls
-            const isTooClose = Object.values(this.gameObjects).some(obj => {
-                const distance = Math.sqrt(
-                    Math.pow(obj.x/16 - x, 2) + 
-                    Math.pow(obj.y/16 - y, 2)
-                );
-                return distance < 2; // Keep objects at least 2 grid cells apart
-            });
-            
-            // If the position is too close to something, try again
-            if (isTooClose) {
-                i--; // Retry this iteration
-                continue;
-            }
+        // Create coagulant objects at the predefined positions
+        for (let i = 0; i < count && i < coagulantPositions.length; i++) {
+            const position = coagulantPositions[i];
             
             // Add coagulant object to gameObjects
-            this.gameObjects[`coagulant${i}`] = new Person({
-                x: utils.withGrid(x),
-                y: utils.withGrid(y),
+            this.gameObjects[`coagulant${i+1}`] = new Person({
+                x: utils.withGrid(position.x),
+                y: utils.withGrid(position.y),
                 src: "images/waterAssets/coagulant.png",
                 behaviorLoop: [
                     { type: "stand", direction: "down", time: 999999 }
@@ -564,7 +544,7 @@ class OverworldMap {
             });
             
             // Add button space for collecting the coagulant
-            this.buttonSpaces[utils.asGridCoords(x, y-0.5)] = { // Position button slightly above the object
+            this.buttonSpaces[utils.asGridCoords(position.x, position.y-0.5)] = {
                 text: "Mix",
                 action: "startCutscene",
                 events: [
@@ -572,10 +552,10 @@ class OverworldMap {
                         type: "custom",
                         action: (map) => {
                             // Remove this coagulant object
-                            delete map.gameObjects[`coagulant${i}`];
+                            delete map.gameObjects[`coagulant${i+1}`];
                             
                             // Remove this button space
-                            delete map.buttonSpaces[utils.asGridCoords(x, y-0.5)];
+                            delete map.buttonSpaces[utils.asGridCoords(position.x, position.y-0.5)];
                             
                             // Check if all coagulants have been mixed
                             map.checkCoagulantsCollected();
@@ -594,8 +574,8 @@ class OverworldMap {
         ).length;
         
         if (remainingCoagulants === 0) {
-            // All coagulants collected, update objective
-            this.updateObjective("Return to the operator for the next step");
+            // All coagulants collected, keep the objective to return to operator
+            this.updateObjective("Return to the operator to learn about sedimentation");
             
             // Update the operator's dialogue for the next phase
             if (this.gameObjects["operator"]) {
@@ -645,8 +625,8 @@ class OverworldMap {
                 this.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = {...newDialogue}; // Left
             }
         } else {
-            // Update objective with remaining count
-            this.updateObjective(`Mix coagulants: ${remainingCoagulants} remaining`);
+            // Still show "Return to operator" while mixing coagulants
+            this.updateObjective(`Return to the operator (${remainingCoagulants} coagulants left to mix)`);
         }
     }
 }
@@ -777,7 +757,7 @@ window.OverworldMaps = {
             
             // Update the operator in the Level1 map
             operator: new Person({
-                x: utils.withGrid(28.5),
+                x: utils.withGrid(27.5),
                 y: utils.withGrid(13),
                 src: "images/characters/people/operator.png",
                 // Make the operator stand still by using a simple behavior loop
@@ -994,7 +974,7 @@ window.OverworldMaps = {
                     }
                 ]
             },
-            // Add a new button space for the faucet
+            // Update the faucet button action to change the mission right away
             [utils.asGridCoords(34.5, 12)]: {
                 text: "Add Coagulants",
                 action: "startCutscene",
@@ -1003,11 +983,11 @@ window.OverworldMaps = {
                     { 
                         type: "custom",
                         action: (map) => {
-                            // Add 5 coagulant objects randomly in the water area
+                            // Add coagulant objects at fixed positions in the water
                             map.addCoagulants(5);
                             
-                            // Update objective
-                            map.updateObjective("Mix the coagulants: Find and stir all coagulants into the water");
+                            // Update objective to direct player back to operator immediately
+                            map.updateObjective("Return to the operator to discuss coagulation");
                             
                             // Disable the faucet button after use
                             delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
