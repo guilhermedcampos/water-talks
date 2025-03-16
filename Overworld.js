@@ -53,6 +53,15 @@ class Overworld {
         });
     }
 
+    bindHeroPositionPositionCheck() {
+        document.addEventListener("PersonWalkingComplete", e => {
+            if (e.detail.whoId === "ben") {
+                // Hero's position has changed, check for cutscenes
+                this.map.checkForFootstepCutscene();
+            }
+        }
+        );
+    }
 
     // Add new method that zooms the camera to a (x,y) position with optional duration (in seconds)
     zoomToPosition(x, y, duration) {
@@ -154,6 +163,7 @@ class Overworld {
         this.directionInput.init();
 
         this.bindActionInput();
+        this.bindHeroPositionPositionCheck();
 
         // Start the game loop
         this.startGameLoop();

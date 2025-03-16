@@ -86,7 +86,7 @@ class Person extends GameObject {
   
     updateSprite() {
       // If the person is moving, set the animation to walk
-      //console.log("Current position: ", this.x, this.y);
+      console.log("Current position: ", this.x, this.y);
       if (this.movingProgressRemaining > 0) {
         this.sprite.setAnimation("walk-"+this.direction);
         return;
@@ -95,5 +95,4 @@ class Person extends GameObject {
       // Otherwise, set the animation to idle
       this.sprite.setAnimation("idle-"+this.direction);
     }
-  
   }

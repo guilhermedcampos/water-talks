@@ -2,6 +2,7 @@ class OverworldMap {
     constructor(config) {
         this.gameObjects = config.gameObjects;  // Game objects
         this.walls = config.walls || {};    // Walls
+        this.cutSceneSpaces = config.cutSceneSpaces || {}; // Cutscene spaces
 
         this.lowerImage = new Image();
         this.lowerImage.src = config.lowerSrc;  // Floor, Walls, tiles, etc
@@ -71,9 +72,18 @@ class OverworldMap {
         const match = Object.values(this.gameObjects).find(object => {
             return object.x === nextCoords.x && object.y === nextCoords.y;
         });
-        console.log("Match", match);
+        console.log("Match Action", match);
         if (!this.isCutscenePlaying && match && match.talking.length) {
             this.startCutscene(match.talking[0].events);
+        }
+    }
+
+    checkForFootstepCutscene() {
+        const hero = this.gameObjects["ben"];
+        const match = this.cutSceneSpaces[`${hero.x},${hero.y}`];
+        console.log("Match Footstep", match);
+        if (!this.isCutscenePlaying && match) {
+            this.startCutscene(match[0].events);
         }
     }
 
@@ -162,6 +172,16 @@ window.OverworldMaps = {
         }, 
         walls: {
             
+        },
+        cutSceneSpaces: {
+            [utils.asGridCoords(44, 28)]: [
+                {
+                    events: [
+                        // { type: "changeMap", text: "Olá! Pronto para embarcar numa missão para proteger as águas de Portugal?" },
+  
+                    ]
+                }
+            ]
         }
     },
 }
