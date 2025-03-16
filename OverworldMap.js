@@ -124,7 +124,6 @@ class OverworldMap {
         
         // Position the button above the character
         // We need to calculate screen position based on game coordinates
-        // This assumes your game is centered in the viewport
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
         
@@ -136,27 +135,43 @@ class OverworldMap {
         button.style.bottom = `${centerY + 50}px`; // Position above character
         button.style.transform = "translateX(-50%)";
         
-        // Minimal white with black border styling
-        button.style.padding = "8px 12px";
+        // Enhanced button styling - bigger with thicker border
+        button.style.padding = "14px 24px"; // Increased padding
         button.style.backgroundColor = "white";
-        button.style.color = "black";
-        button.style.border = "2px solid black";
+        button.style.color = "#3c3c54";
+        button.style.border = "4px solid black";// Thicker border
+        button.style.borderColor = "#3c3c54";
         button.style.borderRadius = "0px"; // Square corners for pixel look
         button.style.cursor = "pointer";
         
-        // Pixelify Sans font styling
+        // Pixelify Sans font styling - bigger text
         button.style.fontFamily = "'Pixelify Sans', sans-serif";
-        button.style.fontSize = "14px";
+        button.style.fontSize = "20px"; // Bigger font
         button.style.letterSpacing = "1px";
         button.style.textTransform = "uppercase";
         button.style.fontWeight = "bold";
+        
+        // Add hover effect
+        button.style.transition = "all 0.2s ease";
+        button.addEventListener("mouseover", () => {
+            button.style.backgroundColor = "#3c3c54";
+            button.style.color = "white";
+            button.style.border = "4px solid white";
+        });
+        button.addEventListener("mouseout", () => {
+            button.style.backgroundColor = "white";
+            button.style.color = "#3c3c54";
+            button.style.border = "4px solid black";// Thicker border
+            button.style.borderColor = "#3c3c54";
+
+        });
         
         // Add click event
         button.addEventListener("click", () => {
             if (buttonConfig.action === "startCutscene" && buttonConfig.events) {
                 this.startCutscene(buttonConfig.events);
             } else if (buttonConfig.action === "custom" && typeof buttonConfig.callback === "function") {
-                buttonConfig.callback();
+                buttonConfig.callback(this); // Pass the map reference
             }
             
             // Remove button after clicking
@@ -260,7 +275,74 @@ window.OverworldMaps = {
             // }),
         }, 
         walls: {
+            // Horizontal walls (top)
+            [utils.asGridCoords(45.5, 21)]: true,
+            [utils.asGridCoords(46.5, 21)]: true,
+            [utils.asGridCoords(47.5, 21)]: true,
+            [utils.asGridCoords(48.5, 21)]: true,
+            [utils.asGridCoords(49.5, 21)]: true,
+            [utils.asGridCoords(50.5, 21)]: true,
+            [utils.asGridCoords(51.5, 21)]: true,
+            [utils.asGridCoords(52.5, 21)]: true,
+            [utils.asGridCoords(53.5, 21)]: true,
+            [utils.asGridCoords(54.5, 21)]: true,
+
             
+            // Horizontal walls (bottom)
+            [utils.asGridCoords(45.5, 33)]: true,
+            [utils.asGridCoords(46.5, 33)]: true,
+            [utils.asGridCoords(47.5, 33)]: true,
+            [utils.asGridCoords(48.5, 33)]: true,
+            [utils.asGridCoords(49.5, 33)]: true,
+            [utils.asGridCoords(50.5, 33)]: true,
+            [utils.asGridCoords(51.5, 33)]: true,
+            [utils.asGridCoords(52.5, 33)]: true,
+            [utils.asGridCoords(53.5, 33)]: true,
+            [utils.asGridCoords(54.5, 33)]: true,
+
+            // Inner Horizontal walls
+            [utils.asGridCoords(45.5, 28)]: true,
+            [utils.asGridCoords(46.5, 28)]: true,
+            [utils.asGridCoords(47.5, 28)]: true,
+            [utils.asGridCoords(48.5, 28)]: true,
+            [utils.asGridCoords(50.5, 28)]: true,
+            [utils.asGridCoords(50.5, 29)]: true,
+            [utils.asGridCoords(51.5, 28)]: true,
+            [utils.asGridCoords(51.5, 29)]: true,
+            [utils.asGridCoords(52.5, 28)]: true,
+            [utils.asGridCoords(52.5, 29)]: true,
+            [utils.asGridCoords(53.5, 28)]: true,
+            [utils.asGridCoords(53.5, 29)]: true,
+            [utils.asGridCoords(54.5, 28)]: true,
+
+            // Vertical walls (right)
+            [utils.asGridCoords(54.5, 21)]: true,
+            [utils.asGridCoords(54.5, 22)]: true,
+            [utils.asGridCoords(54.5, 23)]: true,
+            [utils.asGridCoords(54.5, 24)]: true,
+            [utils.asGridCoords(54.5, 25)]: true,
+            [utils.asGridCoords(54.5, 26)]: true,
+            [utils.asGridCoords(54.5, 27)]: true,
+            [utils.asGridCoords(54.5, 28)]: true,
+            [utils.asGridCoords(54.5, 29)]: true,
+            [utils.asGridCoords(54.5, 30)]: true,
+            [utils.asGridCoords(54.5, 31)]: true,
+            [utils.asGridCoords(54.5, 32)]: true,
+
+            // Vertical walls (left)
+            [utils.asGridCoords(44.5, 21)]: true,
+            [utils.asGridCoords(44.5, 22)]: true,
+            [utils.asGridCoords(44.5, 23)]: true,
+            [utils.asGridCoords(44.5, 24)]: true,
+            [utils.asGridCoords(44.5, 25)]: true,
+            [utils.asGridCoords(44.5, 26)]: true,
+            [utils.asGridCoords(44.5, 27)]: true,
+            [utils.asGridCoords(44.5, 28)]: true,
+            [utils.asGridCoords(44.5, 29)]: true,
+            [utils.asGridCoords(44.5, 30)]: true,
+            [utils.asGridCoords(44.5, 31)]: true,
+            [utils.asGridCoords(44.5, 32)]: true,
+
         },
         cutSceneSpaces: {
             [utils.asGridCoords(44, 28)]: [
@@ -276,8 +358,112 @@ window.OverworldMaps = {
         buttonSpaces: {
             [utils.asGridCoords(53.5, 30)]: {
                 text: "Flush",
-                action: "startCutscene",
-            
+                action: "custom",
+                callback: function(map) {
+                    // Create fade to black effect
+                    const fadeOverlay = document.createElement("div");
+                    fadeOverlay.style.position = "fixed";
+                    fadeOverlay.style.top = "0";
+                    fadeOverlay.style.left = "0";
+                    fadeOverlay.style.width = "100%";
+                    fadeOverlay.style.height = "100%";
+                    fadeOverlay.style.backgroundColor = "black";
+                    fadeOverlay.style.opacity = "0";
+                    fadeOverlay.style.transition = "opacity 1.5s ease";
+                    fadeOverlay.style.zIndex = "1000";
+                    document.body.appendChild(fadeOverlay);
+                    
+                    // Create audio element for typing sound
+                    const typingSound = new Audio("sounds/typing.mp3");
+                    typingSound.loop = true;  // Enable looping
+                    typingSound.volume = 0.5; // Set volume to 50%
+                    
+                    // Trigger fade in
+                    setTimeout(() => {
+                        fadeOverlay.style.opacity = "1";
+                        
+                        // After fade is complete, show typing text messages
+                        setTimeout(() => {
+                            // Create text container
+                            const textContainer = document.createElement("div");
+                            textContainer.style.position = "fixed";
+                            textContainer.style.top = "50%";
+                            textContainer.style.left = "50%";
+                            textContainer.style.transform = "translate(-50%, -50%)";
+                            textContainer.style.width = "80%";
+                            textContainer.style.maxWidth = "800px";
+                            textContainer.style.color = "white";
+                            textContainer.style.fontFamily = "'Pixelify Sans', sans-serif";
+                            textContainer.style.fontSize = "24px";
+                            textContainer.style.lineHeight = "1.6";
+                            textContainer.style.textAlign = "center";
+                            textContainer.style.zIndex = "1001";
+                            document.body.appendChild(textContainer);
+                            
+                            // Array of messages to type out
+                            const messages = [
+                                "Every drop counts... but where does it go?",
+                                "Every day, Lisbon treats over 550 million liters of water...",
+                                "From your home to the treatment plant, every flush tells a story...",
+                                "What you waste ... must be cleaned."
+                            ];
+                            
+                            // Function to type out text character by character
+                            const typeText = (message, index, callback) => {
+                                textContainer.innerHTML = "";
+                                let i = 0;
+                                const typingSpeed = 50; // milliseconds per character
+                                
+                                // Start playing typing sound when typing begins
+                                typingSound.currentTime = 0;
+                                typingSound.play();
+                                
+                                const typing = setInterval(() => {
+                                    if (i < message.length) {
+                                        textContainer.innerHTML += message.charAt(i);
+                                        i++;
+                                    } else {
+                                        clearInterval(typing);
+                                        
+                                        // Stop typing sound when the entire message is displayed
+                                        typingSound.pause();
+                                        typingSound.currentTime = 0;
+                                        
+                                        setTimeout(() => {
+                                            callback();
+                                        }, 2000); // Wait 2 seconds after typing completes
+                                    }
+                                }, typingSpeed);
+                            };
+                            
+                            // Function to handle each message sequentially
+                            const showMessages = (messageIndex) => {
+                                if (messageIndex < messages.length) {
+                                    typeText(messages[messageIndex], messageIndex, () => {
+                                        showMessages(messageIndex + 1);
+                                    });
+                                } else {
+                                    // All messages shown, fade out
+                                    setTimeout(() => {
+                                        textContainer.style.transition = "opacity 1.5s ease";
+                                        textContainer.style.opacity = "0";
+                                        fadeOverlay.style.opacity = "0";
+                                        
+                                        // Remove DOM elements after fade out
+                                        setTimeout(() => {
+                                            document.body.removeChild(textContainer);
+                                            document.body.removeChild(fadeOverlay);
+                                        }, 1500);
+                                    }, 1000);
+                                }
+                            };
+                            
+                            // Start showing messages
+                            showMessages(0);
+                            
+                        }, 1500); // Wait for fade in to complete
+                    }, 50);
+                }
             }
         }
     },

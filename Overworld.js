@@ -171,15 +171,6 @@ class Overworld {
         // Start the game loop
         this.startGameLoop();
         
-        // Wait for cutscene to complete before zooming
-        await this.map.startCutscene([
-            {type: "textMessage", text: "Olá! Pronto para embarcar numa missão para proteger as águas de Portugal?"},
-            { who: "ben", type: "walk", direction: "right"},
-            { who: "ben", type: "walk", direction: "right"},
-            { who: "ben", type: "walk", direction: "right"},
-            // { who: "npc1", type: "stand", direction: "left", time: 1000},
-        ]);
-        
         // Now that cutscene is done, zoom to position
         console.log("Cutscene complete, starting zoom effect");
         //this.zoomToPosition(628, 448, 5);
