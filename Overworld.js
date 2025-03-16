@@ -173,6 +173,5 @@ class Overworld {
         
         // Now that cutscene is done, zoom to position
         console.log("Cutscene complete, starting zoom effect");
-        //this.zoomToPosition(628, 448, 5);
-    }
+    }   
 }
