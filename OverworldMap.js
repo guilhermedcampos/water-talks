@@ -102,26 +102,27 @@ class OverworldMap {
         const hero = this.gameObjects["ben"];
         const buttonMatch = this.buttonSpaces[`${hero.x},${hero.y}`];
         
-        // If this is a debris collect button and operator hasn't been talked to, then do not show it:
-        if (buttonMatch && buttonMatch.text === "Collect" && !this.talkedToOperator) {
+        // If there's no button match or we already have an active button
+        if (!buttonMatch || this.activeButton) {
+            if (!buttonMatch && this.activeButton) {
+                this.removeButton();
+            }
             return;
         }
         
-        // If this is the "Add Coagulants" button and the coagulants stage isn't started, do not show it:
-        if (buttonMatch && buttonMatch.text === "Add Coagulants" && !this.coagulantsStageStarted) {
+        // Check if this is a debris collection button and if the player hasn't talked to the operator yet
+        if (buttonMatch.text === "Collect" && !this.talkedToOperator) {
+            // Don't show collection buttons until player has talked to operator
             return;
         }
-                
-        // Remove any existing button if we moved away
-        if (!buttonMatch && this.activeButton) {
-            this.removeButton();
+        
+        // If this is the "Add Coagulants" button and the coagulants stage isn't started, do not show it
+        if (buttonMatch.text === "Add Coagulants" && !this.coagulantsStageStarted) {
             return;
         }
-                
-        // Show the button if we're at a trigger space and no button is active
-        if (buttonMatch && !this.activeButton) {
-            this.showButton(buttonMatch);
-        }
+        
+        // For all other buttons, show them
+        this.showButton(buttonMatch);
     }
     
     // Add a method to show the button
@@ -895,6 +896,9 @@ class OverworldMap {
             }
         } else if (buttonMatch.text === "Add Coagulants" && !this.coagulantsStageStarted) {
             // Don't show coagulant button until stage is started
+            return;
+        } else if (buttonMatch.text === "Collect" && !this.talkedToOperator) {
+            // Don't show collect button until operator is talked to
             return;
         } else {
             // For all other buttons (Collect, Mix, Observe), show them if conditions are met
