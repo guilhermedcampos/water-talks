@@ -21,6 +21,9 @@ class OverworldMap {
         // Create objective UI panel
         this.createObjectivePanel();
         this.talkedToOperator = false; // Add flag here
+
+        // Initialize keyboard support for buttons
+        this.initKeyboardButtonSupport();
     }
 
     // Draw the lower layer
@@ -861,6 +864,22 @@ class OverworldMap {
             (x === operatorX && y === operatorY + 16) || // below
             (x === operatorX - 16 && y === operatorY)    // left
         );
+    }
+
+    // Add this method to the OverworldMap class
+    initKeyboardButtonSupport() {
+        document.addEventListener('keydown', (e) => {
+            // Check if space key was pressed and there's an active button
+            if (e.code === 'Space' && this.activeButton) {
+                console.log("Space key pressed - activating button");
+                
+                // Simulate a click on the active button
+                this.activeButton.click();
+                
+                // Prevent default space behavior (like page scrolling)
+                e.preventDefault();
+            }
+        });
     }
 }
 
