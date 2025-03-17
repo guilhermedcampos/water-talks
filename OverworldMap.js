@@ -729,7 +729,7 @@ class OverworldMap {
         // Mark this floc as observed
         this.observedFlocs[flocId] = true;
         
-        // Remove the observe button
+        // Remove the observe button at this position
         delete this.buttonSpaces[utils.asGridCoords(x, y)];
         
         // Count observed flocs
@@ -737,114 +737,50 @@ class OverworldMap {
         const totalFlocs = Object.keys(this.gameObjects).filter(key => key.startsWith("floc")).length;
         
         if (observedCount === totalFlocs) {
-            // All flocs observed, update objective
+            // All flocs observed, instruct the player to report to the operator
             this.updateObjective("Report your observations to the operator");
-            
-            // Update operator dialogue for the sedimentation phase
+
+            // Define the final dialogue with a button that, when pressed,
+            // will trigger the final cutscene.
             if (this.gameObjects["operator"]) {
                 const newDialogue = {
                     text: "Talk",
                     action: "startCutscene",
                     events: [
-                        { type: "textMessage", text: "What do you observe about the flocs?", faceHero: "operator" },
-                        { type: "textMessage", text: "Yes, excellent! The particles have clumped together into visible flocs." },
-                        { type: "textMessage", text: "Great! Your work is complete for this stage of water treatment." },
-                        { type: "textMessage", text: "Now, follow me to the sedimentation area where we'll observe how these flocs settle." },
+                        { type: "textMessage", text: "Great! Follow me now!", faceHero: "operator" },
+                        
                         { 
                             type: "custom",
                             action: (map) => {
-                                map.updateObjective("Follow the operator to the sedimentation area");
-                                
-                                // Get the operator object
-                                const operator = map.gameObjects["operator"];
-                                
-                                console.log("Starting operator movement");
-                                
-                                // Stop any existing behavior
-                                if (operator.behaviorLoopTimeout) {
-                                    clearTimeout(operator.behaviorLoopTimeout);
-                                    operator.behaviorLoopTimeout = null;
-                                }
-                                
-                                // Set walking animation directly
-                                operator.startBehavior({
-                                    map: map,
-                                    behavior: {
-                                        type: "walk",
-                                        direction: "down"
-                                    }
-                                });
-                                
-                                // Use a series of delayed movements to ensure the operator walks correctly
-                                let stepsTaken = 0;
-                                const maxSteps = 8;
-                                const walkInterval = setInterval(() => {
-                                    if (stepsTaken < maxSteps) {
-                                        // Move the operator down one step
-                                        const oldY = operator.y;
-                                        operator.y = oldY + 16; // Move down one grid space
-                                        stepsTaken++;
-                                        console.log(`Operator moved: steps=${stepsTaken}, position=${operator.x/16},${operator.y/16}`);
-                                    } else {
-                                        // Stop walking and face up
-                                        clearInterval(walkInterval);
-                                        operator.direction = "up";
-                                        
-                                        // Add button at the final position
-                                        console.log("Adding continue button at destination");
-                                        map.buttonSpaces[utils.asGridCoords(27.5, 20)] = {
-                                            text: "Continue",
-                                            action: "startCutscene",
-                                            events: [
-                                                { type: "textMessage", text: "Now we'll observe sedimentation, where the flocs settle to the bottom." },
-                                                { type: "textMessage", text: "This is how we remove most of the impurities from our water." },
-                                                { 
-                                                    type: "custom",
-                                                    action: (map) => {
-                                                        map.updateObjective("Sedimentation: Watch as particles settle");
-                                                    }
-                                                }
-                                            ]
-                                        };
-                                        
-                                        // Update objective
-                                        map.updateObjective("Speak with the operator about sedimentation");
-                                    }
-                                }, 1000); // Move every second for smoother walking
+
+                                this.updateObjective("Follow the operator to the next stage");
+                                // Instead of starting a new cutscene (which resets behaviors),
+                                // directly set the behavior loops to make both operator and ben walk down.
+                                map.gameObjects["operator"].behaviorLoop = [
+                                    { type: "walk", direction: "down", time: 3 }
+                                ];
+                                map.gameObjects["ben"].behaviorLoop = [
+                                    { type: "walk", direction: "down", time: 3 }
+                                ];
+                                // Start their behavior events directly.
+                                map.gameObjects["operator"].doBehaviorEvent(map);
+                                map.gameObjects["ben"].doBehaviorEvent(map);
                             }
                         }
                     ]
                 };
-                
-                // Update operator button spaces
+
+                // Add the dialogue button around the operator
                 const operatorX = this.gameObjects["operator"].x / 16;
                 const operatorY = this.gameObjects["operator"].y / 16;
-                
-                // Clear existing operator button spaces
-                Object.keys(this.buttonSpaces).forEach(key => {
-                    const coords = key.split(",");
-                    const x = parseFloat(coords[0]);
-                    const y = parseFloat(coords[1]);
-                    
-                    // If this button space is near the operator, remove it
-                    const distance = Math.sqrt(
-                        Math.pow(x - operatorX, 2) + 
-                        Math.pow(y - operatorY, 2)
-                    );
-                    
-                    if (distance < 2) {
-                        delete this.buttonSpaces[key];
-                    }
-                });
-                
-                // Add new dialogue button spaces
-                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY - 1)] = {...newDialogue};
-                this.buttonSpaces[utils.asGridCoords(operatorX + 1, operatorY)] = {...newDialogue};
-                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY + 1)] = {...newDialogue};
-                this.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = {...newDialogue};
+                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY - 1)] = { ...newDialogue };
+                this.buttonSpaces[utils.asGridCoords(operatorX + 1, operatorY)] = { ...newDialogue };
+                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY + 1)] = { ...newDialogue };
+                this.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = { ...newDialogue };
             }
+
+            // (Remove or comment out the following line)
         } else {
-            // Update objective with progress
             this.updateObjective(`Observe flocs: ${totalFlocs - observedCount} remaining`);
         }
     }
