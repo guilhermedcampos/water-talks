@@ -505,6 +505,17 @@ class OverworldMap {
                       // Update objective to direct player back to operator.
                       map.updateObjective("Mix coagulants: Check the dispenser for remaining coagulants");
 
+                      // Create and add an arrow indicator at grid position (34.5, 12).
+                      map.gameObjects["arrowIndicator"] = new AnimatedGifSprite({
+                        x: utils.withGrid(34.7),
+                        y: utils.withGrid(11.5),
+                        src: "images/waterAssets/arrowDown.gif",  // Base name still used
+                        frameCount: 6,  // Number of frames in your animation
+                        animationSpeed: 130,  // Milliseconds between frame changes
+                        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                        collides: false,
+                    });
+
                       // Dynamically add the faucet/dispenser button so the player can activate it.
                       map.buttonSpaces[utils.asGridCoords(34.5, 12)] = {
                         text: "Add Coagulants",
@@ -520,6 +531,15 @@ class OverworldMap {
                               // Update the objective 
                               map.updateObjective("Mix coagulants");
           
+                              // Remove the arrow indicator
+                              if (map.gameObjects["arrowIndicator"]) {
+                                // Call destroy method to clear any animation intervals
+                                if (map.gameObjects["arrowIndicator"].destroy) {
+                                    map.gameObjects["arrowIndicator"].destroy();
+                                }
+                                delete map.gameObjects["arrowIndicator"];
+                            }
+                              
                               // Remove the faucet button so it never shows again.
                               delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
                             }
@@ -1069,7 +1089,16 @@ window.OverworldMaps = {
                             map.addCoagulants(5);
                             
                             // Update objective to direct player back to operator immediately
-                            map.updateObjective("Mix coagulants: ${remainingCoagulants} remaining");
+                            map.updateObjective("Mix coagulants");
+                            
+                            // Remove the arrow indicator
+                            if (map.gameObjects["arrowIndicator"]) {
+                                // Call destroy method to clear any animation intervals
+                                if (map.gameObjects["arrowIndicator"].destroy) {
+                                    map.gameObjects["arrowIndicator"].destroy();
+                                }
+                                delete map.gameObjects["arrowIndicator"];
+                            }
                             
                             // Disable the faucet button after use
                             delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
