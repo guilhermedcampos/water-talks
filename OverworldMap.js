@@ -479,7 +479,6 @@ class OverworldMap {
         );
         const debrisCount = debrisKeys.length;
         
-        // Inside checkDebrisCollected, after debris collection is complete:
         if (debrisCount === 0) {
             // All debris collected, update objective
             this.updateObjective("Return to the operator");
@@ -754,57 +753,59 @@ class OverworldMap {
                                 // Get the operator object
                                 const operator = map.gameObjects["operator"];
                                 
-                                // Ensure any ongoing behavior is stopped
-                                operator.behaviorLoop = [];
+                                console.log("Starting operator movement");
                                 
-                                // Define the walking path to coordinates (27.5, 21)
-                                operator.behaviorLoop = [
-                                    { type: "walk", direction: "down", time: 1200 },
-                                    { type: "walk", direction: "down", time: 1200 },
-                                    { type: "walk", direction: "down", time: 1200 },
-                                    { type: "walk", direction: "down", time: 1200 },
-                                    { type: "walk", direction: "down", time: 1200 },
-                                    { type: "walk", direction: "down", time: 1200 },
-                                    { type: "walk", direction: "down", time: 1200 },
-                                    { type: "walk", direction: "down", time: 1200 },
-                                    // Stop at destination
-                                    { type: "stand", direction: "up", time: 999999 }
-                                ];
-                                
-                                console.log("Setting operator behavior loop:", operator.behaviorLoop);
-                                
-                                // Make sure any existing behavior is canceled
+                                // Stop any existing behavior
                                 if (operator.behaviorLoopTimeout) {
                                     clearTimeout(operator.behaviorLoopTimeout);
                                     operator.behaviorLoopTimeout = null;
                                 }
                                 
-                                // Force operator to start behavior immediately
-                                operator.doBehaviorEvent(map);
+                                // Set walking animation directly
+                                operator.startBehavior({
+                                    map: map,
+                                    behavior: {
+                                        type: "walk",
+                                        direction: "down"
+                                    }
+                                });
                                 
-                                // Add a button at the destination that appears after the operator arrives
-                                setTimeout(() => {
-                                    console.log("Adding Continue button at destination");
-                                    
-                                    // Add new button at the destination
-                                    map.buttonSpaces[utils.asGridCoords(27.5, 20)] = {
-                                        text: "Continue",
-                                        action: "startCutscene",
-                                        events: [
-                                            { type: "textMessage", text: "Now we'll observe sedimentation, where the flocs settle to the bottom." },
-                                            { type: "textMessage", text: "This is how we remove most of the impurities from our water." },
-                                            { 
-                                                type: "custom",
-                                                action: (map) => {
-                                                    map.updateObjective("Sedimentation: Watch as particles settle");
+                                // Use a series of delayed movements to ensure the operator walks correctly
+                                let stepsTaken = 0;
+                                const maxSteps = 8;
+                                const walkInterval = setInterval(() => {
+                                    if (stepsTaken < maxSteps) {
+                                        // Move the operator down one step
+                                        const oldY = operator.y;
+                                        operator.y = oldY + 16; // Move down one grid space
+                                        stepsTaken++;
+                                        console.log(`Operator moved: steps=${stepsTaken}, position=${operator.x/16},${operator.y/16}`);
+                                    } else {
+                                        // Stop walking and face up
+                                        clearInterval(walkInterval);
+                                        operator.direction = "up";
+                                        
+                                        // Add button at the final position
+                                        console.log("Adding continue button at destination");
+                                        map.buttonSpaces[utils.asGridCoords(27.5, 20)] = {
+                                            text: "Continue",
+                                            action: "startCutscene",
+                                            events: [
+                                                { type: "textMessage", text: "Now we'll observe sedimentation, where the flocs settle to the bottom." },
+                                                { type: "textMessage", text: "This is how we remove most of the impurities from our water." },
+                                                { 
+                                                    type: "custom",
+                                                    action: (map) => {
+                                                        map.updateObjective("Sedimentation: Watch as particles settle");
+                                                    }
                                                 }
-                                            }
-                                        ]
-                                    };
-                                    
-                                    // Update objective text to indicate the player can interact with the operator
-                                    map.updateObjective("Speak with the operator about sedimentation");
-                                }, 9000); // Approximate time for operator to reach destination (~1200ms * 7 steps)
+                                            ]
+                                        };
+                                        
+                                        // Update objective
+                                        map.updateObjective("Speak with the operator about sedimentation");
+                                    }
+                                }, 1000); // Move every second for smoother walking
                             }
                         }
                     ]
@@ -816,7 +817,17 @@ class OverworldMap {
                 
                 // Clear existing operator button spaces
                 Object.keys(this.buttonSpaces).forEach(key => {
-                    if (key.includes(operatorX) || key.includes(operatorY)) {
+                    const coords = key.split(",");
+                    const x = parseFloat(coords[0]);
+                    const y = parseFloat(coords[1]);
+                    
+                    // If this button space is near the operator, remove it
+                    const distance = Math.sqrt(
+                        Math.pow(x - operatorX, 2) + 
+                        Math.pow(y - operatorY, 2)
+                    );
+                    
+                    if (distance < 2) {
                         delete this.buttonSpaces[key];
                     }
                 });
@@ -831,6 +842,80 @@ class OverworldMap {
             // Update objective with progress
             this.updateObjective(`Observe flocs: ${observedCount}/${totalFlocs} observed`);
         }
+    }
+
+    // Update the checkForButtonTrigger method to properly control when operator dialogue is available
+    checkForButtonTrigger() {
+        const hero = this.gameObjects["ben"];
+        const buttonMatch = this.buttonSpaces[`${hero.x},${hero.y}`];
+        
+        // If there's no button match or we already have an active button
+        if (!buttonMatch || this.activeButton) {
+            if (!buttonMatch && this.activeButton) {
+                this.removeButton();
+            }
+            return;
+        }
+        
+        // Control access to operator dialogue based on game state
+        if (buttonMatch.text === "Talk" && this.isOperatorPosition(hero.x, hero.y)) {
+            // Check if all debris are collected
+            const debrisCount = Object.keys(this.gameObjects).filter(key => key.startsWith("debris")).length;
+            
+            // Check if all coagulants are mixed
+            const coagulantCount = Object.keys(this.gameObjects).filter(key => key.startsWith("coagulant")).length;
+            
+            // Check if all flocs are observed
+            const observedFlocs = this.observedFlocs ? Object.keys(this.observedFlocs).length : 0;
+            const totalFlocs = Object.keys(this.gameObjects).filter(key => key.startsWith("floc")).length;
+            const allFlocsObserved = observedFlocs === totalFlocs && totalFlocs > 0;
+            
+            // Different stages of the game
+            if (debrisCount > 0 && !this.talkedToOperator) {
+                // Initial stage: Allow first conversation with operator
+                this.showButton(buttonMatch);
+            } else if (debrisCount > 0 && this.talkedToOperator) {
+                // Still need to collect debris - don't allow talking to operator again
+                return;
+            } else if (debrisCount === 0 && !this.coagulantsStageStarted) {
+                // Debris collected but coagulant stage not started - allow talking
+                this.showButton(buttonMatch);
+            } else if (coagulantCount > 0) {
+                // Still need to mix coagulants - don't allow talking to operator
+                return;
+            } else if (coagulantCount === 0 && totalFlocs === 0) {
+                // All coagulants mixed but flocs not added - allow talking
+                this.showButton(buttonMatch);
+            } else if (!allFlocsObserved) {
+                // Still need to observe flocs - don't allow talking to operator
+                return;
+            } else {
+                // All tasks completed - allow talking to operator
+                this.showButton(buttonMatch);
+            }
+        } else if (buttonMatch.text === "Add Coagulants" && !this.coagulantsStageStarted) {
+            // Don't show coagulant button until stage is started
+            return;
+        } else {
+            // For all other buttons (Collect, Mix, Observe), show them if conditions are met
+            this.showButton(buttonMatch);
+        }
+    }
+
+    // Helper method to check if position is near operator
+    isOperatorPosition(x, y) {
+        if (!this.gameObjects["operator"]) return false;
+        
+        const operatorX = this.gameObjects["operator"].x;
+        const operatorY = this.gameObjects["operator"].y;
+        
+        // Check if position is adjacent to operator (in all 4 directions)
+        return (
+            (x === operatorX && y === operatorY - 16) || // above
+            (x === operatorX + 16 && y === operatorY) || // right
+            (x === operatorX && y === operatorY + 16) || // below
+            (x === operatorX - 16 && y === operatorY)    // left
+        );
     }
 }
 
