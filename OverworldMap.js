@@ -497,6 +497,10 @@ class OverworldMap {
                     action: (map) => {
                       // Set a flag indicating that the coagulants stage has started.
                       map.coagulantsStageStarted = true;
+
+                      // Update objective to direct player back to operator.
+                      map.updateObjective("Mix coagulants: Check the dispenser for remaining coagulants");
+
                       // Dynamically add the faucet/dispenser button so the player can activate it.
                       map.buttonSpaces[utils.asGridCoords(34.5, 12)] = {
                         text: "Add Coagulants",
@@ -508,9 +512,9 @@ class OverworldMap {
                             action: (map) => {
                               // Add coagulant objects at fixed positions in the water.
                               map.addCoagulants(5);
-          
-                              // Update objective to direct player back to operator.
-                              map.updateObjective("Mix coagulants: Check the dispenser for remaining coagulants");
+
+                              // Update the objective 
+                              map.updateObjective("Mix coagulants");
           
                               // Remove the faucet button so it never shows again.
                               delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
