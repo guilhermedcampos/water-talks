@@ -916,14 +916,14 @@ window.OverworldMaps = {
                 isPlayerControlled: true,
                 x: utils.withGrid(5),
                 y: utils.withGrid(5), 
-                src: "images/characters/people/mainCharacter.png"
+                src: "images/characters/people/mainUnderwater.png"
             }),
             
             // Update the operator in the Level1 map
             operator: new Person({
                 x: utils.withGrid(27.5),
                 y: utils.withGrid(13),
-                src: "images/characters/people/operator.png",
+                src: "images/characters/people/operatorUnderwater.png",
                 // Make the operator stand still by using a simple behavior loop
                 // with only one standing direction for a very long time
                 behaviorLoop: [
