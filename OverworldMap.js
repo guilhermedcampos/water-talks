@@ -17,6 +17,9 @@ class OverworldMap {
         
         // Store spawnpoint coordinates if provided
         this.spawnpoint = config.spawnpoint || null;
+
+        // Store if flush cutscene has started
+        this.flushCutsceneStarted = false;
         
         // Create objective UI panel
         this.createObjectivePanel();
@@ -134,6 +137,9 @@ class OverworldMap {
         const button = document.createElement("button");
         button.innerText = buttonConfig.text || "Interact";
         button.classList.add("game-button");
+        
+        // Add data attribute to identify button type
+        button.dataset.buttonType = buttonConfig.text;
         
         // Get the hero for positioning
         const hero = this.gameObjects["ben"];
@@ -373,6 +379,11 @@ class OverworldMap {
     
     // Public callback method for the "Flush" button.
     flushButtonCallbackHandler(messages) {
+        if (this.flushCutsceneStarted) {
+            return;
+        } else {
+            this.flushCutsceneStarted = true;
+        }
         // Start showing the flush messages immediately
         this.showFlushMessages(messages);
 
@@ -891,6 +902,11 @@ class OverworldMap {
         document.addEventListener('keydown', (e) => {
             // Check if space key was pressed and there's an active button
             if (e.code === 'Space' && this.activeButton) {
+                // Don't activate "Talk" buttons with space key
+                if (this.activeButton.dataset.buttonType === "Talk") {
+                    return;
+                }
+                
                 console.log("Space key pressed - activating button");
                 
                 // Simulate a click on the active button
