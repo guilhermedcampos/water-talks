@@ -106,6 +106,11 @@ class OverworldMap {
         if (buttonMatch && buttonMatch.text === "Collect" && !this.talkedToOperator) {
             return;
         }
+        
+        // If this is the "Add Coagulants" button and the coagulants stage isn't started, do not show it:
+        if (buttonMatch && buttonMatch.text === "Add Coagulants" && !this.coagulantsStageStarted) {
+            return;
+        }
                 
         // Remove any existing button if we moved away
         if (!buttonMatch && this.activeButton) {
@@ -474,54 +479,62 @@ class OverworldMap {
         );
         const debrisCount = debrisKeys.length;
         
+        // Inside checkDebrisCollected, after debris collection is complete:
         if (debrisCount === 0) {
             // All debris collected, update objective
             this.updateObjective("Return to the operator");
-            
-            // Update the operator's dialogue to acknowledge completion
+          
+            // Update the operator's dialogue to acknowledge completion and instruct the next stage
             if (this.gameObjects["operator"]) {
-                // Define the new dialogue for the operator
-                const newDialogue = {
-                    text: "Talk",
-                    action: "startCutscene",
-                    events: [
-                        { type: "textMessage", text: "Excellent work! You've cleaned up all the visible debris.", faceHero: "operator" },
-                        { type: "textMessage", text: "With the surface cleared, we must now address the finer particles suspended within." },
-                        { type: "textMessage", text: "Introduce coagulants into the water; they will neutralize the charges of these particles, causing them to clump together into larger aggregates known as flocs." },
-                        { 
+              const newDialogue = {
+                text: "Talk",
+                action: "startCutscene",
+                events: [
+                  { type: "textMessage", text: "Excellent work! You've cleaned up all the visible debris.", faceHero: "operator" },
+                  { type: "textMessage", text: "Now, I want you to add the coagulants into the water. Activate the dispenser over there.", faceHero: "operator" },
+                  { 
+                    type: "custom",
+                    action: (map) => {
+                      // Set a flag indicating that the coagulants stage has started.
+                      map.coagulantsStageStarted = true;
+                      // Dynamically add the faucet/dispenser button so the player can activate it.
+                      map.buttonSpaces[utils.asGridCoords(34.5, 12)] = {
+                        text: "Add Coagulants",
+                        action: "startCutscene",
+                        events: [
+                          { type: "textMessage", text: "You've activated the coagulant dispenser!" },
+                          { 
                             type: "custom",
                             action: (map) => {
-                                map.updateObjective("Coagulation Initiation: Add coagulants to the water to begin the flocculation process.");
+                              // Add coagulant objects at fixed positions in the water.
+                              map.addCoagulants(5);
+          
+                              // Update objective to direct player back to operator.
+                              map.updateObjective("Mix coagulants: Check the dispenser for remaining coagulants");
+          
+                              // Remove the faucet button so it never shows again.
+                              delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
                             }
-                        }
-                    ]
-                };
-                
-                // Clear any existing button spaces around the operator
-                delete this.buttonSpaces[utils.asGridCoords(27.5, 12)];
-                delete this.buttonSpaces[utils.asGridCoords(28.5, 13)];
-                delete this.buttonSpaces[utils.asGridCoords(27.5, 14)];
-                delete this.buttonSpaces[utils.asGridCoords(26.5, 13)];
-                
-                // Add new dialogue button spaces around the operator
-                // Use the operator's current position to determine where to place the buttons
-                const operatorX = this.gameObjects["operator"].x / 16; // Convert from pixels to grid
-                const operatorY = this.gameObjects["operator"].y / 16;
-                
-                console.log("Updating operator dialogue at position:", operatorX, operatorY);
-                
-                // Add talk buttons in all four directions around the operator
-                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY - 1)] = {...newDialogue}; // Above
-                this.buttonSpaces[utils.asGridCoords(operatorX + 1, operatorY)] = {...newDialogue}; // Right
-                this.buttonSpaces[utils.asGridCoords(operatorX, operatorY + 1)] = {...newDialogue}; // Below
-                this.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = {...newDialogue}; // Left
-                
-                console.log("Updated button spaces:", this.buttonSpaces);
+                          }
+                        ]
+                      };
+                    }
+                  }
+                ]
+              };
+          
+              // Clear left-over operator button spaces if needed and add new ones around operator.
+              const operatorX = this.gameObjects["operator"].x / 16;
+              const operatorY = this.gameObjects["operator"].y / 16;
+              this.buttonSpaces[utils.asGridCoords(operatorX, operatorY - 1)] = { ...newDialogue };
+              this.buttonSpaces[utils.asGridCoords(operatorX + 1, operatorY)] = { ...newDialogue };
+              this.buttonSpaces[utils.asGridCoords(operatorX, operatorY + 1)] = { ...newDialogue };
+              this.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = { ...newDialogue };
             }
-        } else {
-            // Update objective to show how many debris are left
+          } else {
+            // Update objective to show how many debris are left.
             this.updateObjective(`Surface Sweep: ${debrisCount} pieces of debris remaining`);
-        }
+          }
     }
 
     // Replace the random addCoagulants method with this fixed-position version
