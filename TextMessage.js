@@ -21,15 +21,33 @@ class TextMessage {
       this.done();
     });
 
-    this.actionListener = new KeyPressListener("Space", () => {
+    // Add space key listener with event prevention
+    this.actionListener = new KeyPressListener("Space", (event) => {
+      // Stop event from propagating to other listeners
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      
       this.actionListener.unbind();
       this.done();
+    });
+    
+    // Also prevent clicks from propagating through the text message container
+    this.element.addEventListener("click", (event) => {
+      event.stopPropagation();
     });
   }
 
   done() {
     this.element.remove();
     this.onComplete();
+    
+    // Delay enabling other space listeners to prevent accidental triggers
+    setTimeout(() => {
+      // Optional: Notify that text message is completely gone
+      document.dispatchEvent(new CustomEvent("textMessageClosed"));
+    }, 50);
   }
 
   init(container) {
