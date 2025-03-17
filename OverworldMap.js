@@ -392,7 +392,7 @@ class OverworldMap {
             setTimeout(() => {
                 // The map reference has changed, so we need to access it through overworld
                 if (this.overworld && this.overworld.map) {
-                    this.overworld.map.updateObjective("Talk to the Water Treatment Operator");
+                    this.overworld.map.updateObjective("Talk to water treatment operator");
                 }
             }, 1000); // Give time for map to load
         }, messagesTime);
@@ -841,7 +841,7 @@ class OverworldMap {
             }
         } else {
             // Update objective with progress
-            this.updateObjective(`Observe flocs: ${observedCount}/${totalFlocs} observed`);
+            this.updateObjective(`Observe flocs: ${totalFlocs - observedCount} remaining`);
         }
     }
 
