@@ -116,18 +116,23 @@ class OverworldMap {
             return;
         }
         
-        // Check if this is a debris collection button and if the player hasn't talked to the operator yet
-        if (buttonMatch.text === "Collect" && !this.talkedToOperator) {
-            // Don't show collection buttons until player has talked to operator
-            return;
+        // Check if we're in Level1 map
+        if (this.overworld && this.overworld.map === this) {
+            const mapKey = Object.keys(window.OverworldMaps).find(key => 
+                window.OverworldMaps[key] === this
+            );
+            
+            // Use level-specific logic if available
+            if (mapKey === "Level1" && Level1.checkForButtonTriggerLevel1) {
+                const shouldShowButton = Level1.checkForButtonTriggerLevel1(this, hero, buttonMatch);
+                if (shouldShowButton) {
+                    this.showButton(buttonMatch);
+                }
+                return;
+            }
         }
-        
-        // If this is the "Add Coagulants" button and the coagulants stage isn't started, do not show it
-        if (buttonMatch.text === "Add Coagulants" && !this.coagulantsStageStarted) {
-            return;
-        }
-        
-        // For all other buttons, show them
+
+        // Default behavior for other levels/maps
         this.showButton(buttonMatch);
     }
     
@@ -813,7 +818,7 @@ class OverworldMap {
         }
         
         // Control access to operator dialogue based on game state
-        if (buttonMatch.text === "Talk" && this.isOperatorPosition(hero.x, hero.y)) {
+        if (buttonMatch.text === "Talk" && Level1.isOperatorPosition(this,hero.x, hero.y)) {
             // Check if all debris are collected
             const debrisCount = Object.keys(this.gameObjects).filter(key => key.startsWith("debris")).length;
             
@@ -860,21 +865,7 @@ class OverworldMap {
         }
     }
 
-    // Helper method to check if position is near operator
-    isOperatorPosition(x, y) {
-        if (!this.gameObjects["operator"]) return false;
-        
-        const operatorX = this.gameObjects["operator"].x;
-        const operatorY = this.gameObjects["operator"].y;
-        
-        // Check if position is adjacent to operator (in all 4 directions)
-        return (
-            (x === operatorX && y === operatorY - 16) || // above
-            (x === operatorX + 16 && y === operatorY) || // right
-            (x === operatorX && y === operatorY + 16) || // below
-            (x === operatorX - 16 && y === operatorY)    // left
-        );
-    }
+
 
     // Add this method to the OverworldMap class
     initKeyboardButtonSupport() {
