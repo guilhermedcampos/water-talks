@@ -1,4 +1,108 @@
 class Level1 {
+
+    // Helper: Types out a message character by character.
+    static typeText(message, textContainer, typingSound, typingSpeed, callback) {
+        textContainer.innerHTML = "";
+        let i = 0;
+        // Start the typing sound immediately
+        typingSound.currentTime = 0;
+        typingSound.play();
+        
+        const typing = setInterval(() => {
+            if (i < message.length) {
+                textContainer.innerHTML += message.charAt(i);
+                i++;
+            } else {
+                clearInterval(typing);
+                // Stop typing sound when done
+                typingSound.pause();
+                typingSound.currentTime = 0;
+                setTimeout(() => {
+                    callback();
+                }, 2000); // Wait 2 seconds after message is complete
+            }
+        }, typingSpeed);
+    }
+
+    static showFlushMessages(map, messages) {
+        // Use provided messages, or fallback to a default if not set
+        messages = messages || [
+            "Every drop counts... but where does it go?",
+            "Every day, Lisbon treats over 550 million liters of water...",
+            "From your home to the treatment plant, every flush tells a story...",
+            "What you waste ... must be cleaned."
+        ];
+        
+        // Create fade overlay element
+        const fadeOverlay = document.createElement("div");
+        fadeOverlay.style.position = "fixed";
+        fadeOverlay.style.top = "0";
+        fadeOverlay.style.left = "0";
+        fadeOverlay.style.width = "100%";
+        fadeOverlay.style.height = "100%";
+        fadeOverlay.style.backgroundColor = "black";
+        fadeOverlay.style.opacity = "0";
+        fadeOverlay.style.transition = "opacity 1.5s ease";
+        fadeOverlay.style.zIndex = "1000";
+        document.body.appendChild(fadeOverlay);
+        
+        // Create the typing sound element
+        const typingSound = new Audio("sounds/typing.mp3");
+        typingSound.loop = true;
+        typingSound.volume = 0.5;
+        
+        // Trigger fade in
+        setTimeout(() => {
+            fadeOverlay.style.opacity = "1";
+            
+            // After fade is complete, show text messages
+            setTimeout(() => {
+                // Create text container element
+                const textContainer = document.createElement("div");
+                textContainer.style.position = "fixed";
+                textContainer.style.top = "50%";
+                textContainer.style.left = "50%";
+                textContainer.style.transform = "translate(-50%, -50%)";
+                textContainer.style.width = "80%";
+                textContainer.style.maxWidth = "800px";
+                textContainer.style.color = "white";
+                textContainer.style.fontFamily = "'Pixelify Sans', sans-serif";
+                textContainer.style.fontSize = "24px";
+                textContainer.style.lineHeight = "1.6";
+                textContainer.style.textAlign = "center";
+                textContainer.style.zIndex = "1001";
+                document.body.appendChild(textContainer);
+                
+                const typingSpeed = 50;
+                // Recursive function to display messages in sequence
+                const showMessages = (index) => {
+                    if (index < messages.length) {
+                        this.typeText(messages[index], textContainer, typingSound, typingSpeed, () => {
+                            showMessages(index + 1);
+                        });
+                    } else {
+                        // All messages are shown – fade out text and overlay
+                        setTimeout(() => {
+                            textContainer.style.transition = "opacity 1.5s ease";
+                            textContainer.style.opacity = "0";
+                            fadeOverlay.style.opacity = "0";
+                            
+                            // Remove elements after fade out
+                            setTimeout(() => {
+                                document.body.removeChild(textContainer);
+                                document.body.removeChild(fadeOverlay);
+                            }, 1500);
+                        }, 1000);
+                    }
+                };
+                
+                // Start showing messages
+                showMessages(0);
+                
+            }, 1500); // Wait 1.5 seconds for fade in to complete
+        }, 50); // Initial slight delay
+
+    }
     
     // Static helper methods
     static isOperatorPosition(map, x, y) {
