@@ -172,6 +172,15 @@ class Level1 {
 
     // Method to handle observing flocs
     static transformCoagulantsToFlocs(map) {
+        // Use the same positions where coagulants were
+        const flocPositions = [
+            { x: 35.5, y: 22 },
+            { x: 39.5, y: 19 },
+            { x: 37.5, y: 24 },
+            { x: 42.5, y: 21 },
+            { x: 36.5, y: 20 }
+        ];
+        
         // Create floc objects at these positions
         for (let i = 0; i < flocPositions.length; i++) {
             const position = flocPositions[i];
@@ -187,6 +196,9 @@ class Level1 {
                 ]
             });
             
+            // Add wall at floc position to prevent walking over it
+            map.walls[`${utils.withGrid(position.x)},${utils.withGrid(position.y)}`] = true;
+            
             // Create a closure for observe handler
             const createObserveHandler = (id, pos) => {
                 return (map) => {
@@ -200,13 +212,6 @@ class Level1 {
                             { 
                                 type: "custom", 
                                 action: () => {
-                                    // Remove all button spaces around this floc
-                                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y - 1)]; // Above
-                                    delete map.buttonSpaces[utils.asGridCoords(pos.x + 1, pos.y)]; // Right
-                                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y + 1)]; // Below
-                                    delete map.buttonSpaces[utils.asGridCoords(pos.x - 1, pos.y)]; // Left
-                                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y)]; // At position
-                                    
                                     // Track this floc as observed
                                     Level1.observeFloc(map, id, pos.x, pos.y);
                                 }
@@ -214,13 +219,6 @@ class Level1 {
                         ]);
                     } else {
                         // For subsequent observations, just mark as observed without showing text
-                        // Remove all button spaces around this floc
-                        delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y - 1)]; // Above
-                        delete map.buttonSpaces[utils.asGridCoords(pos.x + 1, pos.y)]; // Right
-                        delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y + 1)]; // Below
-                        delete map.buttonSpaces[utils.asGridCoords(pos.x - 1, pos.y)]; // Left
-                        delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y)]; // At position
-                        
                         Level1.observeFloc(map, id, pos.x, pos.y);
                     }
                 };
@@ -265,14 +263,30 @@ class Level1 {
         // Mark this floc as observed
         map.observedFlocs[flocId] = true;
         
-        // Remove the observe button at this position
-        delete map.buttonSpaces[utils.asGridCoords(x, y)];
+        // Get the actual floc object to find its position
+        const floc = map.gameObjects[flocId];
+        if (floc) {
+            // Remove all button spaces around this floc
+            delete map.buttonSpaces[utils.asGridCoords(x, y - 1)]; // Above
+            delete map.buttonSpaces[utils.asGridCoords(x + 1, y)]; // Right
+            delete map.buttonSpaces[utils.asGridCoords(x, y + 1)]; // Below
+            delete map.buttonSpaces[utils.asGridCoords(x - 1, y)]; // Left
+        }
         
         // Count observed flocs
         const observedCount = Object.keys(map.observedFlocs).length;
         const totalFlocs = Object.keys(map.gameObjects).filter(key => key.startsWith("floc")).length;
         
         if (observedCount === totalFlocs) {
+            // All flocs observed, now remove all floc walls to allow passage
+            Object.keys(map.gameObjects).forEach(key => {
+                if (key.startsWith("floc")) {
+                    const floc = map.gameObjects[key];
+                    // Remove the wall at this position now that all flocs are observed
+                    delete map.walls[`${floc.x},${floc.y}`];
+                }
+            });
+            
             // All flocs observed, instruct the player to report to the operator
             map.updateObjective("Report your observations to the operator");
 
@@ -395,18 +409,23 @@ class Level1 {
                 ]
             });
             
+            // Add wall at coagulant position to prevent walking over it
+            map.walls[`${utils.withGrid(position.x)},${utils.withGrid(position.y)}`] = true;
+            
             // Create a closure to keep the current coagulant ID
             const createMixHandler = (currentId, pos) => {
                 return (map) => {
                     // Remove this coagulant object
                     delete map.gameObjects[currentId];
                     
+                    // Remove the wall at this position so player can walk through after mixing
+                    delete map.walls[`${utils.withGrid(pos.x)},${utils.withGrid(pos.y)}`];
+                    
                     // Remove all button spaces around this coagulant
                     delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y - 1)]; // Above
                     delete map.buttonSpaces[utils.asGridCoords(pos.x + 1, pos.y)]; // Right
                     delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y + 1)]; // Below
                     delete map.buttonSpaces[utils.asGridCoords(pos.x - 1, pos.y)]; // Left
-                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y)]; // At position
                     
                     // Check if all coagulants have been mixed
                     Level1.checkCoagulantsCollected(map);
