@@ -266,27 +266,24 @@ class Level1 {
         // Get the actual floc object to find its position
         const floc = map.gameObjects[flocId];
         if (floc) {
+            // Remove wall at the floc's position so player can walk through
+            delete map.walls[`${floc.x},${floc.y}`];
+            
             // Remove all button spaces around this floc
             delete map.buttonSpaces[utils.asGridCoords(x, y - 1)]; // Above
             delete map.buttonSpaces[utils.asGridCoords(x + 1, y)]; // Right
             delete map.buttonSpaces[utils.asGridCoords(x, y + 1)]; // Below
             delete map.buttonSpaces[utils.asGridCoords(x - 1, y)]; // Left
+            
+            // Delete the floc object from the gameObjects after removing its wall
+            delete map.gameObjects[flocId];
         }
         
-        // Count observed flocs
+        // Count observed flocs and remaining flocs
         const observedCount = Object.keys(map.observedFlocs).length;
-        const totalFlocs = Object.keys(map.gameObjects).filter(key => key.startsWith("floc")).length;
+        const remainingFlocs = Object.keys(map.gameObjects).filter(key => key.startsWith("floc")).length;
         
-        if (observedCount === totalFlocs) {
-            // All flocs observed, now remove all floc walls to allow passage
-            Object.keys(map.gameObjects).forEach(key => {
-                if (key.startsWith("floc")) {
-                    const floc = map.gameObjects[key];
-                    // Remove the wall at this position now that all flocs are observed
-                    delete map.walls[`${floc.x},${floc.y}`];
-                }
-            });
-            
+        if (remainingFlocs === 0) {
             // All flocs observed, instruct the player to report to the operator
             map.updateObjective("Report your observations to the operator");
 
@@ -311,7 +308,7 @@ class Level1 {
                 map.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = { ...newDialogue };
             }
         } else {
-            map.updateObjective(`Observe flocs: ${totalFlocs - observedCount} remaining`);
+            map.updateObjective(`Observe flocs: ${remainingFlocs} remaining`);
         }
     }
 
