@@ -538,6 +538,59 @@ class Level1 {
             map.updateObjective(`Surface Sweep: ${debrisCount} pieces of debris remaining`);
         }
     }
+
+    // Add this method to the Level1.js file, inside the Level1 class
+    static initLevel2() {
+        return {
+            events: [
+                {
+                    type: "custom",
+                    action: (map) => {
+                        // Create fade overlay element
+                        const fadeOverlay = document.createElement("div");
+                        fadeOverlay.style.position = "fixed";
+                        fadeOverlay.style.top = "0";
+                        fadeOverlay.style.left = "0";
+                        fadeOverlay.style.width = "100%";
+                        fadeOverlay.style.height = "100%";
+                        fadeOverlay.style.backgroundColor = "black";
+                        fadeOverlay.style.opacity = "0";
+                        fadeOverlay.style.transition = "opacity 1.5s ease";
+                        fadeOverlay.style.zIndex = "1000";
+                        document.body.appendChild(fadeOverlay);
+                        
+                        // Trigger fade in
+                        setTimeout(() => {
+                            fadeOverlay.style.opacity = "1";
+                            
+                            // After fade is complete, change map
+                            setTimeout(() => {
+                                // Change to Level2
+                                map.startCutscene([
+                                    { type: "changeMap", map: "Level2" }
+                                ]);
+                                
+                                // Start fade out after map change
+                                setTimeout(() => {
+                                    fadeOverlay.style.opacity = "0";
+                                    
+                                    // Remove overlay after fade out
+                                    setTimeout(() => {
+                                        document.body.removeChild(fadeOverlay);
+                                        
+                                        // Update objective for Level2
+                                        if (map.overworld && map.overworld.map) {
+                                            map.overworld.map.updateObjective("Welcome to Level 2");
+                                        }
+                                    }, 1500);
+                                }, 500);
+                            }, 1500);
+                        }, 50);
+                    }
+                }
+            ]
+        };
+    }
 }
 
 // Constants

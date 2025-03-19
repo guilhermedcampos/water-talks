@@ -3,6 +3,7 @@ class OverworldMap {
         this.overworld = null;  // Reference to the overworld
         this.gameObjects = config.gameObjects;  // Game objects
         this.walls = config.walls || {};    // Walls
+        this.spawmpoint = config.spawnpoint || {}; // Spawnpoint
         this.cutSceneSpaces = config.cutSceneSpaces || {}; // Cutscene spaces
         this.buttonSpaces = config.buttonSpaces || {}; // Button trigger spaces
 
@@ -578,6 +579,23 @@ window.OverworldMaps = {
             [utils.asGridCoords(40.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
             [utils.asGridCoords(41.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
             [utils.asGridCoords(42.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
+
+            // Change Map position
+            [utils.asGridCoords(33.5, 25)]: Level1.initLevel2(),
+            [utils.asGridCoords(32.5, 25)]: Level1.initLevel2(),
         }
     },
+    Level2: {
+        id: "Level2",
+        lowerSrc: "images/maps/Level2Lower.png", 
+        upperSrc: "images/maps/Level2Upper.png", 
+        spawnpoint: {
+            x: utils.withGrid(32.5),
+            y: utils.withGrid(25),
+        },
+        gameObjects: {},
+        walls: {},
+        cutSceneSpaces: {},
+        buttonSpaces: {},
+    }
 }
