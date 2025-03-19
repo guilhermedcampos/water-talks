@@ -169,37 +169,189 @@ class Level1 {
             return true;
         }
     }
+
+    // Method to handle observing flocs
+    static transformCoagulantsToFlocs(map) {
+    
+        // Create floc objects at these positions
+        for (let i = 0; i < flocPositions.length; i++) {
+            const position = flocPositions[i];
+            
+            // Add floc object to gameObjects
+            map.gameObjects[`floc${i+1}`] = new Person({
+                x: utils.withGrid(position.x),
+                y: utils.withGrid(position.y),
+                src: "images/waterAssets/flocks.png", 
+                behaviorLoop: [
+                    { type: "stand", direction: "down", time: 999999 }
+                ]
+            });
+            
+            // Different button events depending on if this is the first floc
+            if (i === 0) {
+                // First floc shows the text message
+                map.buttonSpaces[utils.asGridCoords(position.x, position.y)] = {
+                    text: "Observe",
+                    action: "startCutscene",
+                    events: [
+                        { 
+                            type: "custom",
+                            action: (map) => {
+                                // Set a flag to indicate we've shown the first floc message
+                                map.observedFirstFloc = true;
+                                // Track this floc as observed
+                                Level1.observeFloc(map, `floc${i+1}`, position.x, position.y);
+                            }
+                        }
+                    ]
+                };
+            } else {
+                // Other flocs skip the text message
+                map.buttonSpaces[utils.asGridCoords(position.x, position.y)] = {
+                    text: "Observe",
+                    action: "startCutscene",
+                    events: [
+                        { 
+                            type: "custom",
+                            action: (map) => {
+                                // Track this floc as observed without showing text
+                                Level1.observeFloc(map, `floc${i+1}`, position.x, position.y);
+                            }
+                        }
+                    ]
+                };
+            }
+        }
+    }
+
+    // Method to handle observing flocs
+    static observeFloc(map, flocId, x, y) {
+        // Initialize observed flocs tracking if needed
+        if (!map.observedFlocs) {
+            map.observedFlocs = {};
+        }
+        
+        // Mark this floc as observed
+        map.observedFlocs[flocId] = true;
+        
+        // Remove the observe button at this position
+        delete map.buttonSpaces[utils.asGridCoords(x, y)];
+        
+        // Count observed flocs
+        const observedCount = Object.keys(map.observedFlocs).length;
+        const totalFlocs = Object.keys(map.gameObjects).filter(key => key.startsWith("floc")).length;
+        
+        if (observedCount === totalFlocs) {
+            // All flocs observed, instruct the player to report to the operator
+            map.updateObjective("Report your observations to the operator");
+
+            // Define the final dialogue with a button that, when pressed,
+            // will trigger the final cutscene.
+            if (map.gameObjects["operator"]) {
+                const newDialogue = {
+                    text: "Talk",
+                    action: "startCutscene",
+                    events: [
+                        { type: "textMessage", text: "Great! Follow me now!", faceHero: "operator" },
+                        followOperatorEvent,
+                    ]
+                };
+
+                // Add the dialogue button around the operator
+                const operatorX = map.gameObjects["operator"].x / 16;
+                const operatorY = map.gameObjects["operator"].y / 16;
+                map.buttonSpaces[utils.asGridCoords(operatorX, operatorY - 1)] = { ...newDialogue };
+                map.buttonSpaces[utils.asGridCoords(operatorX + 1, operatorY)] = { ...newDialogue };
+                map.buttonSpaces[utils.asGridCoords(operatorX, operatorY + 1)] = { ...newDialogue };
+                map.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = { ...newDialogue };
+            }
+        } else {
+            map.updateObjective(`Observe flocs: ${totalFlocs - observedCount} remaining`);
+        }
+    }
+
+    // Check if all coagulants are mixed
+    static checkCoagulantsCollected(map) {
+        // Count remaining coagulants
+        const remainingCoagulants = Object.keys(map.gameObjects).filter(key => 
+            key.startsWith("coagulant")
+        ).length;
+        
+        if (remainingCoagulants === 0) {
+            // All coagulants collected, now direct player to return to operator
+            map.updateObjective("Return to the operator to discuss coagulation");
+            
+            // Update the operator's dialogue for the next phase
+            if (map.gameObjects["operator"]) {
+                // Define the new dialogue for the operator
+                const newDialogue = {
+                    text: "Talk",
+                    action: "startCutscene",
+                    events: [
+                        { type: "textMessage", text: "Excellent! The coagulants are now in the water.", faceHero: "operator" },
+                        { type: "textMessage", text: "Observe as the coagulants work their magic, binding the tiny impurities into flocs." },
+                        { type: "textMessage", text: "These larger clusters are easier to remove in subsequent treatment stages, ensuring our water becomes ever purer." },
+                        { 
+                            type: "custom",
+                            action: (map) => {
+                                // Transform coagulants into flocs 
+                                Level1.transformCoagulantsToFlocs(map);
+                                
+                                // Update objective to observe floc formation
+                                map.updateObjective("Floc Formation: Observe the growth of flocs and inform the operator");
+                            }
+                        }
+                    ]
+                };
+                
+                // Clear existing operator button spaces
+                Object.keys(map.buttonSpaces).forEach(key => {
+                    const coords = key.split(",");
+                    const x = parseFloat(coords[0]);
+                    const y = parseFloat(coords[1]);
+                    
+                    // If this button space is near the operator, remove it
+                    const operatorX = map.gameObjects["operator"].x / 16;
+                    const operatorY = map.gameObjects["operator"].y / 16;
+                    const distance = Math.sqrt(
+                        Math.pow(x - operatorX, 2) + 
+                        Math.pow(y - operatorY, 2)
+                    );
+                    
+                    if (distance < 1.5) {
+                        delete map.buttonSpaces[key];
+                    }
+                });
+                
+                // Add new dialogue button spaces around the operator
+                const operatorX = map.gameObjects["operator"].x / 16;
+                const operatorY = map.gameObjects["operator"].y / 16;
+                
+                map.buttonSpaces[utils.asGridCoords(operatorX, operatorY - 1)] = {...newDialogue}; // Above
+                map.buttonSpaces[utils.asGridCoords(operatorX + 1, operatorY)] = {...newDialogue}; // Right
+                map.buttonSpaces[utils.asGridCoords(operatorX, operatorY + 1)] = {...newDialogue}; // Below
+                map.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = {...newDialogue}; // Left
+            }
+        } else {
+            // Update objective to show how many coagulants are left to mix
+            map.updateObjective(`Mix coagulants: ${remainingCoagulants} remaining`);
+        }
+    }
 }
 
+// Constants
 
-
-
-
+const flocPositions = [
+    { x: 32.5, y: 15 },
+    { x: 25.5, y: 20 },
+    { x: 32.5, y: 18 },
+    { x: 26.5, y: 16 },
+    { x: 30.5, y: 19 }
+];
 
 // Events
 
-const addCoagulantsEvent = {  
-    type: "custom",
-    action: (map) => {
-      // Add coagulant objects at fixed positions in the water.
-      map.addCoagulants(5);
 
-      // Update the objective 
-      map.updateObjective("Mix coagulants");
-
-      // Remove the arrow indicator
-      if (map.gameObjects["arrowIndicator"]) {
-        // Call destroy method to clear any animation intervals
-        if (map.gameObjects["arrowIndicator"].destroy) {
-            map.gameObjects["arrowIndicator"].destroy();
-        }
-        delete map.gameObjects["arrowIndicator"];
-    }
-      
-      // Remove the faucet button so it never shows again.
-      delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
-    }
-  }
 
 const introLevel1Event = {
     text: "Talk",
@@ -281,6 +433,62 @@ const collectDebris3Event = {
     ]
 }
 
+const coagulantsStageEvent = { 
+    type: "custom",
+    action: (map) => {
+      // Set a flag indicating that the coagulants stage has started.
+      map.coagulantsStageStarted = true;
+
+      // Update objective to direct player back to operator.
+      map.updateObjective("Mix coagulants: Check the dispenser for remaining coagulants");
+
+      // Create and add an arrow indicator at grid position (34.5, 12).
+      map.gameObjects["arrowIndicator"] = new AnimatedGifSprite({
+        x: utils.withGrid(34.7),
+        y: utils.withGrid(11.5),
+        src: "images/waterAssets/arrowDown.gif",  // Base name still used
+        frameCount: 6,  // Number of frames in your animation
+        animationSpeed: 130,  // Milliseconds between frame changes
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    });
+
+      // Dynamically add the faucet/dispenser button so the player can activate it.
+      map.buttonSpaces[utils.asGridCoords(34.5, 12)] = {
+        text: "Add Coagulants",
+        action: "startCutscene",
+        events: [
+          { type: "textMessage", text: "You've activated the coagulant dispenser!" },
+          addCoagulantsEvent,
+        ]
+      };
+    }
+  }
+
+const addCoagulantsEvent = {  
+    type: "custom",
+    action: (map) => {
+      // Add coagulant objects at fixed positions in the water.
+      map.addCoagulants(5);
+
+      // Update the objective 
+      map.updateObjective("Mix coagulants");
+
+      // Remove the arrow indicator
+      if (map.gameObjects["arrowIndicator"]) {
+        // Call destroy method to clear any animation intervals
+        if (map.gameObjects["arrowIndicator"].destroy) {
+            map.gameObjects["arrowIndicator"].destroy();
+        }
+        delete map.gameObjects["arrowIndicator"];
+    }
+      
+      // Remove the faucet button so it never shows again.
+      delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
+    }
+  }
+
+
 const startCoagulantsEvent = {
     text: "Add Coagulants",
     action: "startCutscene",
@@ -309,4 +517,23 @@ const startCoagulantsEvent = {
             }
         }
     ]
+}
+
+const followOperatorEvent = { 
+    type: "custom",
+    action: (map) => {
+
+        map.updateObjective("Follow the operator to the next stage");
+        // Instead of starting a new cutscene (which resets behaviors),
+        // directly set the behavior loops to make both operator and ben walk down.
+        map.gameObjects["operator"].behaviorLoop = [
+            { type: "walk", direction: "down", time: 3 }
+        ];
+        map.gameObjects["ben"].behaviorLoop = [
+            { type: "walk", direction: "down", time: 3 }
+        ];
+        // Start their behavior events directly.
+        map.gameObjects["operator"].doBehaviorEvent(map);
+        map.gameObjects["ben"].doBehaviorEvent(map);
+    }
 }
