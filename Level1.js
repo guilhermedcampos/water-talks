@@ -600,7 +600,7 @@ const level1GameObjects = {
         isPlayerControlled: true,
         x: utils.withGrid(5),
         y: utils.withGrid(5), 
-        src: "images/characters/people/mainUnderwater.png"
+        src: "images/characters/people/mainCharacter.png"
     }),
     
     // Update the operator in the Level1 map

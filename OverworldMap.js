@@ -590,8 +590,8 @@ window.OverworldMaps = {
         lowerSrc: "images/maps/Level2Lower.png", 
         upperSrc: "images/maps/Level2Upper.png", 
         spawnpoint: {
-            x: utils.withGrid(26.5),
-            y: utils.withGrid(12),
+            x: utils.withGrid(35.5),
+            y: utils.withGrid(17),
         },
         gameObjects: level2GameObjects,
         walls: {},
