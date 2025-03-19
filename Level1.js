@@ -449,9 +449,9 @@ const level1GameObjects = {
     
     // Update the operator in the Level1 map
     operator: new Person({
-        x: utils.withGrid(27.5),
-        y: utils.withGrid(13),
-        src: "images/characters/people/operatorUnderwater.png",
+        x: utils.withGrid(32.5),
+        y: utils.withGrid(17),
+        src: "images/characters/people/operator.png",
         // Make the operator stand still by using a simple behavior loop
         // with only one standing direction for a very long time
         behaviorLoop: [
@@ -461,29 +461,37 @@ const level1GameObjects = {
     }),
     // Add water debris items that float on the water
     debris1: new Person({
-        x: utils.withGrid(28.5),
-        y: utils.withGrid(18),
+        x: utils.withGrid(35.5),
+        y: utils.withGrid(24),
         src: "images/waterAssets/bottle.png", 
         behaviorLoop: [
             { type: "stand", direction: "down", time: 999999 }
         ]
     }),
     debris2: new Person({
-        x: utils.withGrid(31.5),
-        y: utils.withGrid(19),
+        x: utils.withGrid(41.5),
+        y: utils.withGrid(23),
         src: "images/waterAssets/box.png", // Create another debris image
         behaviorLoop: [
             { type: "stand", direction: "down", time: 999999 }
         ]
     }),
     debris3: new Person({
-        x: utils.withGrid(25.5),
-        y: utils.withGrid(20),
+        x: utils.withGrid(38.5),
+        y: utils.withGrid(21),
         src: "images/waterAssets/wheel.png", // Create a third debris image
         behaviorLoop: [
             { type: "stand", direction: "down", time: 999999 }
         ]
-    })
+    }),
+    debris4: new Person({
+        x: utils.withGrid(40.5),
+        y: utils.withGrid(19),
+        src: "images/waterAssets/box2.png", // Create a fourth debris image
+        behaviorLoop: [
+            { type: "stand", direction: "down", time: 999999 }
+        ]
+    }),
 };
 
 const flocPositions = [

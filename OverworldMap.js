@@ -498,18 +498,19 @@ window.OverworldMaps = {
     
     // New Level1 map
     Level1: {
+        id: "Level1",
         lowerSrc: "images/maps/Level1Lower.png", 
         upperSrc: "images/maps/Level1Upper.png", 
         spawnpoint: { // 464 208
-            x: utils.withGrid(30.5),
-            y: utils.withGrid(14),
+            x: utils.withGrid(36.5),
+            y: utils.withGrid(20),
         },
         gameObjects: level1GameObjects,
         walls: wallsLevel1,
         buttonSpaces: {
 
             // Talking to operator event
-            [utils.asGridCoords(28.5, 13)]: introLevel1Event,
+            [utils.asGridCoords(32.5, 17)]: introLevel1Event,
 
             // Button spaces for the debris items
             [utils.asGridCoords(28.5, 17)]: collectDebris1Event,
