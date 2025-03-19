@@ -119,4 +119,7 @@ const wallsLevel1 = {
             [utils.asGridCoords(31.5, 20)]: true,
             [utils.asGridCoords(31.5, 21)]: true,
             [utils.asGridCoords(31.5, 22)]: true,
+
+            // Water pipe
+            [utils.asGridCoords(36.5, 21)]: true,
 };

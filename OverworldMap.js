@@ -509,13 +509,36 @@ window.OverworldMaps = {
         walls: wallsLevel1,
         buttonSpaces: {
 
-            // Talking to operator event
-            [utils.asGridCoords(32.5, 17)]: introLevel1Event,
+            // Talking to operator event (35.5, 19)
+            [utils.asGridCoords(32.5, 18)]: introLevel1Event,
+            [utils.asGridCoords(32.5, 20)]: introLevel1Event,
+            [utils.asGridCoords(31.5, 19)]: introLevel1Event,
+            [utils.asGridCoords(33.5, 19)]: introLevel1Event,
 
             // Button spaces for the debris items
-            [utils.asGridCoords(28.5, 17)]: collectDebris1Event,
-            [utils.asGridCoords(31.5, 18)]: collectDebris2Event,
-            [utils.asGridCoords(25.5, 19)]: collectDebris3Event,
+            // Debris 1: (35.5, 24)
+            [utils.asGridCoords(35.5, 23)]: collectDebris1Event,
+            [utils.asGridCoords(35.5, 25)]: collectDebris1Event,
+            [utils.asGridCoords(34.5, 24)]: collectDebris1Event,
+            [utils.asGridCoords(36.5, 24)]: collectDebris1Event,
+
+            // Debris 2: (41.5, 23)
+            [utils.asGridCoords(41.5, 22)]: collectDebris2Event,
+            [utils.asGridCoords(41.5, 24)]: collectDebris2Event,
+            [utils.asGridCoords(40.5, 23)]: collectDebris2Event,
+            [utils.asGridCoords(42.5, 23)]: collectDebris2Event,
+
+            // Debris 3: (38.5, 21)
+            [utils.asGridCoords(38.5, 20)]: collectDebris3Event,
+            [utils.asGridCoords(38.5, 22)]: collectDebris3Event,
+            [utils.asGridCoords(37.5, 21)]: collectDebris3Event,
+            [utils.asGridCoords(39.5, 21)]: collectDebris3Event,
+
+            // Debris 4 (40.5, 19)
+            [utils.asGridCoords(40.5, 18)]: collectDebris4Event,
+            [utils.asGridCoords(40.5, 20)]: collectDebris4Event,
+            [utils.asGridCoords(39.5, 19)]: collectDebris4Event,
+            [utils.asGridCoords(41.5, 19)]: collectDebris4Event,
 
             // Update the faucet button action to change the mission right away
             [utils.asGridCoords(34.5, 12)]: startCoagulantsEvent,

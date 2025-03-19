@@ -503,9 +503,6 @@ const flocPositions = [
 ];
 
 // Events
-
-
-
 const introLevel1Event = {
     text: "Talk",
     action: "startCutscene",
@@ -537,7 +534,7 @@ const collectDebris1Event = {
                 delete map.gameObjects["debris1"];
                 
                 // Remove the wall at this position to ensure it's not blocking
-                map.removeWall(utils.withGrid(28.5), utils.withGrid(18));
+                map.removeWall(utils.withGrid(35.5), utils.withGrid(24));
                 
                 // Check if all debris is collected
                 Level1.checkDebrisCollected();
@@ -557,7 +554,7 @@ const collectDebris2Event = {
                 delete map.gameObjects["debris2"];
                 
                 // Remove the wall at this position to ensure it's not blocking
-                map.removeWall(utils.withGrid(31.5), utils.withGrid(19));
+                map.removeWall(utils.withGrid(41.5), utils.withGrid(23));
                 
                 // Check if all debris is collected
                 Level1.checkDebrisCollected();
@@ -577,7 +574,27 @@ const collectDebris3Event = {
                 delete map.gameObjects["debris3"];
                 
                 // Remove the wall at this position to ensure it's not blocking
-                map.removeWall(utils.withGrid(25.5), utils.withGrid(20));
+                map.removeWall(utils.withGrid(38.5), utils.withGrid(21));
+                
+                // Check if all debris is collected
+                Level1.checkDebrisCollected();
+            }
+        }
+    ]
+}
+
+const collectDebris4Event = {
+    text: "Collect",
+    action: "startCutscene",
+    events: [
+        { 
+            type: "custom",
+            action: (map) => {
+                // Remove the debris object
+                delete map.gameObjects["debris4"];
+                
+                // Remove the wall at this position to ensure it's not blocking
+                map.removeWall(utils.withGrid(40.5), utils.withGrid(19));
                 
                 // Check if all debris is collected
                 Level1.checkDebrisCollected();
