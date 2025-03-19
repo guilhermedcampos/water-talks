@@ -337,9 +337,154 @@ class Level1 {
             map.updateObjective(`Mix coagulants: ${remainingCoagulants} remaining`);
         }
     }
+
+    // Add this as static method to Level1 class
+    static addCoagulants(map, count) {
+        // Define fixed positions for coagulants in the water
+        const coagulantPositions = [
+            { x: 32.5, y: 15 },
+            { x: 25.5, y: 20 },
+            { x: 32.5, y: 18 },
+            { x: 26.5, y: 16 },
+            { x: 30.5, y: 19 }
+        ];
+        
+        // Create coagulant objects at the predefined positions
+        for (let i = 0; i < count && i < coagulantPositions.length; i++) {
+            const position = coagulantPositions[i];
+            
+            // Add coagulant object to gameObjects
+            map.gameObjects[`coagulant${i+1}`] = new Person({
+                x: utils.withGrid(position.x),
+                y: utils.withGrid(position.y),
+                src: "images/waterAssets/coagulant.png",
+                behaviorLoop: [
+                    { type: "stand", direction: "down", time: 999999 }
+                ]
+            });
+            
+            // Add button space for collecting the coagulant
+            map.buttonSpaces[utils.asGridCoords(position.x, position.y)] = {
+                text: "Mix",
+                action: "startCutscene",
+                events: [
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            // Remove this coagulant object
+                            delete map.gameObjects[`coagulant${i+1}`];
+                            
+                            // Remove this button space
+                            delete map.buttonSpaces[utils.asGridCoords(position.x, position.y)];
+                            
+                            // Check if all coagulants have been mixed
+                            Level1.checkCoagulantsCollected(map);
+                        }
+                    }
+                ]
+            };
+        }
+    }
+
+    // Add this method to check if all debris has been collected
+    static checkDebrisCollected(map) {
+        // Remove collect button spaces for debris that have been collected
+        if (!map.gameObjects["debris1"]) {
+            delete map.buttonSpaces[utils.asGridCoords(28.5, 17)];
+        }
+        if (!map.gameObjects["debris2"]) {
+            delete map.buttonSpaces[utils.asGridCoords(31.5, 18)];
+        }
+        if (!map.gameObjects["debris3"]) {
+            delete map.buttonSpaces[utils.asGridCoords(25.5, 19)];
+        }
+        
+        // Check remaining debris count
+        const debrisKeys = Object.keys(map.gameObjects).filter(key =>
+            key.startsWith("debris")
+        );
+        const debrisCount = debrisKeys.length;
+        
+        if (debrisCount === 0) {
+            // All debris collected, update objective
+            map.updateObjective("Return to the operator");
+          
+            // Update the operator's dialogue to acknowledge completion and instruct the next stage
+            if (map.gameObjects["operator"]) {
+              const newDialogue = {
+                text: "Talk",
+                action: "startCutscene",
+                events: [
+                  { type: "textMessage", text: "Excellent work! With the surface cleared, we must now address the finer particles suspended within.", faceHero: "operator" },
+                  { type: "textMessage", text: "Now, I want you to add the coagulants into the water. Activate the dispenser over there.", faceHero: "operator" },
+                  { type: "textMessage", text: "They will neutralize the charges of these particles, causing them to clump together into larger aggregates known as flocs.", faceHero: "operator" },
+                  coagulantsStageEvent,
+                ]
+              };
+          
+              // Clear left-over operator button spaces if needed and add new ones around operator.
+              const operatorX = map.gameObjects["operator"].x / 16;
+              const operatorY = map.gameObjects["operator"].y / 16;
+              map.buttonSpaces[utils.asGridCoords(operatorX, operatorY - 1)] = { ...newDialogue };
+              map.buttonSpaces[utils.asGridCoords(operatorX + 1, operatorY)] = { ...newDialogue };
+              map.buttonSpaces[utils.asGridCoords(operatorX, operatorY + 1)] = { ...newDialogue };
+              map.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = { ...newDialogue };
+            }
+        } else {
+            // Update objective to show how many debris are left.
+            map.updateObjective(`Surface Sweep: ${debrisCount} pieces of debris remaining`);
+        }
+    }
 }
 
 // Constants
+
+const level1GameObjects = {
+    ben: new Person({
+        isPlayerControlled: true,
+        x: utils.withGrid(5),
+        y: utils.withGrid(5), 
+        src: "images/characters/people/mainUnderwater.png"
+    }),
+    
+    // Update the operator in the Level1 map
+    operator: new Person({
+        x: utils.withGrid(27.5),
+        y: utils.withGrid(13),
+        src: "images/characters/people/operatorUnderwater.png",
+        // Make the operator stand still by using a simple behavior loop
+        // with only one standing direction for a very long time
+        behaviorLoop: [
+            { type: "stand", direction: "down", time: 999999 }
+        ],
+        // Remove the talking property so it doesn't automatically trigger
+    }),
+    // Add water debris items that float on the water
+    debris1: new Person({
+        x: utils.withGrid(28.5),
+        y: utils.withGrid(18),
+        src: "images/waterAssets/bottle.png", 
+        behaviorLoop: [
+            { type: "stand", direction: "down", time: 999999 }
+        ]
+    }),
+    debris2: new Person({
+        x: utils.withGrid(31.5),
+        y: utils.withGrid(19),
+        src: "images/waterAssets/box.png", // Create another debris image
+        behaviorLoop: [
+            { type: "stand", direction: "down", time: 999999 }
+        ]
+    }),
+    debris3: new Person({
+        x: utils.withGrid(25.5),
+        y: utils.withGrid(20),
+        src: "images/waterAssets/wheel.png", // Create a third debris image
+        behaviorLoop: [
+            { type: "stand", direction: "down", time: 999999 }
+        ]
+    })
+};
 
 const flocPositions = [
     { x: 32.5, y: 15 },
@@ -387,7 +532,7 @@ const collectDebris1Event = {
                 map.removeWall(utils.withGrid(28.5), utils.withGrid(18));
                 
                 // Check if all debris is collected
-                map.checkDebrisCollected();
+                Level1.checkDebrisCollected();
             }
         }
     ]
@@ -407,7 +552,7 @@ const collectDebris2Event = {
                 map.removeWall(utils.withGrid(31.5), utils.withGrid(19));
                 
                 // Check if all debris is collected
-                map.checkDebrisCollected();
+                Level1.checkDebrisCollected();
             }
         }
     ]
@@ -427,7 +572,7 @@ const collectDebris3Event = {
                 map.removeWall(utils.withGrid(25.5), utils.withGrid(20));
                 
                 // Check if all debris is collected
-                map.checkDebrisCollected();
+                Level1.checkDebrisCollected();
             }
         }
     ]
@@ -469,7 +614,7 @@ const addCoagulantsEvent = {
     type: "custom",
     action: (map) => {
       // Add coagulant objects at fixed positions in the water.
-      map.addCoagulants(5);
+      Level1.addCoagulants(5);
 
       // Update the objective 
       map.updateObjective("Mix coagulants");
@@ -498,7 +643,7 @@ const startCoagulantsEvent = {
             type: "custom",
             action: (map) => {
                 // Add coagulant objects at fixed positions in the water
-                map.addCoagulants(5);
+                Level1.addCoagulants(5);
                 
                 // Update objective to direct player back to operator immediately
                 map.updateObjective("Mix coagulants");

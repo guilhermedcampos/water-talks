@@ -374,104 +374,6 @@ class OverworldMap {
         }
     }
 
-    // Add this method to check if all debris has been collected
-    checkDebrisCollected() {
-        // Remove collect button spaces for debris that have been collected
-        if (!this.gameObjects["debris1"]) {
-            delete this.buttonSpaces[utils.asGridCoords(28.5, 17)];
-        }
-        if (!this.gameObjects["debris2"]) {
-            delete this.buttonSpaces[utils.asGridCoords(31.5, 18)];
-        }
-        if (!this.gameObjects["debris3"]) {
-            delete this.buttonSpaces[utils.asGridCoords(25.5, 19)];
-        }
-        
-        // Check remaining debris count
-        const debrisKeys = Object.keys(this.gameObjects).filter(key =>
-            key.startsWith("debris")
-        );
-        const debrisCount = debrisKeys.length;
-        
-        if (debrisCount === 0) {
-            // All debris collected, update objective
-            this.updateObjective("Return to the operator");
-          
-            // Update the operator's dialogue to acknowledge completion and instruct the next stage
-            if (this.gameObjects["operator"]) {
-              const newDialogue = {
-                text: "Talk",
-                action: "startCutscene",
-                events: [
-                  { type: "textMessage", text: "Excellent work! With the surface cleared, we must now address the finer particles suspended within.", faceHero: "operator" },
-                  { type: "textMessage", text: "Now, I want you to add the coagulants into the water. Activate the dispenser over there.", faceHero: "operator" },
-                  { type: "textMessage", text: "They will neutralize the charges of these particles, causing them to clump together into larger aggregates known as flocs.", faceHero: "operator" },
-                  coagulantsStageEvent,
-                ]
-              };
-          
-              // Clear left-over operator button spaces if needed and add new ones around operator.
-              const operatorX = this.gameObjects["operator"].x / 16;
-              const operatorY = this.gameObjects["operator"].y / 16;
-              this.buttonSpaces[utils.asGridCoords(operatorX, operatorY - 1)] = { ...newDialogue };
-              this.buttonSpaces[utils.asGridCoords(operatorX + 1, operatorY)] = { ...newDialogue };
-              this.buttonSpaces[utils.asGridCoords(operatorX, operatorY + 1)] = { ...newDialogue };
-              this.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = { ...newDialogue };
-            }
-          } else {
-            // Update objective to show how many debris are left.
-            this.updateObjective(`Surface Sweep: ${debrisCount} pieces of debris remaining`);
-          }
-    }
-
-    // Replace the random addCoagulants method with this fixed-position version
-    addCoagulants(count) {
-        // Define fixed positions for coagulants in the water
-        const coagulantPositions = [
-            { x: 32.5, y: 15 },
-            { x: 25.5, y: 20 },
-            { x: 32.5, y: 18 },
-            { x: 26.5, y: 16 },
-            { x: 30.5, y: 19 }
-        ];
-        
-        // Create coagulant objects at the predefined positions
-        for (let i = 0; i < count && i < coagulantPositions.length; i++) {
-            const position = coagulantPositions[i];
-            
-            // Add coagulant object to gameObjects
-            this.gameObjects[`coagulant${i+1}`] = new Person({
-                x: utils.withGrid(position.x),
-                y: utils.withGrid(position.y),
-                src: "images/waterAssets/coagulant.png",
-                behaviorLoop: [
-                    { type: "stand", direction: "down", time: 999999 }
-                ]
-            });
-            
-            // Add button space for collecting the coagulant
-            this.buttonSpaces[utils.asGridCoords(position.x, position.y)] = {
-                text: "Mix",
-                action: "startCutscene",
-                events: [
-                    { 
-                        type: "custom",
-                        action: (map) => {
-                            // Remove this coagulant object
-                            delete map.gameObjects[`coagulant${i+1}`];
-                            
-                            // Remove this button space
-                            delete map.buttonSpaces[utils.asGridCoords(position.x, position.y)];
-                            
-                            // Check if all coagulants have been mixed
-                            Level1.checkCoagulantsCollected(map);
-                        }
-                    }
-                ]
-            };
-        }
-    }
-
     // Update the checkForButtonTrigger method to properly control when operator dialogue is available
     checkForButtonTrigger() {
         const hero = this.gameObjects["ben"];
@@ -532,8 +434,6 @@ class OverworldMap {
             this.showButton(buttonMatch);
         }
     }
-
-
 
     // Add this method to the OverworldMap class
     initKeyboardButtonSupport() {
@@ -604,52 +504,7 @@ window.OverworldMaps = {
             x: utils.withGrid(30.5),
             y: utils.withGrid(14),
         },
-        gameObjects: {
-            ben: new Person({
-                isPlayerControlled: true,
-                x: utils.withGrid(5),
-                y: utils.withGrid(5), 
-                src: "images/characters/people/mainUnderwater.png"
-            }),
-            
-            // Update the operator in the Level1 map
-            operator: new Person({
-                x: utils.withGrid(27.5),
-                y: utils.withGrid(13),
-                src: "images/characters/people/operatorUnderwater.png",
-                // Make the operator stand still by using a simple behavior loop
-                // with only one standing direction for a very long time
-                behaviorLoop: [
-                    { type: "stand", direction: "down", time: 999999 }
-                ],
-                // Remove the talking property so it doesn't automatically trigger
-            }),
-            // Add water debris items that float on the water
-            debris1: new Person({
-                x: utils.withGrid(28.5),
-                y: utils.withGrid(18),
-                src: "images/waterAssets/bottle.png", 
-                behaviorLoop: [
-                    { type: "stand", direction: "down", time: 999999 }
-                ]
-            }),
-            debris2: new Person({
-                x: utils.withGrid(31.5),
-                y: utils.withGrid(19),
-                src: "images/waterAssets/box.png", // Create another debris image
-                behaviorLoop: [
-                    { type: "stand", direction: "down", time: 999999 }
-                ]
-            }),
-            debris3: new Person({
-                x: utils.withGrid(25.5),
-                y: utils.withGrid(20),
-                src: "images/waterAssets/wheel.png", // Create a third debris image
-                behaviorLoop: [
-                    { type: "stand", direction: "down", time: 999999 }
-                ]
-            })
-        },
+        gameObjects: level1GameObjects,
         walls: wallsLevel1,
         buttonSpaces: {
 
