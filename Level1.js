@@ -26,6 +26,7 @@ class Level1 {
 
     static showFlushMessages(map, messages) {
         // Use provided messages, or fallback to a default if not set
+        map.isCutscenePlaying = true;
         messages = messages || [
             "Every drop counts... but where does it go?",
             "Every day, Lisbon treats over 550 million liters of water...",
@@ -101,7 +102,7 @@ class Level1 {
                 
             }, 1500); // Wait 1.5 seconds for fade in to complete
         }, 50); // Initial slight delay
-
+        map.isCutscenePlaying = false;
     }
 
     static changeSpriteEvent(mapName, positionType) {
@@ -825,16 +826,20 @@ const followOperatorEvent = {
     action: (map) => {
 
         map.updateObjective("Follow the operator to the next stage");
-        // Instead of starting a new cutscene (which resets behaviors),
-        // directly set the behavior loops to make both operator and ben walk down.
-        map.gameObjects["operator"].behaviorLoop = [
-            { type: "walk", direction: "down", time: 3 }
-        ];
-        map.gameObjects["ben"].behaviorLoop = [
-            { type: "walk", direction: "down", time: 3 }
-        ];
-        // Start their behavior events directly.
-        map.gameObjects["operator"].doBehaviorEvent(map);
-        map.gameObjects["ben"].doBehaviorEvent(map);
+
+        const walkEvents = []
+
+        walkEvents.push({ type: "walk", who: "ben", direction: "right", time: 1000 });
+
+        // Add multiple walk commands for the operator to move down several tiles
+        for (let i = 0; i < 10; i++) {
+            walkEvents.push({ type: "walk", who: "operator", direction: "down" });
+        }
+        
+        // Remove the wall at the exit point to allow the player to leave
+        delete map.walls[utils.asGridCoords(33.5, 25)];
+        delete map.walls[utils.asGridCoords(32.5, 25)];
+
+        map.startCutscene(walkEvents);
     }
 }

@@ -512,7 +512,6 @@ window.OverworldMaps = {
 
             // Talking to operator event (35.5, 19)
             [utils.asGridCoords(32.5, 18)]: introLevel1Event,
-            [utils.asGridCoords(31.5, 19)]: introLevel1Event,
             [utils.asGridCoords(33.5, 17)]: introLevel1Event,
 
             // Button spaces for the debris items
