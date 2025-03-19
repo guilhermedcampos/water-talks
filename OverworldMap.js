@@ -503,12 +503,12 @@ window.OverworldMaps = {
         id: "Level1",
         lowerSrc: "images/maps/Level1Lower.png", 
         upperSrc: "images/maps/Level1Upper.png", 
-        spawnpoint: { // 464 208
-            x: utils.withGrid(36.5),
-            y: utils.withGrid(20),
+        spawnpoint: { 
+            x: utils.withGrid(32.5),
+            y: utils.withGrid(23),
         },
         gameObjects: level1GameObjects,
-        walls: wallsLevel1,
+        walls: level1Walls,
         buttonSpaces: {
 
             // Talking to operator event (35.5, 19)
@@ -590,10 +590,10 @@ window.OverworldMaps = {
         lowerSrc: "images/maps/Level2Lower.png", 
         upperSrc: "images/maps/Level2Upper.png", 
         spawnpoint: {
-            x: utils.withGrid(32.5),
-            y: utils.withGrid(25),
+            x: utils.withGrid(26.5),
+            y: utils.withGrid(12),
         },
-        gameObjects: {},
+        gameObjects: level2GameObjects,
         walls: {},
         cutSceneSpaces: {},
         buttonSpaces: {},

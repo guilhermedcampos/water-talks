@@ -68,7 +68,7 @@ const wallsHouse = {
     [utils.asGridCoords(44.5, 32)]: true,
 };
 
-const wallsLevel1 = {            
+const level1Walls = {            
             // Horizontal walls (top)
             [utils.asGridCoords(31.5, 16)]: true,
             [utils.asGridCoords(32.5, 16)]: true,
