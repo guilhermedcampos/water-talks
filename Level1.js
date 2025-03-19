@@ -745,7 +745,7 @@ const coagulantsStageEvent = {
       // Create and add an arrow indicator at grid position (34.5, 12).
       map.gameObjects["arrowIndicator"] = new AnimatedGifSprite({
         x: utils.withGrid(32.5),
-        y: utils.withGrid(20.5),
+        y: utils.withGrid(19.5),
         src: "images/waterAssets/arrowDown.gif",  // Base name still used
         frameCount: 6,  // Number of frames in your animation
         animationSpeed: 130,  // Milliseconds between frame changes
@@ -765,11 +765,11 @@ const coagulantsStageEvent = {
     }
   }
 
-// Fix the addCoagulantsEvent to properly call the Level1.addCoagulants method
+// Fix the addCoagulantsEvent to remove the correct button coordinate
 const addCoagulantsEvent = {  
     type: "custom",
     action: (map) => {
-      // The issue is here - need to pass the map parameter to the addCoagulants method
+      // Call the addCoagulants method with proper parameters
       Level1.addCoagulants(map, 5);
 
       // Update the objective 
@@ -784,12 +784,12 @@ const addCoagulantsEvent = {
         delete map.gameObjects["arrowIndicator"];
       }
       
-      // Remove the faucet button so it never shows again.
-      delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
+      // Remove the correct button coordinate (32.5,21) instead of (34.5,12)
+      delete map.buttonSpaces[utils.asGridCoords(32.5, 21)];
     }
 }
 
-// Update the startCoagulantsEvent to ensure full cleanup
+// Update the startCoagulantsEvent to remove the correct button
 const startCoagulantsEvent = {
     text: "Add Coagulants",
     action: "startCutscene",
@@ -813,8 +813,8 @@ const startCoagulantsEvent = {
                     delete map.gameObjects["arrowIndicator"];
                 }
                 
-                // Disable the faucet button after use
-                delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
+                // Disable the correct faucet button coordinate
+                delete map.buttonSpaces[utils.asGridCoords(32.5, 21)];
             }
         }
     ]
