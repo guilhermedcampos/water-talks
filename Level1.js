@@ -172,55 +172,86 @@ class Level1 {
 
     // Method to handle observing flocs
     static transformCoagulantsToFlocs(map) {
-    
         // Create floc objects at these positions
         for (let i = 0; i < flocPositions.length; i++) {
             const position = flocPositions[i];
+            const flocId = `floc${i+1}`;
             
             // Add floc object to gameObjects
-            map.gameObjects[`floc${i+1}`] = new Person({
+            map.gameObjects[flocId] = new Person({
                 x: utils.withGrid(position.x),
                 y: utils.withGrid(position.y),
-                src: "images/waterAssets/flocks.png", 
+                src: "images/waterAssets/flocks.png",
                 behaviorLoop: [
                     { type: "stand", direction: "down", time: 999999 }
                 ]
             });
             
-            // Different button events depending on if this is the first floc
-            if (i === 0) {
-                // First floc shows the text message
-                map.buttonSpaces[utils.asGridCoords(position.x, position.y)] = {
-                    text: "Observe",
-                    action: "startCutscene",
-                    events: [
-                        { 
-                            type: "custom",
-                            action: (map) => {
-                                // Set a flag to indicate we've shown the first floc message
-                                map.observedFirstFloc = true;
-                                // Track this floc as observed
-                                Level1.observeFloc(map, `floc${i+1}`, position.x, position.y);
+            // Create a closure for observe handler
+            const createObserveHandler = (id, pos) => {
+                return (map) => {
+                    // First time user observes a floc, show a message
+                    if (!map.observedFirstFloc) {
+                        map.observedFirstFloc = true;
+                        
+                        // Show intro text message
+                        map.startCutscene([
+                            { type: "textMessage", text: "The flocs are growing as suspended particles bind together." },
+                            { 
+                                type: "custom", 
+                                action: () => {
+                                    // Remove all button spaces around this floc
+                                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y - 1)]; // Above
+                                    delete map.buttonSpaces[utils.asGridCoords(pos.x + 1, pos.y)]; // Right
+                                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y + 1)]; // Below
+                                    delete map.buttonSpaces[utils.asGridCoords(pos.x - 1, pos.y)]; // Left
+                                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y)]; // At position
+                                    
+                                    // Track this floc as observed
+                                    Level1.observeFloc(map, id, pos.x, pos.y);
+                                }
                             }
-                        }
-                    ]
+                        ]);
+                    } else {
+                        // For subsequent observations, just mark as observed without showing text
+                        // Remove all button spaces around this floc
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y - 1)]; // Above
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x + 1, pos.y)]; // Right
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y + 1)]; // Below
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x - 1, pos.y)]; // Left
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y)]; // At position
+                        
+                        Level1.observeFloc(map, id, pos.x, pos.y);
+                    }
                 };
-            } else {
-                // Other flocs skip the text message
-                map.buttonSpaces[utils.asGridCoords(position.x, position.y)] = {
-                    text: "Observe",
-                    action: "startCutscene",
-                    events: [
-                        { 
-                            type: "custom",
-                            action: (map) => {
-                                // Track this floc as observed without showing text
-                                Level1.observeFloc(map, `floc${i+1}`, position.x, position.y);
-                            }
-                        }
-                    ]
-                };
-            }
+            };
+            
+            const observeHandler = createObserveHandler(flocId, position);
+            
+            // Add button spaces around the floc
+            map.buttonSpaces[utils.asGridCoords(position.x, position.y - 1)] = { // Above
+                text: "Observe",
+                action: "startCutscene",
+                events: [{ type: "custom", action: observeHandler }]
+            };
+            
+            map.buttonSpaces[utils.asGridCoords(position.x + 1, position.y)] = { // Right
+                text: "Observe",
+                action: "startCutscene",
+                events: [{ type: "custom", action: observeHandler }]
+            };
+            
+            map.buttonSpaces[utils.asGridCoords(position.x, position.y + 1)] = { // Below
+                text: "Observe",
+                action: "startCutscene",
+                events: [{ type: "custom", action: observeHandler }]
+            };
+            
+            map.buttonSpaces[utils.asGridCoords(position.x - 1, position.y)] = { // Left
+                text: "Observe",
+                action: "startCutscene",
+                events: [{ type: "custom", action: observeHandler }]
+            };
         }
     }
 
@@ -342,19 +373,20 @@ class Level1 {
     static addCoagulants(map, count) {
         // Define fixed positions for coagulants in the water
         const coagulantPositions = [
-            { x: 42.5, y: 30 },
-            { x: 44.5, y: 32 },
-            { x: 46.5, y: 34 },
-            { x: 48.5, y: 36 },
-            { x: 50.5, y: 37 }
+            { x: 35.5, y: 22 },
+            { x: 39.5, y: 19 },
+            { x: 37.5, y: 24 },
+            { x: 42.5, y: 21 },
+            { x: 36.5, y: 20 }
         ];
         
         // Create coagulant objects at the predefined positions
         for (let i = 0; i < count && i < coagulantPositions.length; i++) {
             const position = coagulantPositions[i];
+            const coagulantId = `coagulant${i+1}`;
             
             // Add coagulant object to gameObjects
-            map.gameObjects[`coagulant${i+1}`] = new Person({
+            map.gameObjects[coagulantId] = new Person({
                 x: utils.withGrid(position.x),
                 y: utils.withGrid(position.y),
                 src: "images/waterAssets/coagulant.png",
@@ -363,25 +395,49 @@ class Level1 {
                 ]
             });
             
-            // Add button space for collecting the coagulant
-            map.buttonSpaces[utils.asGridCoords(position.x, position.y)] = {
+            // Create a closure to keep the current coagulant ID
+            const createMixHandler = (currentId, pos) => {
+                return (map) => {
+                    // Remove this coagulant object
+                    delete map.gameObjects[currentId];
+                    
+                    // Remove all button spaces around this coagulant
+                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y - 1)]; // Above
+                    delete map.buttonSpaces[utils.asGridCoords(pos.x + 1, pos.y)]; // Right
+                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y + 1)]; // Below
+                    delete map.buttonSpaces[utils.asGridCoords(pos.x - 1, pos.y)]; // Left
+                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y)]; // At position
+                    
+                    // Check if all coagulants have been mixed
+                    Level1.checkCoagulantsCollected(map);
+                };
+            };
+            
+            const mixHandler = createMixHandler(coagulantId, position);
+            
+            // Add button spaces around the coagulant
+            map.buttonSpaces[utils.asGridCoords(position.x, position.y - 1)] = { // Above
                 text: "Mix",
                 action: "startCutscene",
-                events: [
-                    { 
-                        type: "custom",
-                        action: (map) => {
-                            // Remove this coagulant object
-                            delete map.gameObjects[`coagulant${i+1}`];
-                            
-                            // Remove this button space
-                            delete map.buttonSpaces[utils.asGridCoords(position.x, position.y)];
-                            
-                            // Check if all coagulants have been mixed
-                            Level1.checkCoagulantsCollected(map);
-                        }
-                    }
-                ]
+                events: [{ type: "custom", action: mixHandler }]
+            };
+            
+            map.buttonSpaces[utils.asGridCoords(position.x + 1, position.y)] = { // Right
+                text: "Mix",
+                action: "startCutscene",
+                events: [{ type: "custom", action: mixHandler }]
+            };
+            
+            map.buttonSpaces[utils.asGridCoords(position.x, position.y + 1)] = { // Below
+                text: "Mix",
+                action: "startCutscene",
+                events: [{ type: "custom", action: mixHandler }]
+            };
+            
+            map.buttonSpaces[utils.asGridCoords(position.x - 1, position.y)] = { // Left
+                text: "Mix",
+                action: "startCutscene",
+                events: [{ type: "custom", action: mixHandler }]
             };
         }
     }
@@ -495,11 +551,11 @@ const level1GameObjects = {
 };
 
 const flocPositions = [
-    { x: 32.5, y: 15 },
-    { x: 25.5, y: 20 },
-    { x: 32.5, y: 18 },
-    { x: 26.5, y: 16 },
-    { x: 30.5, y: 19 }
+    { x: 35.5, y: 22 },
+    { x: 39.5, y: 19 },
+    { x: 37.5, y: 24 },
+    { x: 42.5, y: 21 },
+    { x: 36.5, y: 20 }
 ];
 
 // Events
@@ -522,7 +578,7 @@ const introLevel1Event = {
         }
     ]
 }
-
+// Update the collectDebris1Event to remove all button spaces
 const collectDebris1Event = {
     text: "Collect",
     action: "startCutscene",
@@ -536,6 +592,12 @@ const collectDebris1Event = {
                 // Remove the wall at this position to ensure it's not blocking
                 map.removeWall(utils.withGrid(35.5), utils.withGrid(24));
                 
+                // Remove all button spaces for this debris
+                delete map.buttonSpaces[utils.asGridCoords(35.5, 23)];
+                delete map.buttonSpaces[utils.asGridCoords(35.5, 25)];
+                delete map.buttonSpaces[utils.asGridCoords(34.5, 24)];
+                delete map.buttonSpaces[utils.asGridCoords(36.5, 24)];
+                
                 // Check if all debris is collected
                 Level1.checkDebrisCollected(map);
             }
@@ -543,6 +605,7 @@ const collectDebris1Event = {
     ]
 }
 
+// Update the collectDebris2Event to remove all button spaces
 const collectDebris2Event = {
     text: "Collect",
     action: "startCutscene",
@@ -556,6 +619,12 @@ const collectDebris2Event = {
                 // Remove the wall at this position to ensure it's not blocking
                 map.removeWall(utils.withGrid(41.5), utils.withGrid(23));
                 
+                // Remove all button spaces for this debris
+                delete map.buttonSpaces[utils.asGridCoords(41.5, 22)];
+                delete map.buttonSpaces[utils.asGridCoords(41.5, 24)];
+                delete map.buttonSpaces[utils.asGridCoords(40.5, 23)];
+                delete map.buttonSpaces[utils.asGridCoords(42.5, 23)];
+                
                 // Check if all debris is collected
                 Level1.checkDebrisCollected(map);
             }
@@ -563,6 +632,7 @@ const collectDebris2Event = {
     ]
 }
 
+// Update the collectDebris3Event to remove all button spaces
 const collectDebris3Event = {
     text: "Collect",
     action: "startCutscene",
@@ -576,6 +646,12 @@ const collectDebris3Event = {
                 // Remove the wall at this position to ensure it's not blocking
                 map.removeWall(utils.withGrid(38.5), utils.withGrid(21));
                 
+                // Remove all button spaces for this debris
+                delete map.buttonSpaces[utils.asGridCoords(38.5, 20)];
+                delete map.buttonSpaces[utils.asGridCoords(38.5, 22)];
+                delete map.buttonSpaces[utils.asGridCoords(37.5, 21)];
+                delete map.buttonSpaces[utils.asGridCoords(39.5, 21)];
+                
                 // Check if all debris is collected
                 Level1.checkDebrisCollected(map);
             }
@@ -583,6 +659,7 @@ const collectDebris3Event = {
     ]
 }
 
+// Update the collectDebris4Event to remove all button spaces
 const collectDebris4Event = {
     text: "Collect",
     action: "startCutscene",
@@ -595,6 +672,12 @@ const collectDebris4Event = {
                 
                 // Remove the wall at this position to ensure it's not blocking
                 map.removeWall(utils.withGrid(40.5), utils.withGrid(19));
+                
+                // Remove all button spaces for this debris
+                delete map.buttonSpaces[utils.asGridCoords(40.5, 18)];
+                delete map.buttonSpaces[utils.asGridCoords(40.5, 20)];
+                delete map.buttonSpaces[utils.asGridCoords(39.5, 19)];
+                delete map.buttonSpaces[utils.asGridCoords(41.5, 19)];
                 
                 // Check if all debris is collected
                 Level1.checkDebrisCollected(map);
@@ -635,11 +718,12 @@ const coagulantsStageEvent = {
     }
   }
 
+// Fix the addCoagulantsEvent to properly call the Level1.addCoagulants method
 const addCoagulantsEvent = {  
     type: "custom",
     action: (map) => {
-      // Add coagulant objects at fixed positions in the water.
-      Level1.addCoagulants(5);
+      // The issue is here - need to pass the map parameter to the addCoagulants method
+      Level1.addCoagulants(map, 5);
 
       // Update the objective 
       map.updateObjective("Mix coagulants");
@@ -651,14 +735,14 @@ const addCoagulantsEvent = {
             map.gameObjects["arrowIndicator"].destroy();
         }
         delete map.gameObjects["arrowIndicator"];
-    }
+      }
       
       // Remove the faucet button so it never shows again.
       delete map.buttonSpaces[utils.asGridCoords(34.5, 12)];
     }
-  }
+}
 
-
+// Update the startCoagulantsEvent to ensure full cleanup
 const startCoagulantsEvent = {
     text: "Add Coagulants",
     action: "startCutscene",
@@ -668,7 +752,7 @@ const startCoagulantsEvent = {
             type: "custom",
             action: (map) => {
                 // Add coagulant objects at fixed positions in the water
-                Level1.addCoagulants(5);
+                Level1.addCoagulants(map, 5);
                 
                 // Update objective to direct player back to operator immediately
                 map.updateObjective("Mix coagulants");
