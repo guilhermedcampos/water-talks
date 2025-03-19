@@ -537,7 +537,7 @@ const collectDebris1Event = {
                 map.removeWall(utils.withGrid(35.5), utils.withGrid(24));
                 
                 // Check if all debris is collected
-                Level1.checkDebrisCollected();
+                Level1.checkDebrisCollected(map);
             }
         }
     ]
@@ -557,7 +557,7 @@ const collectDebris2Event = {
                 map.removeWall(utils.withGrid(41.5), utils.withGrid(23));
                 
                 // Check if all debris is collected
-                Level1.checkDebrisCollected();
+                Level1.checkDebrisCollected(map);
             }
         }
     ]
@@ -577,7 +577,7 @@ const collectDebris3Event = {
                 map.removeWall(utils.withGrid(38.5), utils.withGrid(21));
                 
                 // Check if all debris is collected
-                Level1.checkDebrisCollected();
+                Level1.checkDebrisCollected(map);
             }
         }
     ]
@@ -597,7 +597,7 @@ const collectDebris4Event = {
                 map.removeWall(utils.withGrid(40.5), utils.withGrid(19));
                 
                 // Check if all debris is collected
-                Level1.checkDebrisCollected();
+                Level1.checkDebrisCollected(map);
             }
         }
     ]
