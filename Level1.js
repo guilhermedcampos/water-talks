@@ -103,6 +103,36 @@ class Level1 {
         }, 50); // Initial slight delay
 
     }
+
+    static changeSpriteEvent(mapName, positionType) {
+        return {
+            events: [
+                {
+                    type: "custom",
+                    action: (map) => {
+                        const hero = map.gameObjects["ben"];
+                        if (!hero) return;
+                        
+                        const currentSprite = hero.sprite.image.src;
+                        
+                        // Only change sprite if the current sprite doesn't match the position type
+                        if (positionType === "land" && currentSprite.includes("mainUnderwater")) {
+                            // Change from underwater to land character
+                            const newImage = new Image();
+                            newImage.src = "images/characters/people/mainCharacter.png";
+                            hero.sprite.image = newImage;
+                        } else if (positionType === "underwater" && currentSprite.includes("mainCharacter")) {
+                            // Change from land to underwater character
+                            const newImage = new Image();
+                            newImage.src = "images/characters/people/mainUnderwater.png";
+                            hero.sprite.image = newImage;
+                        }
+                        // Otherwise do nothing - already in the correct sprite for this position
+                    }
+                }
+            ]
+        };
+    }
     
     // Static helper methods
     static isOperatorPosition(map, x, y) {
@@ -576,6 +606,7 @@ const flocPositions = [
     { x: 42.5, y: 21 },
     { x: 36.5, y: 20 }
 ];
+
 
 // Events
 const introLevel1Event = {

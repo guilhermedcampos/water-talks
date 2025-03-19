@@ -94,9 +94,10 @@ class OverworldMap {
     checkForFootstepCutscene() {
         const hero = this.gameObjects["ben"];
         const match = this.cutSceneSpaces[`${hero.x},${hero.y}`];
+
         console.log("Match Footstep", match);
         if (!this.isCutscenePlaying && match) {
-            this.startCutscene(match[0].events);
+            this.startCutscene(match.events);
         }
         
         // Also check for button spaces
@@ -540,6 +541,43 @@ window.OverworldMaps = {
 
             // Update the faucet button action to change the mission right away
             [utils.asGridCoords(34.5, 12)]: startCoagulantsEvent,
+        },
+        cutSceneSpaces: {
+            // Transition spots - If player is underwater and steps on those positions, change his sprite to land
+            [utils.asGridCoords(33.5, 24)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(33.5, 23)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(33.5, 22)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(33.5, 21)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(33.5, 20)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(33.5, 19)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(33.5, 18)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(34.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(35.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(36.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(37.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(38.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(39.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(40.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(41.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
+            [utils.asGridCoords(42.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
+
+            // Transition spots - If player is on land and steps on those positions, change his sprite to underwater
+            [utils.asGridCoords(34.5, 24)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(34.5, 23)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(34.5, 22)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(34.5, 21)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(34.5, 20)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(34.5, 19)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(34.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
+
+            [utils.asGridCoords(35.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(36.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(37.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(38.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(39.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(40.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(41.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
+            [utils.asGridCoords(42.5, 18)]: Level1.changeSpriteEvent("Level1", "underwater"),
         }
     },
 }
