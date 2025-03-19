@@ -342,11 +342,11 @@ class Level1 {
     static addCoagulants(map, count) {
         // Define fixed positions for coagulants in the water
         const coagulantPositions = [
-            { x: 32.5, y: 15 },
-            { x: 25.5, y: 20 },
-            { x: 32.5, y: 18 },
-            { x: 26.5, y: 16 },
-            { x: 30.5, y: 19 }
+            { x: 42.5, y: 30 },
+            { x: 44.5, y: 32 },
+            { x: 46.5, y: 34 },
+            { x: 48.5, y: 36 },
+            { x: 50.5, y: 37 }
         ];
         
         // Create coagulant objects at the predefined positions
@@ -614,8 +614,8 @@ const coagulantsStageEvent = {
 
       // Create and add an arrow indicator at grid position (34.5, 12).
       map.gameObjects["arrowIndicator"] = new AnimatedGifSprite({
-        x: utils.withGrid(34.7),
-        y: utils.withGrid(11.5),
+        x: utils.withGrid(32.5),
+        y: utils.withGrid(20.5),
         src: "images/waterAssets/arrowDown.gif",  // Base name still used
         frameCount: 6,  // Number of frames in your animation
         animationSpeed: 130,  // Milliseconds between frame changes
@@ -624,7 +624,7 @@ const coagulantsStageEvent = {
     });
 
       // Dynamically add the faucet/dispenser button so the player can activate it.
-      map.buttonSpaces[utils.asGridCoords(34.5, 12)] = {
+      map.buttonSpaces[utils.asGridCoords(32.5, 21)] = {
         text: "Add Coagulants",
         action: "startCutscene",
         events: [
