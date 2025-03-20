@@ -580,7 +580,7 @@ class Level1 {
                                         
                                         // Update objective for Level2
                                         if (map.overworld && map.overworld.map) {
-                                            map.overworld.map.updateObjective("Welcome to Level 2");
+                                            Level2.startSedimentationStage(map)
                                         }
                                     }, 1500);
                                 }, 500);
@@ -885,7 +885,7 @@ const followOperatorEvent = {
         walkEvents.push({ type: "walk", who: "ben", direction: "right", time: 1000 });
 
         // Add multiple walk commands for the operator to move down several tiles
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 8; i++) {
             walkEvents.push({ type: "walk", who: "operator", direction: "down" });
         }
         
