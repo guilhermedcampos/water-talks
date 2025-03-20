@@ -153,3 +153,93 @@ const level1Walls = {
             [utils.asGridCoords(42.5, 16)]: true,
             [utils.asGridCoords(41.5, 16)]: true,
 };
+
+const level2Walls = {
+    // Horizontal walls (top)
+    [utils.asGridCoords(25.5, 16)]: true,
+    [utils.asGridCoords(26.5, 16)]: true,
+    [utils.asGridCoords(27.5, 16)]: true,
+    [utils.asGridCoords(28.5, 16)]: true,
+    [utils.asGridCoords(29.5, 16)]: true,
+    [utils.asGridCoords(30.5, 16)]: true,
+    [utils.asGridCoords(31.5, 16)]: true,
+    [utils.asGridCoords(32.5, 16)]: true,
+    [utils.asGridCoords(33.5, 16)]: true,
+    [utils.asGridCoords(34.5, 16)]: true,
+    [utils.asGridCoords(35.5, 16)]: true,
+    [utils.asGridCoords(36.5, 16)]: true,
+    [utils.asGridCoords(37.5, 16)]: true,
+    [utils.asGridCoords(38.5, 16)]: true,
+    [utils.asGridCoords(39.5, 16)]: true,
+
+    // Vertical walls (right)
+    [utils.asGridCoords(39.5, 17)]: true,
+    [utils.asGridCoords(39.5, 18)]: true,
+    [utils.asGridCoords(39.5, 19)]: true,
+    [utils.asGridCoords(39.5, 20)]: true,
+    [utils.asGridCoords(39.5, 21)]: true,
+    [utils.asGridCoords(39.5, 22)]: true,
+    [utils.asGridCoords(39.5, 23)]: true,
+    [utils.asGridCoords(39.5, 24)]: true,
+    [utils.asGridCoords(39.5, 25)]: true,
+    [utils.asGridCoords(39.5, 26)]: true,
+
+    // Horizontal walls (bottom)
+    [utils.asGridCoords(25.5, 26)]: true,
+    [utils.asGridCoords(26.5, 26)]: true,
+    [utils.asGridCoords(27.5, 26)]: true,
+    [utils.asGridCoords(28.5, 26)]: true,
+    [utils.asGridCoords(29.5, 26)]: true,
+    [utils.asGridCoords(30.5, 26)]: true,
+    [utils.asGridCoords(31.5, 26)]: true,
+    [utils.asGridCoords(32.5, 26)]: true,
+    [utils.asGridCoords(33.5, 26)]: true,
+    [utils.asGridCoords(34.5, 26)]: true,
+    [utils.asGridCoords(35.5, 26)]: true,
+    [utils.asGridCoords(36.5, 26)]: true,
+    [utils.asGridCoords(37.5, 26)]: true,
+    [utils.asGridCoords(38.5, 26)]: true,
+    [utils.asGridCoords(39.5, 26)]: true,
+
+    // Vertical walls (left)
+    [utils.asGridCoords(25.5, 17)]: true,
+    [utils.asGridCoords(25.5, 18)]: true,
+    [utils.asGridCoords(25.5, 19)]: true,
+    [utils.asGridCoords(25.5, 20)]: true,
+    [utils.asGridCoords(25.5, 21)]: true,
+    [utils.asGridCoords(25.5, 22)]: true,
+    [utils.asGridCoords(25.5, 23)]: true,
+    [utils.asGridCoords(25.5, 24)]: true,
+    [utils.asGridCoords(25.5, 25)]: true,
+    [utils.asGridCoords(25.5, 26)]: true,
+
+    // Vertical Tube
+    [utils.asGridCoords(26.5, 26)]: true,
+    [utils.asGridCoords(26.5, 25)]: true,
+    [utils.asGridCoords(26.5, 24)]: true,
+    [utils.asGridCoords(26.5, 23)]: true,
+    [utils.asGridCoords(26.5, 22)]: true,
+    [utils.asGridCoords(26.5, 21)]: true,
+    [utils.asGridCoords(26.5, 20)]: true,
+    [utils.asGridCoords(26.5, 19)]: true,
+    [utils.asGridCoords(26.5, 18)]: true,
+    [utils.asGridCoords(26.5, 17)]: true,
+
+    [utils.asGridCoords(27.5, 19)]: true,
+    [utils.asGridCoords(27.5, 18)]: true,
+    [utils.asGridCoords(27.5, 17)]: true,
+
+    [utils.asGridCoords(27.5, 25)]: true,
+    [utils.asGridCoords(28.5, 25)]: true,
+    [utils.asGridCoords(29.5, 25)]: true,
+
+    [utils.asGridCoords(38.5, 19)]: true,
+    [utils.asGridCoords(38.5, 18)]: true,
+    [utils.asGridCoords(38.5, 17)]: true,
+
+    // Desk
+    [utils.asGridCoords(38.5, 23)]: true,
+    [utils.asGridCoords(38.5, 24)]: true,
+    [utils.asGridCoords(38.5, 25)]: true,
+    [utils.asGridCoords(37.5, 25)]: true,
+}
