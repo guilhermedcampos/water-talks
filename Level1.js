@@ -205,11 +205,11 @@ class Level1 {
     static transformCoagulantsToFlocs(map) {
         // Use the same positions where coagulants were
         const flocPositions = [
-            { x: 35.5, y: 22 },
+            { x: 41.5, y: 25 },
             { x: 39.5, y: 19 },
             { x: 37.5, y: 24 },
             { x: 42.5, y: 21 },
-            { x: 36.5, y: 20 }
+            { x: 38.5, y: 21 }
         ];
         
         // Create floc objects at these positions
@@ -415,11 +415,11 @@ class Level1 {
     static addCoagulants(map, count) {
         // Define fixed positions for coagulants in the water
         const coagulantPositions = [
-            { x: 35.5, y: 22 },
+            { x: 41.5, y: 25 },
             { x: 39.5, y: 19 },
             { x: 37.5, y: 24 },
             { x: 42.5, y: 21 },
-            { x: 36.5, y: 20 }
+            { x: 38.5, y: 21 }
         ];
         
         // Create coagulant objects at the predefined positions
@@ -617,8 +617,8 @@ const level1GameObjects = {
     }),
     // Add water debris items that float on the water
     debris1: new Person({
-        x: utils.withGrid(35.5),
-        y: utils.withGrid(24),
+        x: utils.withGrid(42.5),
+        y: utils.withGrid(21),
         src: "images/waterAssets/bottle.png", 
         behaviorLoop: [
             { type: "stand", direction: "down", time: 999999 }
@@ -691,13 +691,13 @@ const collectDebris1Event = {
                 delete map.gameObjects["debris1"];
                 
                 // Remove the wall at this position to ensure it's not blocking
-                map.removeWall(utils.withGrid(35.5), utils.withGrid(24));
+                map.removeWall(utils.withGrid(42.5), utils.withGrid(21));
                 
-                // Remove all button spaces for this debris
-                delete map.buttonSpaces[utils.asGridCoords(35.5, 23)];
-                delete map.buttonSpaces[utils.asGridCoords(35.5, 25)];
-                delete map.buttonSpaces[utils.asGridCoords(34.5, 24)];
-                delete map.buttonSpaces[utils.asGridCoords(36.5, 24)];
+                // Remove all button spaces for this debris around (42.5, 21)
+                delete map.buttonSpaces[utils.asGridCoords(42.5, 20)];
+                delete map.buttonSpaces[utils.asGridCoords(42.5, 22)];
+                delete map.buttonSpaces[utils.asGridCoords(41.5, 21)];
+                delete map.buttonSpaces[utils.asGridCoords(43.5, 21)];
                 
                 // Check if all debris is collected
                 Level1.checkDebrisCollected(map);
@@ -720,12 +720,12 @@ const collectDebris2Event = {
                 // Remove the wall at this position to ensure it's not blocking
                 map.removeWall(utils.withGrid(41.5), utils.withGrid(23));
                 
-                // Remove all button spaces for this debris
+                // Remove all button spaces for this debris around (41.5, 21)
                 delete map.buttonSpaces[utils.asGridCoords(41.5, 22)];
                 delete map.buttonSpaces[utils.asGridCoords(41.5, 24)];
                 delete map.buttonSpaces[utils.asGridCoords(40.5, 23)];
                 delete map.buttonSpaces[utils.asGridCoords(42.5, 23)];
-                
+
                 // Check if all debris is collected
                 Level1.checkDebrisCollected(map);
             }
@@ -798,8 +798,8 @@ const coagulantsStageEvent = {
 
       // Create and add an arrow indicator at grid position (34.5, 12).
       map.gameObjects["arrowIndicator"] = new AnimatedGifSprite({
-        x: utils.withGrid(32.5),
-        y: utils.withGrid(19.5),
+        x: utils.withGrid(31),
+        y: utils.withGrid(21),
         src: "images/waterAssets/arrowDown.gif",  // Base name still used
         frameCount: 6,  // Number of frames in your animation
         animationSpeed: 130,  // Milliseconds between frame changes
@@ -808,7 +808,7 @@ const coagulantsStageEvent = {
     });
 
       // Dynamically add the faucet/dispenser button so the player can activate it.
-      map.buttonSpaces[utils.asGridCoords(32.5, 21)] = {
+      map.buttonSpaces[utils.asGridCoords(31.5, 21)] = {
         text: "Add Coagulants",
         action: "startCutscene",
         events: [
@@ -839,7 +839,7 @@ const addCoagulantsEvent = {
       }
       
       // Remove the correct button coordinate (32.5,21) instead of (34.5,12)
-      delete map.buttonSpaces[utils.asGridCoords(32.5, 21)];
+      delete map.buttonSpaces[utils.asGridCoords(31.5, 21)];
     }
 }
 
