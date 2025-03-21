@@ -422,70 +422,66 @@ class Level1 {
             { x: 38.5, y: 21 }
         ];
         
-        // Create coagulant objects at the predefined positions
+        // Reposition existing coagulant objects to the predefined positions
         for (let i = 0; i < count && i < coagulantPositions.length; i++) {
             const position = coagulantPositions[i];
             const coagulantId = `coagulant${i+1}`;
             
-            // Add coagulant object to gameObjects
-            map.gameObjects[coagulantId] = new Person({
-                x: utils.withGrid(position.x),
-                y: utils.withGrid(position.y),
-                src: "images/waterAssets/coagulant.png",
-                behaviorLoop: [
-                    { type: "stand", direction: "down", time: 999999 }
-                ]
-            });
-            
-            // Add wall at coagulant position to prevent walking over it
-            map.walls[`${utils.withGrid(position.x)},${utils.withGrid(position.y)}`] = true;
-            
-            // Create a closure to keep the current coagulant ID
-            const createMixHandler = (currentId, pos) => {
-                return (map) => {
-                    // Remove this coagulant object
-                    delete map.gameObjects[currentId];
-                    
-                    // Remove the wall at this position so player can walk through after mixing
-                    delete map.walls[`${utils.withGrid(pos.x)},${utils.withGrid(pos.y)}`];
-                    
-                    // Remove all button spaces around this coagulant
-                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y - 1)]; // Above
-                    delete map.buttonSpaces[utils.asGridCoords(pos.x + 1, pos.y)]; // Right
-                    delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y + 1)]; // Below
-                    delete map.buttonSpaces[utils.asGridCoords(pos.x - 1, pos.y)]; // Left
-                    
-                    // Check if all coagulants have been mixed
-                    Level1.checkCoagulantsCollected(map);
+            // Reposition existing coagulant object
+            if (map.gameObjects[coagulantId]) {
+                map.gameObjects[coagulantId].x = utils.withGrid(position.x);
+                map.gameObjects[coagulantId].y = utils.withGrid(position.y);
+                
+                // Add wall at coagulant position to prevent walking over it
+                map.walls[`${utils.withGrid(position.x)},${utils.withGrid(position.y)}`] = true;
+                
+                // Create a closure to keep the current coagulant ID
+                const createMixHandler = (currentId, pos) => {
+                    return (map) => {
+                        // Move the coagulant off-screen instead of deleting it
+                        delete map.gameObjects[currentId];
+                        
+                        // Remove the wall at this position so player can walk through after mixing
+                        delete map.walls[`${utils.withGrid(pos.x)},${utils.withGrid(pos.y)}`];
+                        
+                        // Remove all button spaces around this coagulant
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y - 1)]; // Above
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x + 1, pos.y)]; // Right
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y + 1)]; // Below
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x - 1, pos.y)]; // Left
+                        
+                        // Check if all coagulants have been mixed
+                        Level1.checkCoagulantsCollected(map);
+                    };
                 };
-            };
-            
-            const mixHandler = createMixHandler(coagulantId, position);
-            
-            // Add button spaces around the coagulant
-            map.buttonSpaces[utils.asGridCoords(position.x, position.y - 1)] = { // Above
-                text: "Mix",
-                action: "startCutscene",
-                events: [{ type: "custom", action: mixHandler }]
-            };
-            
-            map.buttonSpaces[utils.asGridCoords(position.x + 1, position.y)] = { // Right
-                text: "Mix",
-                action: "startCutscene",
-                events: [{ type: "custom", action: mixHandler }]
-            };
-            
-            map.buttonSpaces[utils.asGridCoords(position.x, position.y + 1)] = { // Below
-                text: "Mix",
-                action: "startCutscene",
-                events: [{ type: "custom", action: mixHandler }]
-            };
-            
-            map.buttonSpaces[utils.asGridCoords(position.x - 1, position.y)] = { // Left
-                text: "Mix",
-                action: "startCutscene",
-                events: [{ type: "custom", action: mixHandler }]
-            };
+                
+                const mixHandler = createMixHandler(coagulantId, position);
+                
+                // Add button spaces around the coagulant
+                map.buttonSpaces[utils.asGridCoords(position.x, position.y - 1)] = { // Above
+                    text: "Mix",
+                    action: "startCutscene",
+                    events: [{ type: "custom", action: mixHandler }]
+                };
+                
+                map.buttonSpaces[utils.asGridCoords(position.x + 1, position.y)] = { // Right
+                    text: "Mix",
+                    action: "startCutscene",
+                    events: [{ type: "custom", action: mixHandler }]
+                };
+                
+                map.buttonSpaces[utils.asGridCoords(position.x, position.y + 1)] = { // Below
+                    text: "Mix",
+                    action: "startCutscene",
+                    events: [{ type: "custom", action: mixHandler }]
+                };
+                
+                map.buttonSpaces[utils.asGridCoords(position.x - 1, position.y)] = { // Left
+                    text: "Mix",
+                    action: "startCutscene",
+                    events: [{ type: "custom", action: mixHandler }]
+                };
+            }
         }
     }
 
@@ -648,6 +644,59 @@ const level1GameObjects = {
             { type: "stand", direction: "down", time: 999999 }
         ]
     }),
+    // Preloaded arrow indicator (initially off-screen)
+    arrowIndicator: new AnimatedGifSprite({
+        x: utils.withGrid(-10), // Off-screen
+        y: utils.withGrid(-10), // Off-screen
+        src: "images/waterAssets/arrowDown.gif",
+        frameCount: 6,
+        animationSpeed: 130,
+        id: "arrowIndicator",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    
+    // Predefine coagulants (initially off-screen)
+    coagulant1: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/coagulant.png",
+        id: "coagulant1",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    coagulant2: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/coagulant.png",
+        id: "coagulant2",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    coagulant3: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/coagulant.png",
+        id: "coagulant3",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    coagulant4: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/coagulant.png",
+        id: "coagulant4",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    coagulant5: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/coagulant.png",
+        id: "coagulant5",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
 };
 
 const flocPositions = [
@@ -796,16 +845,8 @@ const coagulantsStageEvent = {
       // Update objective to direct player back to operator.
       map.updateObjective("Mix coagulants: Check the dispenser for remaining coagulants");
 
-      // Create and add an arrow indicator at grid position (34.5, 12).
-      map.gameObjects["arrowIndicator"] = new AnimatedGifSprite({
-        x: utils.withGrid(31),
-        y: utils.withGrid(21),
-        src: "images/waterAssets/arrowDown.gif",  // Base name still used
-        frameCount: 6,  // Number of frames in your animation
-        animationSpeed: 130,  // Milliseconds between frame changes
-        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
-        collides: false,
-    });
+      map.gameObjects["arrowIndicator"].x = utils.withGrid(31);
+      map.gameObjects["arrowIndicator"].y = utils.withGrid(21);
 
       // Dynamically add the faucet/dispenser button so the player can activate it.
       map.buttonSpaces[utils.asGridCoords(31.5, 21)] = {
@@ -816,6 +857,7 @@ const coagulantsStageEvent = {
           addCoagulantsEvent,
         ]
       };
+
     }
   }
 
