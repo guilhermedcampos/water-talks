@@ -628,8 +628,9 @@ window.OverworldMaps = {
             [utils.asGridCoords(39.5, 17)]: Level1.changeSpriteEvent("Level1", "underwater"),
             [utils.asGridCoords(40.5, 17)]: Level1.changeSpriteEvent("Level1", "underwater"),
             // Change Map position
-            [utils.asGridCoords(33.5, 25)]: Level1.initLevel2(),
-            [utils.asGridCoords(32.5, 25)]: Level1.initLevel2(),
+            [utils.asGridCoords(34.5, 25)]: initLevel2Event,
+            [utils.asGridCoords(33.5, 25)]: initLevel2Event,
+            [utils.asGridCoords(32.5, 25)]: initLevel2Event,
         }
     },
     Level2: {

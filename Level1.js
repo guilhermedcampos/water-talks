@@ -536,56 +536,47 @@ class Level1 {
     }
 
     // Add this method to the Level1.js file, inside the Level1 class
-    static initLevel2() {
-        return {
-            events: [
-                {
-                    type: "custom",
-                    action: (map) => {
-                        // Create fade overlay element
-                        const fadeOverlay = document.createElement("div");
-                        fadeOverlay.style.position = "fixed";
-                        fadeOverlay.style.top = "0";
-                        fadeOverlay.style.left = "0";
-                        fadeOverlay.style.width = "100%";
-                        fadeOverlay.style.height = "100%";
-                        fadeOverlay.style.backgroundColor = "black";
-                        fadeOverlay.style.opacity = "0";
-                        fadeOverlay.style.transition = "opacity 1.5s ease";
-                        fadeOverlay.style.zIndex = "1000";
-                        document.body.appendChild(fadeOverlay);
+    static initLevel2(map) {
+        // Create fade overlay element
+        const fadeOverlay = document.createElement("div");
+        fadeOverlay.style.position = "fixed";
+        fadeOverlay.style.top = "0";
+        fadeOverlay.style.left = "0";
+        fadeOverlay.style.width = "100%";
+        fadeOverlay.style.height = "100%";
+        fadeOverlay.style.backgroundColor = "black";
+        fadeOverlay.style.opacity = "0";
+        fadeOverlay.style.transition = "opacity 1.5s ease";
+        fadeOverlay.style.zIndex = "1000";
+        document.body.appendChild(fadeOverlay);
+        
+        // Trigger fade in
+        setTimeout(() => {
+            fadeOverlay.style.opacity = "1";
+            
+            // After fade is complete, change map
+            setTimeout(() => {
+                // Change to Level2
+                map.startCutscene([
+                    { type: "changeMap", map: "Level2" }
+                ]);
+                
+                // Start fade out after map change
+                setTimeout(() => {
+                    fadeOverlay.style.opacity = "0";
+                    
+                    // Remove overlay after fade out
+                    setTimeout(() => {
+                        document.body.removeChild(fadeOverlay);
                         
-                        // Trigger fade in
-                        setTimeout(() => {
-                            fadeOverlay.style.opacity = "1";
-                            
-                            // After fade is complete, change map
-                            setTimeout(() => {
-                                // Change to Level2
-                                map.startCutscene([
-                                    { type: "changeMap", map: "Level2" }
-                                ]);
-                                
-                                // Start fade out after map change
-                                setTimeout(() => {
-                                    fadeOverlay.style.opacity = "0";
-                                    
-                                    // Remove overlay after fade out
-                                    setTimeout(() => {
-                                        document.body.removeChild(fadeOverlay);
-                                        
-                                        // Update objective for Level2
-                                        if (map.overworld && map.overworld.map) {
-                                            Level2.startSedimentationStage(map)
-                                        }
-                                    }, 1500);
-                                }, 500);
-                            }, 1500);
-                        }, 50);
-                    }
-                }
-            ]
-        };
+                        // Update objective for Level2 and start sedimentation stage
+                        if (map.overworld && map.overworld.map) {
+                            Level2.startSedimentationStage(map.overworld.map);
+                        }
+                    }, 1500);
+                }, 500);
+            }, 1500);
+        }, 50);
     }
 }
 
@@ -596,7 +587,8 @@ const level1GameObjects = {
         isPlayerControlled: true,
         x: utils.withGrid(5),
         y: utils.withGrid(5), 
-        src: "images/characters/people/mainCharacter.png"
+        src: "images/characters/people/mainCharacter.png",
+        id: "ben"
     }),
     
     // Update the operator in the Level1 map
@@ -604,6 +596,7 @@ const level1GameObjects = {
         x: utils.withGrid(32.5),
         y: utils.withGrid(17),
         src: "images/characters/people/operator.png",
+        id: "operator",
         // Make the operator stand still by using a simple behavior loop
         // with only one standing direction for a very long time
         behaviorLoop: [
@@ -919,22 +912,39 @@ const startCoagulantsEvent = {
 const followOperatorEvent = { 
     type: "custom",
     action: (map) => {
-
         map.updateObjective("Follow the operator to the next stage");
 
-        const walkEvents = []
-
-        walkEvents.push({ type: "walk", who: "ben", direction: "right", time: 1000 });
+        const walkEvents = [];
 
         // Add multiple walk commands for the operator to move down several tiles
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 7; i++) {
             walkEvents.push({ type: "walk", who: "operator", direction: "down" });
         }
-        
+
+        // Add multiple walk commands for the operator to move right several tiles
+        for (let i = 0; i < 3; i++) {
+            walkEvents.push({ type: "walk", who: "operator", direction: "right" });
+        }
+
         // Remove the wall at the exit point to allow the player to leave
         delete map.walls[utils.asGridCoords(33.5, 25)];
         delete map.walls[utils.asGridCoords(32.5, 25)];
 
+        // Add a final event to delete the operator AFTER the walking is complete
+        walkEvents.push({ 
+            type: "custom",
+            action: (map) => {
+                // Delete the operator at the exit point
+                delete map.gameObjects["operator"];
+                
+                // Maybe add a message to guide the player
+                map.startCutscene([
+                    { type: "textMessage", text: "Follow the operator through the door..." }
+                ]);
+            }
+        });
+
+        // Start the cutscene with all events including the deletion at the end
         map.startCutscene(walkEvents);
     }
 }
