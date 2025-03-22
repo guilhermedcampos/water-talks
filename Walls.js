@@ -130,6 +130,8 @@ const level1Walls = {
             [utils.asGridCoords(42.5, 26)]: true,
             [utils.asGridCoords(43.5, 26)]: true,
             [utils.asGridCoords(44.5, 26)]: true,
+            [utils.asGridCoords(33.5, 25)] : true,
+            [utils.asGridCoords(32.5, 25)] : true,
 
             // Shelf
             [utils.asGridCoords(31.5, 19)]: true,
