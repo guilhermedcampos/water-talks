@@ -15,7 +15,7 @@ class Overworld {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             // Establish the camera person (the player)
-            const cameraPerson = this.map.gameObjects.ben;
+            const cameraPerson = this.map.cameraPerson || this.map.gameObjects.ben;
 
             // Update the game objects, sort by y position so that the lower objects are drawn first
             // avoiding the need for z-index

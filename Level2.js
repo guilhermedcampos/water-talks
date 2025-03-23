@@ -9,9 +9,17 @@ class Level2 {
     }
 
     static showSedimentationOverlay(map) {
-    
+    // Move ben and operator off the grid temp
+    map.gameObjects["ben"].isPlayerControlled = false;
+
+    map.gameObjects["ben"].x = utils.withGrid(-10);
+    map.gameObjects["ben"].y = utils.withGrid(-10);
+
+    map.gameObjects["operator"].x = utils.withGrid(-10);
+    map.gameObjects["operator"].y = utils.withGrid(-10);
+
     // Change the upperSrc to the sedimentation overlay image
-    map.upperImage.src = "images/maps/Level2Sedimentation.png";
+    map.lowerImage.src = "images/maps/Level2Sedimentation.png";
     map.isCutscenePlaying = true;
 
     // Get the canvas context
@@ -19,9 +27,11 @@ class Level2 {
 
     // Force the map to re-render to reflect the changes
     map.drawLowerImage(ctx, map.gameObjects["ben"]);
-    map.drawUpperImage(ctx, map.gameObjects["ben"]);
+    
+    // Change the camera focus to a different position
+    map.cameraPerson = { x: utils.withGrid(36.5), y: utils.withGrid(23) };
 
-    drawSediments(map);
+    Level2.drawSediments(ctx, map);
     }
 
     static drawSediments(ctx, map) {
@@ -40,7 +50,6 @@ class Level2 {
             if (sediment) {
                 sediment.x = utils.withGrid(position.x);
                 sediment.y = utils.withGrid(position.y);
-                ctx.drawImage(sediment.sprite.image, sediment.x, sediment.y);
             }
         });
     }
