@@ -711,6 +711,8 @@ window.OverworldMaps = {
             [utils.asGridCoords(28.5, 25)]: Level1.changeSpriteEvent("Level1", "underwater"),
             [utils.asGridCoords(27.5, 25)]: Level1.changeSpriteEvent("Level1", "underwater"),
             },
-        buttonSpaces: {},
+        buttonSpaces: {
+            [utils.asGridCoords(37.5, 23)]: observeSedimentationEvent,
+        },
     }
 }
