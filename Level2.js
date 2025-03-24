@@ -13,9 +13,11 @@ class Level2 {
         map.gameObjects["ben"].isPlayerControlled = false;
 
         // Move Ben and operator off the grid temporarily
+        const curBen = [ map.gameObjects["ben"].x, map.gameObjects["ben"].y];
         map.gameObjects["ben"].x = utils.withGrid(-10);
         map.gameObjects["ben"].y = utils.withGrid(-10);
 
+        const curOperator = [map.gameObjects["operator"].x, map.gameObjects["operator"].y];
         map.gameObjects["operator"].x = utils.withGrid(-10);
         map.gameObjects["operator"].y = utils.withGrid(-10);
 
@@ -38,8 +40,11 @@ class Level2 {
         // Drop sediments
         Level2.dropWalls(map);
 
-        // Draw sediments with a timeout of 1.5 times slower between each drawing
+        // Draw sediments with a timeout 
         Level2.dropAllSediments(ctx, map);
+
+        // Add a delay before returning to the level
+        setTimeout(() => Level2.returnToLevel(curBen, curOperator, map), 10000);
     }
 
     static drawSediments(ctx, map, offset) {
@@ -98,6 +103,38 @@ class Level2 {
         setTimeout(() => Level2.drawSediments(ctx, map, 5.5), 8250);
         setTimeout(() => Level2.drawSediments(ctx, map, 5.75), 8625);
         setTimeout(() => Level2.drawSediments(ctx, map, 6), 9000);
+    }
+
+    static returnToLevel(curBen, curOperator, map) {
+        // Delete the sediments
+        for (let i = 1; i <= 7; i++) {
+            delete map.gameObjects[`sediment${i}`];
+        }
+
+        // Change the lowerSrc back to the normal image 
+        map.lowerImage.src = "images/maps/Level2Lower.png";
+
+        // Force the map to re-render to reflect the changes
+        const ctx = document.querySelector(".game-canvas").getContext("2d");
+        map.drawLowerImage(ctx, map.gameObjects["ben"]);
+
+        // Add the desk (Walls) back
+        map.walls[utils.asGridCoords(38.5, 23)] = true;
+        map.walls[utils.asGridCoords(38.5, 24)] = true;
+        map.walls[utils.asGridCoords(38.5, 25)] = true;
+        map.walls[utils.asGridCoords(37.5, 25)] = true;
+
+        // Move Ben and operator back to the grid
+        map.gameObjects["ben"].x = curBen[0];
+        map.gameObjects["ben"].y = curBen[1];
+        map.gameObjects["ben"].isPlayerControlled = true;
+
+        map.gameObjects["operator"].x = curOperator[0];
+        map.gameObjects["operator"].y = curOperator[1];
+
+        // Change the camera focus back to Ben
+        map.cameraPerson = map.gameObjects["ben"];
+        map.isCutscenePlaying = false;
     }
 }
 // Constants
