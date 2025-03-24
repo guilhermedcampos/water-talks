@@ -38,34 +38,19 @@ class Level2 {
         // Drop sediments
         Level2.dropWalls(map);
 
-        // Draw sediments with a timeout of half second between each drawing
-        setTimeout(() => Level2.drawSediments(ctx, map, 1), 1000);
-        setTimeout(() => Level2.drawSediments(ctx, map, 1.25), 1250);
-        setTimeout(() => Level2.drawSediments(ctx, map, 1.5), 1500);
-        setTimeout(() => Level2.drawSediments(ctx, map, 1.75), 1750);
-        setTimeout(() => Level2.drawSediments(ctx, map, 2), 2000);
-        setTimeout(() => Level2.drawSediments(ctx, map, 2.25), 2250);
-        setTimeout(() => Level2.drawSediments(ctx, map, 2.5), 2500);
-        setTimeout(() => Level2.drawSediments(ctx, map, 2.75), 2750);
-        setTimeout(() => Level2.drawSediments(ctx, map, 3), 3000);
-        setTimeout(() => Level2.drawSediments(ctx, map, 3.25), 3250);
-        setTimeout(() => Level2.drawSediments(ctx, map, 3.5), 3500);
-        setTimeout(() => Level2.drawSediments(ctx, map, 3.75), 3750);
-        setTimeout(() => Level2.drawSediments(ctx, map, 4), 4000);
-        setTimeout(() => Level2.drawSediments(ctx, map, 4.25), 4250);
-        setTimeout(() => Level2.drawSediments(ctx, map, 4.5), 4500);
-        setTimeout(() => Level2.drawSediments(ctx, map, 4.75), 4750);
-        setTimeout(() => Level2.drawSediments(ctx, map, 5), 5000);
+        // Draw sediments with a timeout of 1.5 times slower between each drawing
+        Level2.dropAllSediments(ctx, map);
     }
 
     static drawSediments(ctx, map, offset) {
         const sedimentsPositions = [
-            { x: 39.5, y: 24 + offset},
-            { x: 37.5, y: 22 + offset}, 
-            { x: 36.5, y: 23 + offset},
-            { x: 35.5, y: 22 + offset},
-            { x: 34.5, y: 24 + offset},
-            { x: 32.5, y: 23 + offset},
+            { x: 41.5, y: 23 + offset},
+            { x: 39.5, y: 23 + offset},
+            { x: 37.5, y: 21 + offset}, 
+            { x: 36.5, y: 22 + offset},
+            { x: 35.5, y: 21 + offset},
+            { x: 34.5, y: 23 + offset},
+            { x: 32.5, y: 22 + offset}, 
         ];
 
         sedimentsPositions.forEach((position, index) => {
@@ -87,8 +72,34 @@ class Level2 {
         delete map.walls[utils.asGridCoords(38.5, 25)];
         delete map.walls[utils.asGridCoords(37.5, 25)];
     }
-}
 
+    static dropAllSediments(ctx, map) {
+        setTimeout(() => Level2.drawSediments(ctx, map, 0.25), 375);
+        setTimeout(() => Level2.drawSediments(ctx, map, 0.5), 750);
+        setTimeout(() => Level2.drawSediments(ctx, map, 0.75), 1125);
+        setTimeout(() => Level2.drawSediments(ctx, map, 1), 1500);
+        setTimeout(() => Level2.drawSediments(ctx, map, 1.25), 1875);
+        setTimeout(() => Level2.drawSediments(ctx, map, 1.5), 2250);
+        setTimeout(() => Level2.drawSediments(ctx, map, 1.75), 2625);
+        setTimeout(() => Level2.drawSediments(ctx, map, 2), 3000);
+        setTimeout(() => Level2.drawSediments(ctx, map, 2.25), 3375);
+        setTimeout(() => Level2.drawSediments(ctx, map, 2.5), 3750);
+        setTimeout(() => Level2.drawSediments(ctx, map, 2.75), 4125);
+        setTimeout(() => Level2.drawSediments(ctx, map, 3), 4500);
+        setTimeout(() => Level2.drawSediments(ctx, map, 3.25), 4875);
+        setTimeout(() => Level2.drawSediments(ctx, map, 3.5), 5250);
+        setTimeout(() => Level2.drawSediments(ctx, map, 3.75), 5625);
+        setTimeout(() => Level2.drawSediments(ctx, map, 4), 6000);
+        setTimeout(() => Level2.drawSediments(ctx, map, 4.25), 6375);
+        setTimeout(() => Level2.drawSediments(ctx, map, 4.5), 6750);
+        setTimeout(() => Level2.drawSediments(ctx, map, 4.75), 7125);
+        setTimeout(() => Level2.drawSediments(ctx, map, 5), 7500);
+        setTimeout(() => Level2.drawSediments(ctx, map, 5.25), 7875);
+        setTimeout(() => Level2.drawSediments(ctx, map, 5.5), 8250);
+        setTimeout(() => Level2.drawSediments(ctx, map, 5.75), 8625);
+        setTimeout(() => Level2.drawSediments(ctx, map, 6), 9000);
+    }
+}
 // Constants
 
 const level2GameObjects = {
@@ -156,6 +167,14 @@ const level2GameObjects = {
         y: utils.withGrid(-10),
         src: "images/waterAssets/sediment.png",
         id: "sediment6",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    sediment7: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/sediment.png",
+        id: "sediment7",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
     }),
