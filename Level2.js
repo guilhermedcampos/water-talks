@@ -48,7 +48,10 @@ class Level2 {
             Level2.returnToLevel(curBen, curOperator, map);
             // Spawn the button after returning to the level
             map.buttonSpaces[utils.asGridCoords(37.5, 23)] = talkToOperatorEvent;
+            this.drawSinkSediments(ctx, map);
+            spawnSinkButtons(map);
         }, 10000);
+
     }
 
     static drawSediments(ctx, map, offset) {
@@ -140,6 +143,72 @@ class Level2 {
         map.cameraPerson = map.gameObjects["ben"];
         map.isCutscenePlaying = false;
     }
+
+    static drawSinkSediments(ctx, map) {
+
+        sedimentsToSinkPositions.forEach((position, index) => {
+            const sedimentId = `sediment2${index + 1}`;
+            const sediment = map.gameObjects[sedimentId];
+            if (sediment) {
+                sediment.x = utils.withGrid(position.x);
+                sediment.y = utils.withGrid(position.y);
+            }
+        });
+    }
+
+    static spawnSinkButtons(map) {
+        // Loop through the sediments that need to sink
+        sedimentsToSinkPositions.forEach((position, index) => {
+            const sedimentId = `sediment2${index + 1}`;
+            const buttonId = `sinkButton${index + 1}`;
+    
+            // Add sediment to gameObjects
+            map.gameObjects[sedimentId] = new Person({
+                x: utils.withGrid(position.x),
+                y: utils.withGrid(position.y),
+                src: "images/waterAssets/sediment.png",
+                behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+            });
+    
+            // Button position (slightly offset from sediment)
+            const buttonX = position.x + 0.5;
+            const buttonY = position.y;
+    
+            // Add button to buttonSpaces
+            map.buttonSpaces[utils.asGridCoords(buttonX, buttonY)] = {
+                text: "Sink",
+                action: "custom",
+                events: [
+                    {
+                        type: "custom",
+                        action: (map) => {
+                            // Remove the sediment and button
+                            delete map.gameObjects[sedimentId];
+                            delete map.buttonSpaces[utils.asGridCoords(buttonX, buttonY)];
+    
+                            // Check if all sediments are sunk
+                            Level2.checkAllSunk(map);
+                        }
+                    }
+                ]
+            };
+        });
+    }
+    
+    // Check if all sediments have been sunk
+    static checkAllSunk(map) {
+        const allSunk = sedimentsToSinkPositions.every((_, index) => 
+            !map.gameObjects[`sediment2${index + 1}`]
+        );
+    
+        if (allSunk) {
+            map.startCutscene([
+                { type: "textMessage", text: "All sediments have been removed!" },
+                { type: "textMessage", text: "Let's move on to filtration." },
+            ]);
+        }
+    }
+    
 }
 // Constants
 
@@ -219,6 +288,39 @@ const level2GameObjects = {
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
     }),
+
+    sediment21: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/sediment.png",
+        id: "sediment21",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    sediment22: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/sediment.png",
+        id: "sediment22",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    sediment23: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/sediment.png",
+        id: "sediment23",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    sediment24: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/sediment.png",
+        id: "sediment24",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
 }
 
 // Constants
@@ -232,7 +334,12 @@ const sedimentsPositions = [
     { x: 32.5, y: 23 },
 ];
 
-
+const sedimentsToSinkPositions = [
+    { x: 31.5, y: 23 },
+    { x: 29.5, y: 21 },
+    { x: 28.5, y: 23 }, 
+    { x: 31.5, y: 19 },
+];
 
 // Events
 
