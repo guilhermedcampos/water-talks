@@ -47,7 +47,9 @@ class Level2 {
         setTimeout(() => {
             Level2.returnToLevel(curBen, curOperator, map);
             // Spawn the button after returning to the level
+            map.updateObjective("Talk to the operator.");
             map.buttonSpaces[utils.asGridCoords(37.5, 23)] = talkToOperatorEvent;
+            map.updateObjective("Sink the remaining flocs.");
             this.drawSinkSediments(ctx, map);
             Level2.spawnSinkButtons(map);
         }, 10000);
@@ -228,7 +230,7 @@ class Level2 {
     
         if (allSunk) {
             map.startCutscene([
-                { type: "textMessage", text: "All sediments have been removed!" },
+                { type: "textMessage", text: "All flocs have been settled!" },
                 { type: "textMessage", text: "Let's move on to filtration." },
             ]);
         }
@@ -313,6 +315,18 @@ const level2GameObjects = {
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
     }),
+
+    arrowIndicator: new AnimatedGifSprite({
+        x: utils.withGrid(-10), 
+        y: utils.withGrid(-10), 
+        src: "images/waterAssets/arrowDown.gif",
+        frameCount: 6,
+        animationSpeed: 130,
+        id: "arrowIndicator",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    
 
     sediment21: new Person({
         x: utils.withGrid(-10),
@@ -411,6 +425,12 @@ const talkToOperatorEvent = {
     events: [
         { type: "textMessage", text: "Looks like sedimentation is complete!" },
         { type: "textMessage", text: "Do you understand how sedimentation works?" },
-        { type: "textMessage", text: "Before we continue to filtration, sink the remaining sediments." },
+        { type: "textMessage", text: "Before we continue to filtration, sink the remaining flocs." },
+        {
+            type: "custom",
+            action: (map) => {
+                delete map.buttonSpaces[utils.asGridCoords(37.5, 23)];
+            }
+        },
     ]
 };
