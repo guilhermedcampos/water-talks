@@ -49,7 +49,7 @@ class Level2 {
             // Spawn the button after returning to the level
             map.buttonSpaces[utils.asGridCoords(37.5, 23)] = talkToOperatorEvent;
             this.drawSinkSediments(ctx, map);
-            spawnSinkButtons(map);
+            Level2.spawnSinkButtons(map);
         }, 10000);
 
     }
@@ -158,43 +158,68 @@ class Level2 {
 
     static spawnSinkButtons(map) {
         // Loop through the sediments that need to sink
-        sedimentsToSinkPositions.forEach((position, index) => {
-            const sedimentId = `sediment2${index + 1}`;
-            const buttonId = `sinkButton${index + 1}`;
-    
-            // Add sediment to gameObjects
-            map.gameObjects[sedimentId] = new Person({
-                x: utils.withGrid(position.x),
-                y: utils.withGrid(position.y),
-                src: "images/waterAssets/sediment.png",
-                behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
-            });
-    
-            // Button position (slightly offset from sediment)
-            const buttonX = position.x + 0.5;
-            const buttonY = position.y;
-    
-            // Add button to buttonSpaces
-            map.buttonSpaces[utils.asGridCoords(buttonX, buttonY)] = {
-                text: "Sink",
-                action: "custom",
-                events: [
-                    {
-                        type: "custom",
-                        action: (map) => {
-                            // Remove the sediment and button
-                            delete map.gameObjects[sedimentId];
-                            delete map.buttonSpaces[utils.asGridCoords(buttonX, buttonY)];
-    
-                            // Check if all sediments are sunk
-                            Level2.checkAllSunk(map);
-                        }
-                    }
-                ]
-            };
-        });
+        for (let i = 0; i < sedimentsToSinkPositions.length; i++) {
+            const position = sedimentsToSinkPositions[i];
+            const sedimentId = `sediment2${i + 1}`;
+            
+            // Reposition existing sediment object
+            if (map.gameObjects[sedimentId]) {
+                map.gameObjects[sedimentId].x = utils.withGrid(position.x);
+                map.gameObjects[sedimentId].y = utils.withGrid(position.y);
+                
+                // Add wall at sediment position to prevent walking over it
+                map.walls[`${utils.withGrid(position.x)},${utils.withGrid(position.y)}`] = true;
+                
+                // Create a closure to keep the current sediment ID
+                const createSinkHandler = (currentId, pos) => {
+                    return (map) => {
+                        // Move the sediment off-screen instead of deleting it
+                        delete map.gameObjects[currentId];
+                        
+                        // Remove the wall at this position so player can walk through after sinking
+                        delete map.walls[`${utils.withGrid(pos.x)},${utils.withGrid(pos.y)}`];
+                        
+                        // Remove all button spaces around this sediment
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y - 1)]; // Above
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x + 1, pos.y)]; // Right
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x, pos.y + 1)]; // Below
+                        delete map.buttonSpaces[utils.asGridCoords(pos.x - 1, pos.y)]; // Left
+                        
+                        // Check if all sediments have been sunk
+                        Level2.checkAllSunk(map);
+                    };
+                };
+                
+                const sinkHandler = createSinkHandler(sedimentId, position);
+                
+                // Add button spaces around the sediment
+                map.buttonSpaces[utils.asGridCoords(position.x, position.y - 1)] = { // Above
+                    text: "Sink",
+                    action: "startCutscene",
+                    events: [{ type: "custom", action: sinkHandler }]
+                };
+                
+                map.buttonSpaces[utils.asGridCoords(position.x + 1, position.y)] = { // Right
+                    text: "Sink",
+                    action: "startCutscene",
+                    events: [{ type: "custom", action: sinkHandler }]
+                };
+                
+                map.buttonSpaces[utils.asGridCoords(position.x, position.y + 1)] = { // Below
+                    text: "Sink",
+                    action: "startCutscene",
+                    events: [{ type: "custom", action: sinkHandler }]
+                };
+                
+                map.buttonSpaces[utils.asGridCoords(position.x - 1, position.y)] = { // Left
+                    text: "Sink",
+                    action: "startCutscene",
+                    events: [{ type: "custom", action: sinkHandler }]
+                };
+            }
+        }
     }
-    
+
     // Check if all sediments have been sunk
     static checkAllSunk(map) {
         const allSunk = sedimentsToSinkPositions.every((_, index) => 
