@@ -44,7 +44,11 @@ class Level2 {
         Level2.dropAllSediments(ctx, map);
 
         // Add a delay before returning to the level
-        setTimeout(() => Level2.returnToLevel(curBen, curOperator, map), 10000);
+        setTimeout(() => {
+            Level2.returnToLevel(curBen, curOperator, map);
+            // Spawn the button after returning to the level
+            map.buttonSpaces[utils.asGridCoords(37.5, 23)] = talkToOperatorEvent;
+        }, 10000);
     }
 
     static drawSediments(ctx, map, offset) {
@@ -269,3 +273,12 @@ const observeSedimentationEvent = {
     ]
 };
 
+const talkToOperatorEvent = {
+    text: "Talk",
+    action: "startCutscene",
+    events: [
+        { type: "textMessage", text: "Looks like sedimentation is complete!" },
+        { type: "textMessage", text: "Do you understand how sedimentation works?" },
+        { type: "textMessage", text: "Before we continue to filtration, sink the remaining sediments." },
+    ]
+};

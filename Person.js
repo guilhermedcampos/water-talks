@@ -85,7 +85,7 @@ class Person extends GameObject {
     }
   
     updateSprite() {
-      if (this.id.startsWith("sediment")) {
+      if (this.id.startsWith("ben")) {
         console.log("Current position: ", this.x / 16, this.y / 16, "Of person: ", this.id);
       }
       // If the person is moving, set the animation to walk
