@@ -49,7 +49,6 @@ class Level2 {
             // Spawn the button after returning to the level
             map.updateObjective("Talk to the operator.");
             map.buttonSpaces[utils.asGridCoords(37.5, 23)] = talkToOperatorEvent;
-            map.updateObjective("Sink the remaining flocs.");
             this.drawSinkSediments(ctx, map);
             Level2.spawnSinkButtons(map);
         }, 10000);
@@ -430,6 +429,7 @@ const talkToOperatorEvent = {
             type: "custom",
             action: (map) => {
                 delete map.buttonSpaces[utils.asGridCoords(37.5, 23)];
+                map.updateObjective("Sink the remaining flocs.");
             }
         },
     ]
