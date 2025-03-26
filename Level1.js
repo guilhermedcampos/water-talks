@@ -846,7 +846,14 @@ const coagulantsStageEvent = {
         text: "Add Coagulants",
         action: "startCutscene",
         events: [
-          { type: "textMessage", text: "You've activated the coagulant dispenser!" },
+          addCoagulantsEvent,
+        ]
+      };
+
+      map.buttonSpaces[utils.asGridCoords(31.5, 22)] = {
+        text: "Add Coagulants",
+        action: "startCutscene",
+        events: [
           addCoagulantsEvent,
         ]
       };
@@ -873,8 +880,9 @@ const addCoagulantsEvent = {
         delete map.gameObjects["arrowIndicator"];
       }
       
-      // Remove the correct button coordinate (32.5,21) instead of (34.5,12)
+      // Remove the correct button coordinate (32.5,21) and (32.5,22)
       delete map.buttonSpaces[utils.asGridCoords(31.5, 21)];
+      delete map.buttonSpaces[utils.asGridCoords(31.5, 22)];
     }
 }
 
@@ -916,14 +924,11 @@ const followOperatorEvent = {
 
         const walkEvents = [];
 
-        // Add multiple walk commands for the operator to move down several tiles
-        for (let i = 0; i < 7; i++) {
-            walkEvents.push({ type: "walk", who: "operator", direction: "down" });
-        }
+        walkEvents.push({ type: "walk", who: "ben", direction: "right" });
 
-        // Add multiple walk commands for the operator to move right several tiles
-        for (let i = 0; i < 3; i++) {
-            walkEvents.push({ type: "walk", who: "operator", direction: "right" });
+        // Add multiple walk commands for the operator to move down several tiles
+        for (let i = 0; i < 8; i++) {
+            walkEvents.push({ type: "walk", who: "operator", direction: "down" });
         }
 
         // Remove the wall at the exit point to allow the player to leave
@@ -936,11 +941,7 @@ const followOperatorEvent = {
             action: (map) => {
                 // Delete the operator at the exit point
                 delete map.gameObjects["operator"];
-                
-                // Maybe add a message to guide the player
-                map.startCutscene([
-                    { type: "textMessage", text: "Follow the operator through the door..." }
-                ]);
+
             }
         });
 

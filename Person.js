@@ -85,6 +85,9 @@ class Person extends GameObject {
     }
   
     updateSprite() {
+      if (this.id === "ben") {
+        console.log("Current position: ", this.x, this.y);
+      }
 
       // If the person is moving, set the animation to walk
       if (this.movingProgressRemaining > 0) {
