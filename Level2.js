@@ -384,6 +384,14 @@ const sedimentsToSinkPositions = [
 const initLevel2Event = { events: [ { type: "custom", action: (map) => Level1.initLevel2(map) } ] };
 
 const operatorWalkEvent = [
+    { 
+        type: "custom", 
+        action: (map) => { 
+            // Remove cutscene walls to allow movement
+            delete map.walls[utils.asGridCoords(36.5, 17)];
+            delete map.walls[utils.asGridCoords(35.5, 18)];
+        }
+    },
     { type: "textMessage", text: "Welcome to the Sedimentation Stage!"},
     { type: "textMessage", text: "Follow me, I'll show you how this process works." },
 

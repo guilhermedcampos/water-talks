@@ -157,6 +157,11 @@ const level1Walls = {
 };
 
 const level2Walls = {
+
+    // Cutscene walls
+    [utils.asGridCoords(36.5, 17)]: true,
+    [utils.asGridCoords(35.5, 18)]: true,
+    
     // Horizontal walls (top)
     [utils.asGridCoords(25.5, 16)]: true,
     [utils.asGridCoords(26.5, 16)]: true,
