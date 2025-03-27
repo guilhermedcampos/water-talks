@@ -2,7 +2,6 @@ class Level2 {
 
     static startSedimentationStage(map) {
         console.log("Starting sedimentation stage");
-        map.updateObjective("Follow the operator to the computer.");
 
         // Start the cutscene with the combined operatorWalkEvent
         map.startCutscene(operatorWalkEvent);
@@ -230,6 +229,7 @@ class Level2 {
         );
     
         if (allSunk) {
+            map.gameObjects["ben"].isPlayerControlled = false;
             delete map.walls[utils.asGridCoords(34.5, 26)];
             delete map.walls[utils.asGridCoords(35.5, 26)];
             map.startCutscene([
@@ -239,6 +239,49 @@ class Level2 {
                 ...transitionToFiltrationEvent.events 
             ]);
         }
+    }
+
+    static initLevel3(map) {
+        // Create fade overlay element
+        const fadeOverlay = document.createElement("div");
+        fadeOverlay.style.position = "fixed";
+        fadeOverlay.style.top = "0";
+        fadeOverlay.style.left = "0";
+        fadeOverlay.style.width = "100%";
+        fadeOverlay.style.height = "100%";
+        fadeOverlay.style.backgroundColor = "black";
+        fadeOverlay.style.opacity = "0";
+        fadeOverlay.style.transition = "opacity 1.5s ease";
+        fadeOverlay.style.zIndex = "1000";
+        document.body.appendChild(fadeOverlay);
+        
+        // Trigger fade in
+        setTimeout(() => {
+            fadeOverlay.style.opacity = "1";
+            
+            // After fade is complete, change map
+            setTimeout(() => {
+                // Change to Level2
+                map.startCutscene([
+                    { type: "changeMap", map: "Level3" }
+                ]);
+                
+                // Start fade out after map change
+                setTimeout(() => {
+                    fadeOverlay.style.opacity = "0";
+                    
+                    // Remove overlay after fade out
+                    setTimeout(() => {
+                        document.body.removeChild(fadeOverlay);
+                        
+                        // Update objective for Level2 and start sedimentation stage
+                        if (map.overworld && map.overworld.map) {
+                            Level3.init(map.overworld.map);
+                        }
+                    }, 1500);
+                }, 500);
+            }, 1500);
+        }, 50);
     }
     
 }
@@ -462,11 +505,12 @@ const transitionToFiltrationEvent = {
         // Operator walks down 3 steps
         { type: "walk", who: "operator", direction: "down" },
         { type: "walk", who: "operator", direction: "down" },
-        { type: "walk", who: "operator", direction: "down" },
         {
             type: "custom",
             action: (map) => {
-                map.updateObjective("Proceed to the filtration stage.");
+                // Re-enable player control after the cutscene and delete the operator
+                delete map.gameObjects["operator"];
+                map.gameObjects["ben"].isPlayerControlled = true;
             }
         }
     ]

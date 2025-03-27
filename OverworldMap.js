@@ -752,10 +752,28 @@ window.OverworldMaps = {
             [utils.asGridCoords(29.5, 25)]: Level1.changeSpriteEvent("Level1", "underwater"),
             [utils.asGridCoords(28.5, 25)]: Level1.changeSpriteEvent("Level1", "underwater"),
             [utils.asGridCoords(27.5, 25)]: Level1.changeSpriteEvent("Level1", "underwater"),
+
+            // Change Map position
+            [utils.asGridCoords(34.5, 26)]: initLevel3Event,
+            [utils.asGridCoords(35.5, 26)]: initLevel3Event,
             },
         buttonSpaces: {
             [utils.asGridCoords(37.5, 23)]: observeSedimentationEvent,
         },
+    },
+
+    Level3: {
+        id: "Level3",
+        lowerSrc: "images/maps/Level3Lower.png", 
+        upperSrc: "images/maps/Level3Upper.png", 
+        spawnpoint: {
+            x: utils.withGrid(28.5),
+            y: utils.withGrid(17),
+        },
+        gameObjects: level3GameObjects,
+        walls: {},
+        cutSceneSpaces: {},
+        buttonSpaces: {},
     },
     /**
      * Level5 - Advanced water treatment facility
