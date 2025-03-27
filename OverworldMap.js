@@ -47,7 +47,7 @@ class OverworldMap {
         
         // Create objective UI panel
         this.createObjectivePanel();
-        this.talkedToOperator = false; // Add flag here
+        this.talkedToOperator = false; 
 
         // Initialize keyboard support for buttons
         this.initKeyboardButtonSupport();

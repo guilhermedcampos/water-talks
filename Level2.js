@@ -49,8 +49,6 @@ class Level2 {
             // Spawn the button after returning to the level
             map.updateObjective("Talk to the operator.");
             map.buttonSpaces[utils.asGridCoords(37.5, 23)] = talkToOperatorEvent;
-            this.drawSinkSediments(ctx, map);
-            Level2.spawnSinkButtons(map);
         }, 10000);
 
     }
@@ -158,6 +156,10 @@ class Level2 {
     }
 
     static spawnSinkButtons(map) {
+
+        if (map.talkedToOperator2) {
+            return;
+        }
         // Loop through the sediments that need to sink
         for (let i = 0; i < sedimentsToSinkPositions.length; i++) {
             const position = sedimentsToSinkPositions[i];
@@ -438,6 +440,9 @@ const talkToOperatorEvent = {
             action: (map) => {
                 delete map.buttonSpaces[utils.asGridCoords(37.5, 23)];
                 map.updateObjective("Sink the remaining flocs.");
+                const ctx = document.querySelector(".game-canvas").getContext("2d");
+                Level2.drawSinkSediments(ctx, map);
+                Level2.spawnSinkButtons(map);
             }
         },
     ]
