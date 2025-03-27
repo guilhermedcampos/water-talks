@@ -735,18 +735,40 @@ window.OverworldMaps = {
     // Add a new Level5 map to OverworldMaps
     Level5: {
         id: "Level5",
-        lowerSrc: "images/maps/Level5Lower.png", // Changed from .gif to .png
+        lowerSrc: "images/maps/Level5Lower.png", 
         upperSrc: "images/maps/Level5Upper.png", 
         spawnpoint: {
-            x: utils.withGrid(30),
-            y: utils.withGrid(22),
+            // Center of the map between coordinates 23 and 38 horizontally, and 17 and 27 vertically
+            x: utils.withGrid(30.5), // Midpoint between 23 and 38
+            y: utils.withGrid(22),   // Midpoint between 17 and 27
         },
         gameObjects: {
             ben: new Person({
                 isPlayerControlled: true,
-                x: utils.withGrid(30),
+                x: utils.withGrid(30.5),
                 y: utils.withGrid(22), 
                 src: "images/characters/people/mainCharacter.png"
+            }),
+            // Add operator NPC at coordinates (32, 20)
+            operator: new Person({
+                x: utils.withGrid(32),
+                y: utils.withGrid(20),
+                src: "images/characters/people/operator.png",
+                behaviorLoop: [
+                    { type: "stand", direction: "down", time: 2000 },
+                    { type: "stand", direction: "right", time: 1000 },
+                    { type: "stand", direction: "down", time: 2000 },
+                    { type: "stand", direction: "left", time: 1000 },
+                ],
+                talking: [
+                    {
+                        events: [
+                            { type: "textMessage", text: "Welcome to the advanced treatment facility.", faceHero: "operator" },
+                            { type: "textMessage", text: "Here we use specialized processes to purify water even further." },
+                            { type: "textMessage", text: "Feel free to look around and learn about our water treatment methods." }
+                        ]
+                    }
+                ]
             }),
         },
         walls: { 
@@ -815,7 +837,25 @@ window.OverworldMaps = {
             [utils.asGridCoords(36, 27)]: true,
             [utils.asGridCoords(37, 27)]: true,
             [utils.asGridCoords(38, 27)]: true,
+            
+            // Add wall for the operator's position
+            [utils.asGridCoords(32, 20)]: true,
         },
-        buttonSpaces: {}
+        cutSceneSpaces: {
+            
+        },
+        buttonSpaces: {
+            // Add a "Talk" button near the operator
+            [utils.asGridCoords(32, 21)]: {
+                text: "Talk",
+                action: "startCutscene",
+                events: [
+                    { type: "textMessage", text: "Welcome to the advanced treatment facility!", faceHero: "operator" },
+                    { type: "textMessage", text: "Here we use specialized processes to purify water even further." },
+                    { type: "textMessage", text: "We remove microscopic contaminants that conventional treatment can't handle." },
+                    { type: "textMessage", text: "This ensures our water meets the highest safety standards." }
+                ]
+            }
+        }
     }
 }
