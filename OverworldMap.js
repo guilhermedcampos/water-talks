@@ -7,8 +7,15 @@ class OverworldMap {
         this.cutSceneSpaces = config.cutSceneSpaces || {}; // Cutscene spaces
         this.buttonSpaces = config.buttonSpaces || {}; // Button trigger spaces
 
-        this.lowerImage = new Image();
-        this.lowerImage.src = config.lowerSrc;  // Floor, Walls, tiles, etc
+        // Check if lowerSrc ends with .gif
+        if (config.lowerSrc.endsWith('.gif')) {
+            this.lowerAnimated = new AnimatedBackground(config.lowerSrc);
+            // Create a dummy image for loading indicators
+            this.lowerImage = new Image();
+        } else {
+            this.lowerImage = new Image();
+            this.lowerImage.src = config.lowerSrc;
+        }
         
         this.upperImage = new Image();
         this.upperImage.src = config.upperSrc;  // Tree tops, Terraces etc
@@ -32,9 +39,17 @@ class OverworldMap {
 
     // Draw the lower layer
     drawLowerImage(ctx, cameraPerson) {
-        ctx.drawImage(this.lowerImage,
-        utils.withGrid(10.5) - cameraPerson.x,
-        utils.withGrid(6) - cameraPerson.y);
+        if (this.lowerAnimated) {
+            this.lowerAnimated.draw(
+                ctx, 
+                utils.withGrid(10.5) - cameraPerson.x,
+                utils.withGrid(6) - cameraPerson.y
+            );
+        } else {
+            ctx.drawImage(this.lowerImage,
+                utils.withGrid(10.5) - cameraPerson.x,
+                utils.withGrid(6) - cameraPerson.y);
+        }
     }
 
     // Draw the upper layer
@@ -544,6 +559,8 @@ window.OverworldMaps = {
             [utils.asGridCoords(34.5, 12)]: startCoagulantsEvent,
         },
         cutSceneSpaces: {
+            // Add our teleport event
+            [utils.asGridCoords(36.5, 16)]: teleportToLevel5Event,
             // Transition spots - If player is underwater and steps on those positions, change his sprite to land
             [utils.asGridCoords(36.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
             [utils.asGridCoords(37.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
@@ -714,5 +731,91 @@ window.OverworldMaps = {
         buttonSpaces: {
             [utils.asGridCoords(37.5, 23)]: observeSedimentationEvent,
         },
+    },
+    // Add a new Level5 map to OverworldMaps
+    Level5: {
+        id: "Level5",
+        lowerSrc: "images/maps/Level5Lower.png", // Changed from .gif to .png
+        upperSrc: "images/maps/Level5Upper.png", 
+        spawnpoint: {
+            x: utils.withGrid(30),
+            y: utils.withGrid(22),
+        },
+        gameObjects: {
+            ben: new Person({
+                isPlayerControlled: true,
+                x: utils.withGrid(30),
+                y: utils.withGrid(22), 
+                src: "images/characters/people/mainCharacter.png"
+            }),
+        },
+        walls: { 
+            // Vertical left wall
+            [utils.asGridCoords(23, 21)]: true,
+            [utils.asGridCoords(23, 22)]: true,
+            [utils.asGridCoords(23, 23)]: true,
+            [utils.asGridCoords(23, 24)]: true,
+            [utils.asGridCoords(23, 25)]: true,
+            [utils.asGridCoords(23, 26)]: true,
+            [utils.asGridCoords(23, 27)]: true,
+            [utils.asGridCoords(23, 28)]: true,
+            [utils.asGridCoords(23, 20)]: true,
+            [utils.asGridCoords(23, 19)]: true,
+            [utils.asGridCoords(23, 18)]: true,
+            [utils.asGridCoords(23, 17)]: true,
+            [utils.asGridCoords(23, 16)]: true,
+
+            // Vertical right wall
+            [utils.asGridCoords(38, 16)]: true,
+            [utils.asGridCoords(38, 17)]: true,
+            [utils.asGridCoords(38, 18)]: true,
+            [utils.asGridCoords(38, 19)]: true,
+            [utils.asGridCoords(38, 20)]: true,
+            [utils.asGridCoords(38, 21)]: true,
+            [utils.asGridCoords(38, 22)]: true,
+            [utils.asGridCoords(38, 23)]: true,
+            [utils.asGridCoords(38, 24)]: true,
+            [utils.asGridCoords(38, 25)]: true,
+            [utils.asGridCoords(38, 26)]: true,
+            [utils.asGridCoords(38, 27)]: true,
+            [utils.asGridCoords(38, 28)]: true,
+
+            // Horizontal top wall
+            [utils.asGridCoords(23, 17)]: true,
+            [utils.asGridCoords(24, 17)]: true,
+            [utils.asGridCoords(25, 17)]: true,
+            [utils.asGridCoords(26, 17)]: true,
+            [utils.asGridCoords(27, 17)]: true,
+            [utils.asGridCoords(28, 17)]: true,
+            [utils.asGridCoords(29, 17)]: true,
+            [utils.asGridCoords(30, 17)]: true,
+            [utils.asGridCoords(31, 17)]: true,
+            [utils.asGridCoords(32, 17)]: true,
+            [utils.asGridCoords(33, 17)]: true,
+            [utils.asGridCoords(34, 17)]: true,
+            [utils.asGridCoords(35, 17)]: true,
+            [utils.asGridCoords(36, 17)]: true,
+            [utils.asGridCoords(37, 17)]: true,
+            [utils.asGridCoords(38, 17)]: true,
+
+            // Horizontal bottom wall
+            [utils.asGridCoords(23, 27)]: true,
+            [utils.asGridCoords(24, 27)]: true,
+            [utils.asGridCoords(25, 27)]: true,
+            [utils.asGridCoords(26, 27)]: true,
+            [utils.asGridCoords(27, 27)]: true,
+            [utils.asGridCoords(28, 27)]: true,
+            [utils.asGridCoords(29, 27)]: true,
+            [utils.asGridCoords(30, 27)]: true,
+            [utils.asGridCoords(31, 27)]: true,
+            [utils.asGridCoords(32, 27)]: true,
+            [utils.asGridCoords(33, 27)]: true,
+            [utils.asGridCoords(34, 27)]: true,
+            [utils.asGridCoords(35, 27)]: true,
+            [utils.asGridCoords(36, 27)]: true,
+            [utils.asGridCoords(37, 27)]: true,
+            [utils.asGridCoords(38, 27)]: true,
+        },
+        buttonSpaces: {}
     }
 }
