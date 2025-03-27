@@ -237,14 +237,20 @@ class Level1 {
                     if (!map.observedFirstFloc) {
                         map.observedFirstFloc = true;
                         
+                        // Disable player control before showing message
+                        map.gameObjects["ben"].isPlayerControlled = false;
+                        
                         // Show intro text message
                         map.startCutscene([
                             { type: "textMessage", text: "The flocs are growing as suspended particles bind together." },
                             { 
                                 type: "custom", 
-                                action: () => {
+                                action: (map) => {
                                     // Track this floc as observed
                                     Level1.observeFloc(map, id, pos.x, pos.y);
+                                    
+                                    // Re-enable player control after message completes
+                                    map.gameObjects["ben"].isPlayerControlled = true;
                                 }
                             }
                         ]);
