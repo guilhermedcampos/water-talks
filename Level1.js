@@ -559,7 +559,7 @@ class Level1 {
         // Trigger fade in
         setTimeout(() => {
             fadeOverlay.style.opacity = "1";
-            
+
             // After fade is complete, change map
             setTimeout(() => {
                 // Change to Level2

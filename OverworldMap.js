@@ -6,6 +6,7 @@
 class OverworldMap {
     /**
      * Create a new map
+     * @param {string} id - Map identifier
      * @param {Object} config - Map configuration
      * @param {Object} config.gameObjects - Game objects to place on the map
      * @param {Object} config.walls - Wall positions as key-value pairs
@@ -16,6 +17,7 @@ class OverworldMap {
      * @param {string} config.upperSrc - Foreground image path
      */
     constructor(config) {
+        this.id = config.id || null;  // Map identifier
         this.overworld = null;  // Reference to the overworld
         this.gameObjects = config.gameObjects;  // Game objects
         this.walls = config.walls || {};    // Walls
@@ -390,7 +392,13 @@ class OverworldMap {
         
         // Add objective text
         const objectiveText = document.createElement("div");
-        objectiveText.textContent = "Flush the toilet";
+        // Check if the current map is Level2 and set the default mission accordingly
+        if (this.id === "Level2") {
+            objectiveText.textContent = "Follow the operator to the computer.";
+        } else {
+            console.log("Map id:", this.id);
+            objectiveText.textContent = "Flush the toilet"; // Default mission for other maps
+        }
         objectiveText.style.fontSize = "25px";
         objectiveText.style.color = "#3c3c54";
         objectiveText.style.fontFamily = "'Pixelify Sans', sans-serif";
@@ -507,6 +515,7 @@ window.OverworldMaps = {
      * Player begins here and flushes the toilet to start their journey
      */
     Bathroom: {
+        id: "Bathroom",
         lowerSrc: "images/maps/BathroomLower.png",
         upperSrc: "images/maps/BathroomUpper.png",
         spawnpoint: {

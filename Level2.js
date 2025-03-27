@@ -2,7 +2,7 @@ class Level2 {
 
     static startSedimentationStage(map) {
         console.log("Starting sedimentation stage");
-
+        map.updateObjective("Follow the operator to the computer.");
         // Start the cutscene with the combined operatorWalkEvent
         map.startCutscene(operatorWalkEvent);
     }
