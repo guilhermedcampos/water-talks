@@ -230,9 +230,13 @@ class Level2 {
         );
     
         if (allSunk) {
+            delete map.walls[utils.asGridCoords(34.5, 26)];
+            delete map.walls[utils.asGridCoords(35.5, 26)];
             map.startCutscene([
                 { type: "textMessage", text: "All flocs have been settled!" },
                 { type: "textMessage", text: "Let's move on to filtration." },
+                { type: "custom", action: () => map.updateObjective("Follow the operator to the filtration stage.") },
+                ...transitionToFiltrationEvent.events 
             ]);
         }
     }
@@ -445,5 +449,25 @@ const talkToOperatorEvent = {
                 Level2.spawnSinkButtons(map);
             }
         },
+    ]
+};
+
+const transitionToFiltrationEvent = {
+    events: [
+        { type: "textMessage", text: "Follow me to the filtration stage." },
+        // Operator walks left 3 steps
+        { type: "walk", who: "operator", direction: "left" },
+        { type: "walk", who: "operator", direction: "left" },
+        { type: "walk", who: "operator", direction: "left" },
+        // Operator walks down 3 steps
+        { type: "walk", who: "operator", direction: "down" },
+        { type: "walk", who: "operator", direction: "down" },
+        { type: "walk", who: "operator", direction: "down" },
+        {
+            type: "custom",
+            action: (map) => {
+                map.updateObjective("Proceed to the filtration stage.");
+            }
+        }
     ]
 };
