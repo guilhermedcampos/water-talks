@@ -1,4 +1,20 @@
+/**
+ * OverworldMap class
+ * Represents a game map with game objects, walls, cutscenes, and interactive elements
+ * Handles rendering, player movement, and game mechanics for each map
+ */
 class OverworldMap {
+    /**
+     * Create a new map
+     * @param {Object} config - Map configuration
+     * @param {Object} config.gameObjects - Game objects to place on the map
+     * @param {Object} config.walls - Wall positions as key-value pairs
+     * @param {Object} config.spawnpoint - Starting point for the player
+     * @param {Object} config.cutSceneSpaces - Trigger points for cutscenes
+     * @param {Object} config.buttonSpaces - Trigger points for interactive buttons
+     * @param {string} config.lowerSrc - Background image path
+     * @param {string} config.upperSrc - Foreground image path
+     */
     constructor(config) {
         this.overworld = null;  // Reference to the overworld
         this.gameObjects = config.gameObjects;  // Game objects
@@ -7,7 +23,7 @@ class OverworldMap {
         this.cutSceneSpaces = config.cutSceneSpaces || {}; // Cutscene spaces
         this.buttonSpaces = config.buttonSpaces || {}; // Button trigger spaces
 
-        // Check if lowerSrc ends with .gif
+        // Check if lowerSrc ends with .gif for animated backgrounds
         if (config.lowerSrc.endsWith('.gif')) {
             this.lowerAnimated = new AnimatedBackground(config.lowerSrc);
             // Create a dummy image for loading indicators
@@ -37,7 +53,11 @@ class OverworldMap {
         this.initKeyboardButtonSupport();
     }
 
-    // Draw the lower layer
+    /**
+     * Draw the lower layer (background) of the map
+     * @param {CanvasRenderingContext2D} ctx - Canvas context
+     * @param {Object} cameraPerson - Object to center the camera on
+     */
     drawLowerImage(ctx, cameraPerson) {
         if (this.lowerAnimated) {
             this.lowerAnimated.draw(
@@ -384,7 +404,10 @@ class OverworldMap {
         this.objectiveText = objectiveText;
     }
     
-    // Method to update objective text
+    /**
+     * Method to update objective text
+     * @param {string} text - New objective text to display
+     */
     updateObjective(text) {
         if (this.objectiveText) {
             this.objectiveText.textContent = text;
@@ -474,12 +497,18 @@ class OverworldMap {
     }
 }
 
-// Maps
+/**
+ * Game map definitions
+ * Contains all level maps with their properties, objects, and interaction points
+ */
 window.OverworldMaps = {
+    /**
+     * Bathroom level - Starting point of the game
+     * Player begins here and flushes the toilet to start their journey
+     */
     Bathroom: {
         lowerSrc: "images/maps/BathroomLower.png",
         upperSrc: "images/maps/BathroomUpper.png",
-        // Add spawnpoint property
         spawnpoint: {
             x: utils.withGrid(49.5),
             y: utils.withGrid(24), 
@@ -493,16 +522,12 @@ window.OverworldMaps = {
             }),
         }, 
         walls: wallsHouse,
-        cutSceneSpaces: {
-            
-        },
-        // Refactored buttonSpaces: the callback is now a string key
+        cutSceneSpaces: {},
         buttonSpaces: {
             [utils.asGridCoords(53.5, 30)]: {
                 text: "Flush",
                 action: "custom",
                 callback: "flushButtonCallbackHandler",
-
                 messages: [
                     "Every drop counts... but where does it go?",
                     "Every day, Lisbon treats over 550 million liters of water...",
@@ -732,7 +757,11 @@ window.OverworldMaps = {
             [utils.asGridCoords(37.5, 23)]: observeSedimentationEvent,
         },
     },
-    // Add a new Level5 map to OverworldMaps
+    /**
+     * Level5 - Advanced water treatment facility
+     * Represents the advanced treatment processes that water undergoes
+     * Features an operator NPC who explains advanced water treatment
+     */
     Level5: {
         id: "Level5",
         lowerSrc: "images/maps/Level5Lower.png", 
@@ -743,15 +772,16 @@ window.OverworldMaps = {
             y: utils.withGrid(22),   // Midpoint between 17 and 27
         },
         gameObjects: {
+            // Player character
             ben: new Person({
                 isPlayerControlled: true,
                 x: utils.withGrid(30.5),
                 y: utils.withGrid(22), 
                 src: "images/characters/people/mainCharacter.png"
             }),
-            // Add operator NPC at coordinates (32, 20)
+            // Operator NPC who explains advanced water treatment
             operator: new Person({
-                x: utils.withGrid(32),
+                x: utils.withGrid(31.5),
                 y: utils.withGrid(20),
                 src: "images/characters/people/operator.png",
                 behaviorLoop: [
@@ -763,99 +793,254 @@ window.OverworldMaps = {
                 talking: [
                     {
                         events: [
-                            { type: "textMessage", text: "Welcome to the advanced treatment facility.", faceHero: "operator" },
-                            { type: "textMessage", text: "Here we use specialized processes to purify water even further." },
-                            { type: "textMessage", text: "Feel free to look around and learn about our water treatment methods." }
+                            { type: "textMessage", text: "Welcome to the lifeblood of our community. From the bustling streets of Lisbon to serene farms like this,", faceHero: "operator" },
+                            { type: "textMessage", text: "our mission is to deliver clean, safe water to every home, field, and creature." },
+                            { type: "textMessage", text: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines," },
+                            { type: "textMessage", text: "connecting 13 reservoirs and managed by 11 pumping stations." },
+                            { type: "textMessage", text: "This extensive system ensures that around 104,285 supply branches efficiently deliver water throughout the city." },
+                            { type: "textMessage", text: "Our journey doesn't end at purification." },
+                            { type: "textMessage", text: "Continuous monitoring and maintenance prevent leaks and ensure optimal pressure," },
+                            { type: "textMessage", text: "By understanding and supporting this system, you help Lisbon thrive." },
+                            { type: "textMessage", text: "Now, let's see if you've learned anything from this journey. Are you ready for a quick test?" },
+                            { 
+                                type: "custom", 
+                                action: (map) => {
+                                    // Set a flag indicating player has talked to the operator
+                                    map.talkedToOperator = true;
+                                    
+                                    // Start the quiz after talking to the operator
+                                    Level5.startQuiz(map);
+                                    
+                                    // Update objective once conversation is complete
+                                    if (map && map.updateObjective) {
+                                        map.updateObjective("Complete the water knowledge quiz");
+                                    }
+                                }
+                            }
                         ]
                     }
                 ]
             }),
         },
-        walls: { 
-            // Vertical left wall
-            [utils.asGridCoords(23, 21)]: true,
-            [utils.asGridCoords(23, 22)]: true,
-            [utils.asGridCoords(23, 23)]: true,
-            [utils.asGridCoords(23, 24)]: true,
-            [utils.asGridCoords(23, 25)]: true,
-            [utils.asGridCoords(23, 26)]: true,
-            [utils.asGridCoords(23, 27)]: true,
-            [utils.asGridCoords(23, 28)]: true,
-            [utils.asGridCoords(23, 20)]: true,
-            [utils.asGridCoords(23, 19)]: true,
-            [utils.asGridCoords(23, 18)]: true,
-            [utils.asGridCoords(23, 17)]: true,
-            [utils.asGridCoords(23, 16)]: true,
-
-            // Vertical right wall
-            [utils.asGridCoords(38, 16)]: true,
-            [utils.asGridCoords(38, 17)]: true,
-            [utils.asGridCoords(38, 18)]: true,
-            [utils.asGridCoords(38, 19)]: true,
-            [utils.asGridCoords(38, 20)]: true,
-            [utils.asGridCoords(38, 21)]: true,
-            [utils.asGridCoords(38, 22)]: true,
-            [utils.asGridCoords(38, 23)]: true,
-            [utils.asGridCoords(38, 24)]: true,
-            [utils.asGridCoords(38, 25)]: true,
-            [utils.asGridCoords(38, 26)]: true,
-            [utils.asGridCoords(38, 27)]: true,
-            [utils.asGridCoords(38, 28)]: true,
-
-            // Horizontal top wall
-            [utils.asGridCoords(23, 17)]: true,
-            [utils.asGridCoords(24, 17)]: true,
-            [utils.asGridCoords(25, 17)]: true,
-            [utils.asGridCoords(26, 17)]: true,
-            [utils.asGridCoords(27, 17)]: true,
-            [utils.asGridCoords(28, 17)]: true,
-            [utils.asGridCoords(29, 17)]: true,
-            [utils.asGridCoords(30, 17)]: true,
-            [utils.asGridCoords(31, 17)]: true,
-            [utils.asGridCoords(32, 17)]: true,
-            [utils.asGridCoords(33, 17)]: true,
-            [utils.asGridCoords(34, 17)]: true,
-            [utils.asGridCoords(35, 17)]: true,
-            [utils.asGridCoords(36, 17)]: true,
-            [utils.asGridCoords(37, 17)]: true,
-            [utils.asGridCoords(38, 17)]: true,
-
-            // Horizontal bottom wall
-            [utils.asGridCoords(23, 27)]: true,
-            [utils.asGridCoords(24, 27)]: true,
-            [utils.asGridCoords(25, 27)]: true,
-            [utils.asGridCoords(26, 27)]: true,
-            [utils.asGridCoords(27, 27)]: true,
-            [utils.asGridCoords(28, 27)]: true,
-            [utils.asGridCoords(29, 27)]: true,
-            [utils.asGridCoords(30, 27)]: true,
-            [utils.asGridCoords(31, 27)]: true,
-            [utils.asGridCoords(32, 27)]: true,
-            [utils.asGridCoords(33, 27)]: true,
-            [utils.asGridCoords(34, 27)]: true,
-            [utils.asGridCoords(35, 27)]: true,
-            [utils.asGridCoords(36, 27)]: true,
-            [utils.asGridCoords(37, 27)]: true,
-            [utils.asGridCoords(38, 27)]: true,
-            
-            // Add wall for the operator's position
-            [utils.asGridCoords(32, 20)]: true,
-        },
+        walls: level5Walls,
         cutSceneSpaces: {
-            
+            // Set objective when entering the map
+            [utils.asGridCoords(30.5, 22)]: {
+                events: [
+                    { 
+                        type: "custom", 
+                        action: (map) => {
+                            // Reset the talkedToOperator flag when entering the map
+                            map.talkedToOperator = false;
+                            
+                            // Update objective when player spawns to make the mission clear
+                            if (map && map.updateObjective) {
+                                map.updateObjective("Talk to the operator one last time");
+                            }
+                        }
+                    }
+                ]
+            },
+            // Exit point to return to Level1
+            [utils.asGridCoords(30, 26)]: {
+                events: [
+                    { type: "textMessage", text: "Return to the treatment plant?" },
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            // Create fade overlay for transition
+                            const fadeOverlay = document.createElement("div");
+                            fadeOverlay.style.position = "fixed";
+                            fadeOverlay.style.top = "0";
+                            fadeOverlay.style.left = "0";
+                            fadeOverlay.style.width = "100%";
+                            fadeOverlay.style.height = "100%";
+                            fadeOverlay.style.backgroundColor = "black";
+                            fadeOverlay.style.opacity = "0";
+                            fadeOverlay.style.transition = "opacity 1.5s ease";
+                            fadeOverlay.style.zIndex = "1000";
+                            document.body.appendChild(fadeOverlay);
+                            
+                            // Fade transition sequence
+                            setTimeout(() => {
+                                fadeOverlay.style.opacity = "1";
+                                
+                                setTimeout(() => {
+                                    // Return to Level1
+                                    map.startCutscene([
+                                        { type: "changeMap", map: "Level1" }
+                                    ]);
+                                    
+                                    setTimeout(() => {
+                                        fadeOverlay.style.opacity = "0";
+                                        
+                                        setTimeout(() => {
+                                            document.body.removeChild(fadeOverlay);
+                                        }, 1500);
+                                    }, 500);
+                                }, 1500);
+                            }, 50);
+                        }
+                    }
+                ]
+            }
         },
         buttonSpaces: {
-            // Add a "Talk" button near the operator
-            [utils.asGridCoords(32, 21)]: {
+            // Talk button positions all around the operator
+            [utils.asGridCoords(30.5, 20)]: {
                 text: "Talk",
                 action: "startCutscene",
                 events: [
-                    { type: "textMessage", text: "Welcome to the advanced treatment facility!", faceHero: "operator" },
-                    { type: "textMessage", text: "Here we use specialized processes to purify water even further." },
-                    { type: "textMessage", text: "We remove microscopic contaminants that conventional treatment can't handle." },
-                    { type: "textMessage", text: "This ensures our water meets the highest safety standards." }
+                            { type: "textMessage", text: "Welcome to the lifeblood of our community. From the bustling streets of Lisbon to serene farms like this,", faceHero: "operator" },
+                            { type: "textMessage", text: "our mission is to deliver clean, safe water to every home, field, and creature." },
+                            { type: "textMessage", text: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines," },
+                            { type: "textMessage", text: "connecting 13 reservoirs and managed by 11 pumping stations." },
+                            { type: "textMessage", text: "This extensive system ensures that around 104,285 supply branches efficiently deliver water throughout the city." },
+                            { type: "textMessage", text: "Our journey doesn't end at purification." },
+                            { type: "textMessage", text: "Continuous monitoring and maintenance prevent leaks and ensure optimal pressure," },
+                            { type: "textMessage", text: "By understanding and supporting this system, you help Lisbon thrive." },
+                            { type: "textMessage", text: "Now, let's see if you've learned anything from this journey. Are you ready for a quick test?" },
+                    { 
+                        type: "custom", 
+                        action: (map) => {
+                            // Set flag that player has talked to operator
+                            map.talkedToOperator = true;
+                            
+                            // Start the quiz after clicking the Talk button
+                            Level5.startQuiz(map);
+                            
+                            // Update objective once conversation is complete
+                            if (map && map.updateObjective) {
+                                map.updateObjective("Complete the water knowledge quiz");
+                            }
+                        }
+                    }
                 ]
+            },
+            [utils.asGridCoords(31.5, 21)]: {
+                text: "Talk",
+                action: "startCutscene",
+                events: [
+                    { type: "textMessage", text: "Welcome to the lifeblood of our community. From the bustling streets of Lisbon to serene farms like this,", faceHero: "operator" },
+                            { type: "textMessage", text: "our mission is to deliver clean, safe water to every home, field, and creature." },
+                            { type: "textMessage", text: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines," },
+                            { type: "textMessage", text: "connecting 13 reservoirs and managed by 11 pumping stations." },
+                            { type: "textMessage", text: "This extensive system ensures that around 104,285 supply branches efficiently deliver water throughout the city." },
+                            { type: "textMessage", text: "Our journey doesn't end at purification." },
+                            { type: "textMessage", text: "Continuous monitoring and maintenance prevent leaks and ensure optimal pressure," },
+                            { type: "textMessage", text: "By understanding and supporting this system, you help Lisbon thrive." },
+                            { type: "textMessage", text: "Now, let's see if you've learned anything from this journey. Are you ready for a quick test?" },
+                    { 
+                        type: "custom", 
+                        action: (map) => {
+                            // Set flag that player has talked to operator
+                            map.talkedToOperator = true;
+                            
+                            // Start the quiz after clicking the Talk button
+                            Level5.startQuiz(map);
+                            
+                            // Update objective once conversation is complete
+                            if (map && map.updateObjective) {
+                                map.updateObjective("Complete the water knowledge quiz");
+                            }
+                        }
+                    }
+                ]
+            },
+            [utils.asGridCoords(32.5, 20)]: {
+                text: "Talk",
+                action: "startCutscene",
+                events: [
+                    { type: "textMessage", text: "Welcome to the lifeblood of our community. From the bustling streets of Lisbon to serene farms like this,", faceHero: "operator" },
+                            { type: "textMessage", text: "our mission is to deliver clean, safe water to every home, field, and creature." },
+                            { type: "textMessage", text: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines," },
+                            { type: "textMessage", text: "connecting 13 reservoirs and managed by 11 pumping stations." },
+                            { type: "textMessage", text: "This extensive system ensures that around 104,285 supply branches efficiently deliver water throughout the city." },
+                            { type: "textMessage", text: "Our journey doesn't end at purification." },
+                            { type: "textMessage", text: "Continuous monitoring and maintenance prevent leaks and ensure optimal pressure," },
+                            { type: "textMessage", text: "By understanding and supporting this system, you help Lisbon thrive." },
+                            { type: "textMessage", text: "Now, let's see if you've learned anything from this journey. Are you ready for a quick test?" },
+                    { 
+                        type: "custom", 
+                        action: (map) => {
+                            // Set flag that player has talked to operator
+                            map.talkedToOperator = true;
+                            
+                            // Start the quiz after clicking the Talk button
+                            Level5.startQuiz(map);
+                            
+                            // Update objective once conversation is complete
+                            if (map && map.updateObjective) {
+                                map.updateObjective("Complete the water knowledge quiz");
+                            }
+                        }
+                    }
+                ]
+            },
+            [utils.asGridCoords(31.5, 19)]: {
+                text: "Talk",
+                action: "startCutscene",
+                events: [
+                    { type: "textMessage", text: "Welcome to the lifeblood of our community. From the bustling streets of Lisbon to serene farms like this,", faceHero: "operator" },
+                            { type: "textMessage", text: "our mission is to deliver clean, safe water to every home, field, and creature." },
+                            { type: "textMessage", text: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines," },
+                            { type: "textMessage", text: "connecting 13 reservoirs and managed by 11 pumping stations." },
+                            { type: "textMessage", text: "This extensive system ensures that around 104,285 supply branches efficiently deliver water throughout the city." },
+                            { type: "textMessage", text: "Our journey doesn't end at purification." },
+                            { type: "textMessage", text: "Continuous monitoring and maintenance prevent leaks and ensure optimal pressure," },
+                            { type: "textMessage", text: "By understanding and supporting this system, you help Lisbon thrive." },
+                            { type: "textMessage", text: "Now, let's see if you've learned anything from this journey. Are you ready for a quick test?" },
+                            { 
+                        type: "custom", 
+                        action: (map) => {
+                            // Set flag that player has talked to operator
+                            map.talkedToOperator = true;
+                            
+                            // Start the quiz after clicking the Talk button
+                            Level5.startQuiz(map);
+                            
+                            // Update objective once conversation is complete
+                            if (map && map.updateObjective) {
+                                map.updateObjective("Complete the water knowledge quiz");
+                            }
+                        }
+                    }
+                ]
+            },
+        },
+        
+        // Add conditional method to check if button should be shown
+        checkForButtonTrigger() {
+            const hero = this.gameObjects["ben"];
+            const buttonMatch = this.buttonSpaces[`${hero.x},${hero.y}`];
+            
+            // If there's no button match or we already have an active button
+            if (!buttonMatch || this.activeButton) {
+                if (!buttonMatch && this.activeButton) {
+                    this.removeButton();
+                }
+                return;
             }
+            
+            // Special case for Take Quiz button - only show after talking to operator
+            if (buttonMatch.text === "Take Quiz" && !this.talkedToOperator) {
+                return;
+            }
+            
+            // For Talk button, always show it
+            if (buttonMatch.text === "Talk") {
+                this.showButton(buttonMatch);
+                return;
+            }
+            
+            // For custom callback buttons, check if the callback returns false
+            if (buttonMatch.action === "custom" && typeof buttonMatch.callback === "function") {
+                const shouldShow = buttonMatch.callback(this);
+                if (shouldShow === false) return;
+            }
+            
+            // Default behavior - show the button
+            this.showButton(buttonMatch);
         }
     }
 }
