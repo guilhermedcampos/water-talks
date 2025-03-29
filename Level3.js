@@ -27,79 +27,6 @@ class Level3 {
         
         // Add talk buttons around the operator
         console.log("Adding talk buttons around operator");
-        
-        // Show filter activation animation (missing in your implementation)
-        Level3.showFilterActivationEffect = function(map, filterType) {
-            console.log(`Showing filter activation effect for ${filterType}`);
-            // Create the effect overlay
-            const effect = document.createElement("div");
-            effect.style.position = "absolute";
-            effect.style.top = "0";
-            effect.style.left = "0";
-            effect.style.width = "100%";
-            effect.style.height = "100%";
-            effect.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-            effect.style.zIndex = "1000";
-            effect.style.display = "flex";
-            effect.style.justifyContent = "center";
-            effect.style.alignItems = "center";
-            
-            // Create the filter activation animation
-            const animation = document.createElement("div");
-            animation.style.width = "300px";
-            animation.style.height = "300px";
-            animation.style.borderRadius = "50%";
-            animation.style.display = "flex";
-            animation.style.justifyContent = "center";
-            animation.style.alignItems = "center";
-            animation.style.fontFamily = "'Pixelify Sans', sans-serif";
-            animation.style.fontSize = "24px";
-            animation.style.textAlign = "center";
-            animation.style.color = "white";
-            animation.style.textShadow = "0 0 10px rgba(255, 255, 255, 0.8)";
-            animation.style.animation = "pulse 1.5s ease-in-out";
-            animation.style.boxShadow = "0 0 50px white";
-            
-            // Set appearance based on filter type
-            switch(filterType) {
-                case "sand":
-                    animation.style.backgroundColor = "rgba(233, 196, 106, 0.8)"; // Sandy color
-                    animation.textContent = "Sand Filter Activated";
-                    break;
-                case "gravel":
-                    animation.style.backgroundColor = "rgba(142, 142, 142, 0.8)"; // Stone color
-                    animation.textContent = "Gravel Filter Activated";
-                    break;
-                case "carbon":
-                    animation.style.backgroundColor = "rgba(20, 20, 20, 0.8)"; // Carbon color
-                    animation.textContent = "Carbon Filter Activated";
-                    break;
-            }
-            
-            // Add keyframe animation for the pulse effect
-            const style = document.createElement("style");
-            style.textContent = `
-                @keyframes pulse {
-                    0% { transform: scale(0.1); opacity: 0; }
-                    50% { transform: scale(1.2); opacity: 1; }
-                    100% { transform: scale(1); opacity: 0.8; }
-                }
-            `;
-            document.head.appendChild(style);
-            
-            // Add to the DOM
-            effect.appendChild(animation);
-            document.body.appendChild(effect);
-            
-            console.log("Animation element added to DOM");
-            
-            // Remove after animation completes
-            setTimeout(() => {
-                document.body.removeChild(effect);
-                document.head.removeChild(style);
-                console.log("Animation elements removed from DOM");
-            }, 1500);
-        };
     }
     
     // Handle sand filter activation
@@ -112,10 +39,6 @@ class Level3 {
         // Remove the buttons
         console.log("Removing active button");
         map.removeButton();
-        
-        // Show animation effect for sand filter activation
-        console.log("Showing sand filter activation effect");
-        Level3.showFilterActivationEffect(map, "sand");
         
         // Start dialogue sequence after animation
         console.log("Setting timeout for dialogue sequence");
@@ -164,10 +87,6 @@ class Level3 {
         console.log("Removing active button");
         map.removeButton();
         
-        // Show animation effect for gravel filter activation
-        console.log("Showing gravel filter activation effect");
-        Level3.showFilterActivationEffect(map, "gravel");
-        
         // Start dialogue sequence after animation
         console.log("Setting timeout for dialogue sequence");
         setTimeout(() => {
@@ -215,10 +134,7 @@ class Level3 {
         // Remove the buttons
         console.log("Removing active button");
         map.removeButton();
-        
-        // Show animation effect for carbon filter activation
-        console.log("Showing carbon filter activation effect");
-        Level3.showFilterActivationEffect(map, "carbon");
+
         
         // Start dialogue sequence after animation
         console.log("Setting timeout for dialogue sequence");
