@@ -210,7 +210,7 @@ const level2Walls = {
     [utils.asGridCoords(32.5, 26)]: true,
     [utils.asGridCoords(33.5, 26)]: true,
     [utils.asGridCoords(34.5, 26)]: true,
-    [utils.asGridCoords(33.5, 27)]: true,
+    [utils.asGridCoords(35.5, 27)]: true,
     [utils.asGridCoords(34.5, 27)]: true,
     [utils.asGridCoords(35.5, 26)]: true,
     [utils.asGridCoords(36.5, 26)]: true,

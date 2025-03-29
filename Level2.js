@@ -231,7 +231,9 @@ class Level2 {
         if (allSunk) {
             map.gameObjects["ben"].isPlayerControlled = false;
             delete map.walls[utils.asGridCoords(34.5, 26)];
+            delete map.walls["34.5,26"];
             delete map.walls[utils.asGridCoords(35.5, 26)];
+            delete map.walls["35.5,26"];
             map.startCutscene([
                 { type: "textMessage", text: "All flocs have been settled!" },
                 { type: "textMessage", text: "Let's move on to filtration." },
@@ -508,6 +510,7 @@ const transitionToFiltrationEvent = {
         {
             type: "custom",
             action: (map) => {
+                map.walls[utils.asGridCoords(34.5, 26)] = false;
                 // Re-enable player control after the cutscene and delete the operator
                 delete map.gameObjects["operator"];
                 map.gameObjects["ben"].isPlayerControlled = true;
