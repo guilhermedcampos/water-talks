@@ -332,3 +332,101 @@ const level5Walls = {
     // Operator position wall
     [utils.asGridCoords(31.5, 20)]: true,
 };
+
+const level3Walls = {
+    // Vertical Locker 
+    [utils.asGridCoords(25.5, 19)]: true,
+    [utils.asGridCoords(25.5, 20)]: true,
+    [utils.asGridCoords(25.5, 21)]: true,
+
+    // Vertical wall left
+    [utils.asGridCoords(24.5, 16)]: true,
+    [utils.asGridCoords(24.5, 17)]: true,
+    [utils.asGridCoords(24.5, 18)]: true,
+    [utils.asGridCoords(24.5, 19)]: true,
+    [utils.asGridCoords(24.5, 20)]: true,
+    [utils.asGridCoords(24.5, 21)]: true,
+    [utils.asGridCoords(24.5, 22)]: true,
+    [utils.asGridCoords(24.5, 23)]: true,
+    [utils.asGridCoords(24.5, 24)]: true,
+    [utils.asGridCoords(24.5, 25)]: true,
+    [utils.asGridCoords(24.5, 26)]: true,
+
+    // Bottom wall
+    [utils.asGridCoords(25.5, 26)]: true,
+    [utils.asGridCoords(26.5, 26)]: true,
+    [utils.asGridCoords(27.5, 26)]: true,
+    [utils.asGridCoords(28.5, 26)]: true,
+    [utils.asGridCoords(29.5, 26)]: true,
+    [utils.asGridCoords(30.5, 26)]: true,
+    [utils.asGridCoords(31.5, 26)]: true,
+    [utils.asGridCoords(32.5, 26)]: true,
+    [utils.asGridCoords(33.5, 26)]: true,
+    [utils.asGridCoords(34.5, 26)]: true,
+    [utils.asGridCoords(35.5, 26)]: true,
+    [utils.asGridCoords(36.5, 26)]: true,
+    [utils.asGridCoords(37.5, 26)]: true,
+    [utils.asGridCoords(38.5, 26)]: true,
+
+    // Vertical wall right
+    [utils.asGridCoords(38.5, 16)]: true,
+    [utils.asGridCoords(38.5, 17)]: true,
+    [utils.asGridCoords(38.5, 18)]: true,
+    [utils.asGridCoords(38.5, 19)]: true,
+    [utils.asGridCoords(38.5, 20)]: true,
+    [utils.asGridCoords(38.5, 21)]: true,
+    [utils.asGridCoords(38.5, 22)]: true,
+    [utils.asGridCoords(38.5, 23)]: true,
+    [utils.asGridCoords(38.5, 24)]: true,
+    [utils.asGridCoords(38.5, 25)]: true,
+
+    // Top wall
+    [utils.asGridCoords(24.5, 16)]: true,
+    [utils.asGridCoords(25.5, 16)]: true,
+    [utils.asGridCoords(26.5, 16)]: true,
+    [utils.asGridCoords(27.5, 16)]: true,
+    [utils.asGridCoords(28.5, 16)]: true,
+    [utils.asGridCoords(29.5, 16)]: true,
+    [utils.asGridCoords(30.5, 16)]: true,
+    [utils.asGridCoords(31.5, 16)]: true,
+    [utils.asGridCoords(32.5, 16)]: true,
+    [utils.asGridCoords(33.5, 16)]: true,
+    [utils.asGridCoords(34.5, 16)]: true,
+    [utils.asGridCoords(35.5, 16)]: true,
+    [utils.asGridCoords(36.5, 16)]: true,
+    [utils.asGridCoords(37.5, 16)]: true,
+
+    // Red Tubes
+    [utils.asGridCoords(29.5, 17)]: true,
+    [utils.asGridCoords(30.5, 17)]: true,
+    [utils.asGridCoords(31.5, 17)]: true,
+    [utils.asGridCoords(32.5, 17)]: true,
+    [utils.asGridCoords(33.5, 17)]: true,
+    [utils.asGridCoords(34.5, 17)]: true,
+    [utils.asGridCoords(35.5, 17)]: true,
+    [utils.asGridCoords(36.5, 17)]: true,
+
+    // Vertical Tube
+    [utils.asGridCoords(37.5, 17)]: true,
+    [utils.asGridCoords(37.5, 18)]: true,
+    [utils.asGridCoords(37.5, 19)]: true,
+    [utils.asGridCoords(37.5, 20)]: true,
+    [utils.asGridCoords(37.5, 21)]: true,
+    [utils.asGridCoords(37.5, 22)]: true,
+    [utils.asGridCoords(37.5, 23)]: true,
+    [utils.asGridCoords(37.5, 24)]: true,
+    [utils.asGridCoords(37.5, 25)]: true,
+
+    // Other 
+    [utils.asGridCoords(36.5, 22)]: true,
+    [utils.asGridCoords(36.5, 20)]: true,
+    [utils.asGridCoords(36.5, 19)]: true,
+    [utils.asGridCoords(35.5, 19)]: true,
+
+    // Horizontal bottom tube
+    [utils.asGridCoords(28.5, 25)]: true,
+    [utils.asGridCoords(27.5, 25)]: true,
+    [utils.asGridCoords(26.5, 25)]: true,
+    [utils.asGridCoords(25.5, 25)]: true,
+
+};
