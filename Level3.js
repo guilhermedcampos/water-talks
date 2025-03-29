@@ -42,28 +42,23 @@ class Level3 {
         
         // Start dialogue sequence after animation
         console.log("Setting timeout for dialogue sequence");
-        setTimeout(() => {
-            console.log("Starting sand filter dialogue sequence");
-            map.startCutscene([
-                { type: "textMessage", text: "Excellent! You've activated the sand filter.", faceHero: "operator" },
-                { type: "textMessage", text: "Sand filtration is one of the oldest and most reliable methods of water treatment." },
-                { type: "textMessage", text: "As water passes through the fine sand layer, particles get trapped in the tiny spaces between sand grains." },
-                { type: "textMessage", text: "This effectively removes sediment, algae, and many impurities from the water." },
-                { type: "textMessage", text: "Now, let's try the gravel filter. It works differently than sand..." },
-                { 
-                    type: "custom", 
-                    action: (map) => {
-                        console.log("Updating objective to activate gravel filter");
-                        // Update objective
-                        if (map && map.updateObjective) {
-                            map.updateObjective("Activate the gravel filter");
-                        } else {
-                            console.error("map.updateObjective not available");
-                        }
+        map.startCutscene([
+            { type: "textMessage", text: "Excellent! You've activated the sand filter.", faceHero: "operator" },
+            { type: "textMessage", text: "Sand filtration is one of the oldest and most reliable methods of water treatment." },
+            { type: "textMessage", text: "As water passes through the fine sand layer, particles get trapped in the tiny spaces between sand grains." },
+            { type: "textMessage", text: "This effectively removes sediment, algae, and many impurities from the water." },
+            { 
+                type: "custom", 
+                action: (map) => {
+                    // Update objective
+                    if (map && map.updateObjective) {
+                        map.updateObjective("Talk to the operator.");
+                    } else {
+                        console.error("map.updateObjective not available");
                     }
                 }
-            ]);
-        }, 1500);
+            }
+        ]);
         
         map.buttonSpaces[utils.asGridCoords(27.5, 22)] = OperatorTalk
         map.buttonSpaces[utils.asGridCoords(26.5, 23)] = OperatorTalk
@@ -89,29 +84,27 @@ class Level3 {
         
         // Start dialogue sequence after animation
         console.log("Setting timeout for dialogue sequence");
-        setTimeout(() => {
-            console.log("Starting gravel filter dialogue sequence");
-            map.startCutscene([
-                { type: "textMessage", text: "Great job activating the gravel filter!", faceHero: "operator" },
-                { type: "textMessage", text: "Gravel filters use larger particles than sand filters." },
-                { type: "textMessage", text: "They're excellent for removing larger debris and preparing water for finer filtration." },
-                { type: "textMessage", text: "Gravel filters often serve as a pre-filter in multi-stage filtration systems." },
-                { type: "textMessage", text: "The difference between sand and gravel is that gravel allows for faster water flow but catches only larger particles." },
-                { type: "textMessage", text: "Now for our final filtration medium - activated carbon. This one works quite differently..." },
-                { 
-                    type: "custom", 
-                    action: (map) => {
-                        console.log("Updating objective to activate carbon filter");
-                        // Update objective
-                        if (map && map.updateObjective) {
-                            map.updateObjective("Activate the carbon filter");
-                        } else {
-                            console.error("map.updateObjective not available");
-                        }
+
+        map.startCutscene([
+            { type: "textMessage", text: "Great job activating the gravel filter!", faceHero: "operator" },
+            { type: "textMessage", text: "Gravel filters use larger particles than sand filters." },
+            { type: "textMessage", text: "They're excellent for removing larger debris and preparing water for finer filtration." },
+            { type: "textMessage", text: "Gravel filters often serve as a pre-filter in multi-stage filtration systems." },
+            { type: "textMessage", text: "The difference between sand and gravel is that gravel allows for faster water flow but catches only larger particles." },
+            { type: "textMessage", text: "Now for our final filtration medium - activated carbon. This one works quite differently..." },
+            { 
+                type: "custom", 
+                action: (map) => {
+                    console.log("Updating objective to activate carbon filter");
+                    // Update objective
+                    if (map && map.updateObjective) {
+                        map.updateObjective("Talk to the operator");
+                    } else {
+                        console.error("map.updateObjective not available");
                     }
                 }
-            ]);
-        }, 1500);
+            }
+        ]);
         
         map.buttonSpaces[utils.asGridCoords(27.5, 22)] = OperatorTalk
         map.buttonSpaces[utils.asGridCoords(26.5, 23)] = OperatorTalk
@@ -138,39 +131,36 @@ class Level3 {
         
         // Start dialogue sequence after animation
         console.log("Setting timeout for dialogue sequence");
-        setTimeout(() => {
-            console.log("Starting carbon filter dialogue sequence");
-            map.startCutscene([
-                { type: "textMessage", text: "Excellent! You've activated the carbon filter.", faceHero: "operator" },
-                { type: "textMessage", text: "Activated carbon is remarkable for water purification." },
-                { type: "textMessage", text: "Unlike sand and gravel that work through mechanical filtration, carbon uses adsorption." },
-                { type: "textMessage", text: "This means it chemically attracts and binds contaminants to its surface." },
-                { type: "textMessage", text: "Carbon is especially effective at removing chlorine, volatile organic compounds, and unpleasant tastes and odors." },
-                { type: "textMessage", text: "By combining these three filtration methods - sand, gravel, and carbon - we create a comprehensive filtration system." },
-                { type: "textMessage", text: "Each medium targets different contaminants, ensuring thoroughly clean water." },
-                { type: "textMessage", text: "You've now seen how we use multiple filtration methods to ensure water quality." },
-                { type: "textMessage", text: "Let's move forward to the next stage of water treatment." },
-                { 
-                    type: "custom", 
-                    action: (map) => {
-                        console.log("Carbon filter dialogue complete, updating objective");
-                        // Update objective
-                        if (map && map.updateObjective) {
-                            map.updateObjective("Return to the operator");
-                        } else {
-                            console.error("map.updateObjective not available");
-                        }
-                        
-                        // Mark all filters as complete
-                        map.filtersCompleted = true;
-                        console.log("Set filtersCompleted flag to true");
-                        
-                        // Add talk buttons again for final conversation
-                        console.log("Adding talk buttons again for final conversation");
+        map.startCutscene([
+            { type: "textMessage", text: "Excellent! You've activated the carbon filter.", faceHero: "operator" },
+            { type: "textMessage", text: "Activated carbon is remarkable for water purification." },
+            { type: "textMessage", text: "Unlike sand and gravel that work through mechanical filtration, carbon uses adsorption." },
+            { type: "textMessage", text: "This means it chemically attracts and binds contaminants to its surface." },
+            { type: "textMessage", text: "Carbon is especially effective at removing chlorine, volatile organic compounds, and unpleasant tastes and odors." },
+            { type: "textMessage", text: "By combining these three filtration methods - sand, gravel, and carbon - we create a comprehensive filtration system." },
+            { type: "textMessage", text: "Each medium targets different contaminants, ensuring thoroughly clean water." },
+            { type: "textMessage", text: "You've now seen how we use multiple filtration methods to ensure water quality." },
+            { type: "textMessage", text: "Let's move forward to the next stage of water treatment." },
+            { 
+                type: "custom", 
+                action: (map) => {
+                    console.log("Carbon filter dialogue complete, updating objective");
+                    // Update objective
+                    if (map && map.updateObjective) {
+                        map.updateObjective("Return to the operator");
+                    } else {
+                        console.error("map.updateObjective not available");
                     }
+                    
+                    // Mark all filters as complete
+                    map.filtersCompleted = true;
+                    console.log("Set filtersCompleted flag to true");
+                    
+                    // Add talk buttons again for final conversation
+                    console.log("Adding talk buttons again for final conversation");
                 }
-            ]);
-        }, 1500);
+            }
+        ]);
         
         map.buttonSpaces[utils.asGridCoords(27.5, 22)] = OperatorTalk
         map.buttonSpaces[utils.asGridCoords(26.5, 23)] = OperatorTalk
@@ -232,7 +222,7 @@ class Level3 {
             case "sand":
                 return [
                     { type: "textMessage", text: "Good progress! Now, please activate the gravel filter.", faceHero: "operator" },
-                    { type: "textMessage", text: "The control panel is at the top of the gravel tank." },
+                    { type: "textMessage", text: "Look for the green tank." },
                     { 
                         type: "custom", 
                         action: (map) => {
@@ -251,7 +241,7 @@ class Level3 {
             case "gravel":
                 return [
                     { type: "textMessage", text: "Almost there! Now activate the carbon filter to complete the filtration process.", faceHero: "operator" },
-                    { type: "textMessage", text: "The controls are at the top of the carbon filter tank." },
+                    { type: "textMessage", text: "The blue tank is what you're looking for." },
                     { 
                         type: "custom", 
                         action: (map) => {
@@ -345,6 +335,15 @@ const OperatorTalk = {
             type: "custom",
             action: (map) => {
                 console.log("Talk button clicked");
+
+                // Get the operator object
+                const operator = map.gameObjects["operator"];
+                if (operator) {
+                    // Temporarily disable the behaviorLoop
+                    operator.savedBehaviorLoop = operator.behaviorLoop; // Save the current behaviorLoop
+                    operator.behaviorLoop = []; // Disable the behaviorLoop
+                }
+
                 // Get appropriate dialogue based on current stage
                 const dialogueEvents = Level3.getOperatorDialogue(map);
                 console.log("Got dialogue events:", dialogueEvents.length);
@@ -360,15 +359,27 @@ const OperatorTalk = {
                 
                 // Start the cutscene with the dialogue
                 console.log("Starting cutscene with dialogue");
-                map.startCutscene(dialogueEvents);
-                
+                map.startCutscene([
+                    ...dialogueEvents,
+                    {
+                        type: "custom",
+                        action: (map) => {
+                            // Re-enable the operator's behaviorLoop after the conversation
+                            if (operator && operator.savedBehaviorLoop) {
+                                operator.behaviorLoop = operator.savedBehaviorLoop;
+                                delete operator.savedBehaviorLoop; // Clean up the saved behaviorLoop
+                            }
+                        }
+                    }
+                ]);
+
                 // Set a flag to track that initial conversation happened
                 map.initialOperatorTalkComplete = true;
                 console.log("Set initialOperatorTalkComplete flag to true");
             }
         }
     ]
-}
+};
 
 const sandFilter1 = {
     text: "Activate Sand Filter",
