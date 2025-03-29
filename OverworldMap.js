@@ -395,6 +395,9 @@ class OverworldMap {
         // Check if the current map is Level2 and set the default mission accordingly
         if (this.id === "Level2") {
             objectiveText.textContent = "Follow the operator to the computer.";
+
+        } else if (this.id === "Level5") {
+            objectiveText.textContent = "Talk to the operator one last time.";
         } else {
             console.log("Map id:", this.id);
             objectiveText.textContent = "Flush the toilet"; // Default mission for other maps
