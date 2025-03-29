@@ -493,6 +493,13 @@ const talkToOperatorEvent = {
     text: "Talk",
     action: "startCutscene",
     events: [
+        { 
+            type: "custom",
+            action: (map) => {
+                // Delete button spaces around the operator
+                delete map.buttonSpaces[utils.asGridCoords(37.5, 23)];
+            }
+        },
         { type: "textMessage", text: "Looks like sedimentation is complete!" },
         { type: "textMessage", text: "Do you understand how sedimentation works?" },
         { type: "textMessage", text: "Before we continue to filtration, sink the remaining flocs." },
