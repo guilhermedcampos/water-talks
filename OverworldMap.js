@@ -555,7 +555,7 @@ window.OverworldMaps = {
                     "What you waste ... must be cleaned."
                 ]
             }
-        }
+        },
     },
     
     // New Level1 map
@@ -793,7 +793,18 @@ window.OverworldMaps = {
         gameObjects: level3GameObjects,
         walls: level3Walls,
         cutSceneSpaces: {},
-        buttonSpaces: {},
+        buttonSpaces: {
+            [utils.asGridCoords(27.5, 22)]: OperatorTalk, // Top
+            [utils.asGridCoords(26.5, 23)]: OperatorTalk, // Left  
+            [utils.asGridCoords(28.5, 23)]: OperatorTalk, // Right
+            [utils.asGridCoords(27.5, 24)]: OperatorTalk, // Bottom
+            [utils.asGridCoords(30.5, 18)]: sandFilter1,
+            [utils.asGridCoords(31.5, 18)]: sandFilter2,
+            [utils.asGridCoords(32.5, 18)]: gravelFilter1,
+            [utils.asGridCoords(33.5, 18)]: gravelFilter2,
+            [utils.asGridCoords(34.5, 18)]: carbonFilter1,
+            [utils.asGridCoords(35.5, 18)]: carbonFilter2,
+        },
     },
     /**
      * Level5 - Advanced water treatment facility

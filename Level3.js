@@ -27,7 +27,6 @@ class Level3 {
         
         // Add talk buttons around the operator
         console.log("Adding talk buttons around operator");
-        Level3.addOperatorTalkButtons(map);
         
         // Show filter activation animation (missing in your implementation)
         Level3.showFilterActivationEffect = function(map, filterType) {
@@ -103,60 +102,6 @@ class Level3 {
         };
     }
     
-    // Add talk buttons around the operator
-    static addOperatorTalkButtons(map) {
-        console.log("addOperatorTalkButtons called", map);
-        if (!map.buttonSpaces) {
-            console.error("map.buttonSpaces is undefined!");
-            map.buttonSpaces = {};
-        }
-        
-        const operatorTalkButtons = [
-            [27.5, 22], // Top
-            [26.5, 23], // Left
-            [28.5, 23], // Right
-            [27.5, 24], // Bottom
-        ];
-        
-        console.log("Adding buttons at coordinates:", operatorTalkButtons);
-        
-        // Add each button
-        operatorTalkButtons.forEach(coords => {
-            const gridCoord = utils.asGridCoords(coords[0], coords[1]);
-            console.log(`Adding 'Talk' button at ${gridCoord}`);
-            
-            map.buttonSpaces[gridCoord] = {
-                text: "Talk",
-                action: "custom",
-                callback: (map) => {
-                    console.log("Talk button clicked");
-                    // Get appropriate dialogue based on current stage
-                    const dialogueEvents = Level3.getOperatorDialogue(map);
-                    console.log("Got dialogue events:", dialogueEvents.length);
-                    
-                    // Remove all talk buttons after dialogue is initiated
-                    operatorTalkButtons.forEach(btnCoords => {
-                        const btnGridCoord = utils.asGridCoords(btnCoords[0], btnCoords[1]);
-                        delete map.buttonSpaces[btnGridCoord];
-                        console.log(`Removed button at ${btnGridCoord}`);
-                    });
-                    
-                    // Remove active button display
-                    console.log("Removing active button display");
-                    map.removeButton();
-                    
-                    // Start the cutscene with the dialogue
-                    console.log("Starting cutscene with dialogue");
-                    map.startCutscene(dialogueEvents);
-                    
-                    // Set a flag to track that initial conversation happened
-                    map.initialOperatorTalkComplete = true;
-                    console.log("Set initialOperatorTalkComplete flag to true");
-                }
-            };
-        });
-    }
-    
     // Handle sand filter activation
     static activateSandFilter(map) {
         console.log("activateSandFilter called");
@@ -197,6 +142,11 @@ class Level3 {
             ]);
         }, 1500);
         
+        map.buttonSpaces[utils.asGridCoords(27.5, 22)] = OperatorTalk
+        map.buttonSpaces[utils.asGridCoords(26.5, 23)] = OperatorTalk
+        map.buttonSpaces[utils.asGridCoords(28.5, 23)] = OperatorTalk
+        map.buttonSpaces[utils.asGridCoords(27.5, 24)] = OperatorTalk
+
         // Remove the sand filter buttons from spaces
         console.log("Removing sand filter buttons");
         delete map.buttonSpaces[utils.asGridCoords(30.5, 18)];
@@ -244,6 +194,11 @@ class Level3 {
             ]);
         }, 1500);
         
+        map.buttonSpaces[utils.asGridCoords(27.5, 22)] = OperatorTalk
+        map.buttonSpaces[utils.asGridCoords(26.5, 23)] = OperatorTalk
+        map.buttonSpaces[utils.asGridCoords(28.5, 23)] = OperatorTalk
+        map.buttonSpaces[utils.asGridCoords(27.5, 24)] = OperatorTalk
+
         // Remove the gravel filter buttons from spaces
         console.log("Removing gravel filter buttons");
         delete map.buttonSpaces[utils.asGridCoords(32.5, 18)];
@@ -296,12 +251,16 @@ class Level3 {
                         
                         // Add talk buttons again for final conversation
                         console.log("Adding talk buttons again for final conversation");
-                        Level3.addOperatorTalkButtons(map);
                     }
                 }
             ]);
         }, 1500);
         
+        map.buttonSpaces[utils.asGridCoords(27.5, 22)] = OperatorTalk
+        map.buttonSpaces[utils.asGridCoords(26.5, 23)] = OperatorTalk
+        map.buttonSpaces[utils.asGridCoords(28.5, 23)] = OperatorTalk
+        map.buttonSpaces[utils.asGridCoords(27.5, 24)] = OperatorTalk
+
         // Remove the carbon filter buttons from spaces
         console.log("Removing carbon filter buttons");
         delete map.buttonSpaces[utils.asGridCoords(34.5, 18)];
@@ -456,6 +415,92 @@ class Level3 {
 }
 
 // Constants
+const OperatorTalk = {
+    text: "Talk",
+    action: "startCutscene",
+    events: [
+        {
+            type: "custom",
+            action: (map) => {
+                console.log("Talk button clicked");
+                // Get appropriate dialogue based on current stage
+                const dialogueEvents = Level3.getOperatorDialogue(map);
+                console.log("Got dialogue events:", dialogueEvents.length);
+
+                delete map.buttonSpaces[utils.asGridCoords(27.5, 22)];
+                delete map.buttonSpaces[utils.asGridCoords(26.5, 23)];
+                delete map.buttonSpaces[utils.asGridCoords(28.5, 23)];
+                delete map.buttonSpaces[utils.asGridCoords(27.5, 24)];
+
+                // Remove active button display
+                console.log("Removing active button display");
+                map.removeButton();
+                
+                // Start the cutscene with the dialogue
+                console.log("Starting cutscene with dialogue");
+                map.startCutscene(dialogueEvents);
+                
+                // Set a flag to track that initial conversation happened
+                map.initialOperatorTalkComplete = true;
+                console.log("Set initialOperatorTalkComplete flag to true");
+            }
+        }
+    ]
+}
+
+const sandFilter1 = {
+    text: "Activate Sand Filter",
+    action: "custom", 
+    callback: (map) => {
+        console.log("Sand filter button clicked (30.5, 18)");
+        Level3.activateSandFilter(map);
+    }
+};
+
+const sandFilter2 = {
+    text: "Activate Sand Filter",
+    action: "custom",
+    callback: (map) => {
+        console.log("Sand filter button clicked (31.5, 18)");
+        Level3.activateSandFilter(map);
+    }
+};
+
+const gravelFilter1 = {
+    text: "Activate Gravel Filter", 
+    action: "custom",
+    callback: (map) => {
+        console.log("Gravel filter button clicked (32.5, 18)");
+        Level3.activateGravelFilter(map);
+    }
+};
+
+const gravelFilter2 = {
+    text: "Activate Gravel Filter",
+    action: "custom", 
+    callback: (map) => {
+        console.log("Gravel filter button clicked (33.5, 18)");
+        Level3.activateGravelFilter(map);
+    }
+};
+
+const carbonFilter1 = {
+    text: "Activate Carbon Filter",
+    action: "custom",
+    callback: (map) => {
+        console.log("Carbon filter button clicked (34.5, 18)");
+        Level3.activateCarbonFilter(map);
+    }
+};
+
+const carbonFilter2 = {
+    text: "Activate Carbon Filter",
+    action: "custom",
+    callback: (map) => {
+        console.log("Carbon filter button clicked (35.5, 18)");
+        Level3.activateCarbonFilter(map);
+    }
+};
 
 const level3GameObjects = {
     ben: new Person({
@@ -536,77 +581,7 @@ const initLevel3Event = {
                         }, 1500);
                     }, 50);
                 }
-                // If we're already in Level3, just initialize it
-                else {
-                    console.log("Already in Level3, initializing");
-                    Level3.init(map);
-                    
-                    // Add button spaces for filter activation after initialization
-                    console.log("Adding filter activation buttons");
-                    map.buttonSpaces = map.buttonSpaces || {};
-                    
-                    // Sand filter buttons
-                    console.log("Adding sand filter buttons");
-                    map.buttonSpaces[utils.asGridCoords(30.5, 18)] = {
-                        text: "Activate Sand Filter",
-                        action: "custom",
-                        callback: (map) => {
-                            console.log("Sand filter button clicked (30.5, 18)");
-                            Level3.activateSandFilter(map);
-                        }
-                    };
-                    
-                    map.buttonSpaces[utils.asGridCoords(31.5, 18)] = {
-                        text: "Activate Sand Filter",
-                        action: "custom",
-                        callback: (map) => {
-                            console.log("Sand filter button clicked (31.5, 18)");
-                            Level3.activateSandFilter(map);
-                        }
-                    };
-                    
-                    // Gravel filter buttons
-                    console.log("Adding gravel filter buttons");
-                    map.buttonSpaces[utils.asGridCoords(32.5, 18)] = {
-                        text: "Activate Gravel Filter",
-                        action: "custom",
-                        callback: (map) => {
-                            console.log("Gravel filter button clicked (32.5, 18)");
-                            Level3.activateGravelFilter(map);
-                        }
-                    };
-                    
-                    map.buttonSpaces[utils.asGridCoords(33.5, 18)] = {
-                        text: "Activate Gravel Filter",
-                        action: "custom",
-                        callback: (map) => {
-                            console.log("Gravel filter button clicked (33.5, 18)");
-                            Level3.activateGravelFilter(map);
-                        }
-                    };
-                    
-                    // Carbon filter buttons
-                    console.log("Adding carbon filter buttons");
-                    map.buttonSpaces[utils.asGridCoords(34.5, 18)] = {
-                        text: "Activate Carbon Filter",
-                        action: "custom",
-                        callback: (map) => {
-                            console.log("Carbon filter button clicked (34.5, 18)");
-                            Level3.activateCarbonFilter(map);
-                        }
-                    };
-                    
-                    map.buttonSpaces[utils.asGridCoords(35.5, 18)] = {
-                        text: "Activate Carbon Filter",
-                        action: "custom",
-                        callback: (map) => {
-                            console.log("Carbon filter button clicked (35.5, 18)");
-                            Level3.activateCarbonFilter(map);
-                        }
-                    };
-                    
-                    console.log("Level3 initialization complete");
-                }
+                Level3.init(map);
             } 
         } 
     ] 
