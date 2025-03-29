@@ -224,6 +224,8 @@ class Level3 {
                             } else {
                                 console.error("map.updateObjective not available");
                             }
+                            map.buttonSpaces[utils.asGridCoords(30.5, 18)] = sandFilter1;
+                            map.buttonSpaces[utils.asGridCoords(31.5, 18)] = sandFilter2;
                         }
                     }
                 ];
@@ -241,6 +243,8 @@ class Level3 {
                             } else {
                                 console.error("map.updateObjective not available");
                             }
+                            map.buttonSpaces[utils.asGridCoords(32.5, 18)] = gravelFilter1;
+                            map.buttonSpaces[utils.asGridCoords(33.5, 18)] = gravelFilter2;
                         }
                     }
                 ];
@@ -258,6 +262,8 @@ class Level3 {
                             } else {
                                 console.error("map.updateObjective not available");
                             }
+                            map.buttonSpaces[utils.asGridCoords(34.5, 18)] = carbonFilter1;
+                            map.buttonSpaces[utils.asGridCoords(35.5, 18)] = carbonFilter2;
                         }
                     }
                 ];
