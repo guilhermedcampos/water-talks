@@ -522,7 +522,15 @@ class Level1 {
                 text: "Talk",
                 action: "startCutscene",
                 events: [
-                    deleteTalkButtons,  
+                    { 
+                        type: "custom",
+                        action: (map) => {
+                            // Delete button spaces around the operator
+                            delete map.buttonSpaces[utils.asGridCoords(31.5, 17)];
+                            delete map.buttonSpaces[utils.asGridCoords(32.5, 18)];
+                            delete map.buttonSpaces[utils.asGridCoords(33.5, 17)];
+                        }
+                    },  
                   { type: "textMessage", text: "Excellent work! With the surface cleared, we must now address the finer particles suspended within.", faceHero: "operator" },
                   { type: "textMessage", text: "Now, I want you to add the coagulants into the water. Activate the dispenser over there.", faceHero: "operator" },
                   { type: "textMessage", text: "They will neutralize the charges of these particles, causing them to clump together into larger aggregates known as flocs.", faceHero: "operator" },
