@@ -331,6 +331,7 @@ class Level1 {
                     text: "Talk",
                     action: "startCutscene",
                     events: [
+                        deleteTalkButtons, 
                         { type: "textMessage", text: "Great! Follow me now!", faceHero: "operator" },
                         followOperatorEvent,
                     ]
@@ -367,6 +368,7 @@ class Level1 {
                     text: "Talk",
                     action: "startCutscene",
                     events: [
+                        deleteTalkButtons,
                         { type: "textMessage", text: "Excellent! The coagulants are now in the water.", faceHero: "operator" },
                         { type: "textMessage", text: "Observe as the coagulants work their magic, binding the tiny impurities into flocs." },
                         { type: "textMessage", text: "These larger clusters are easier to remove in subsequent treatment stages, ensuring our water becomes ever purer." },
@@ -520,6 +522,7 @@ class Level1 {
                 text: "Talk",
                 action: "startCutscene",
                 events: [
+                    deleteTalkButtons,  
                   { type: "textMessage", text: "Excellent work! With the surface cleared, we must now address the finer particles suspended within.", faceHero: "operator" },
                   { type: "textMessage", text: "Now, I want you to add the coagulants into the water. Activate the dispenser over there.", faceHero: "operator" },
                   { type: "textMessage", text: "They will neutralize the charges of these particles, causing them to clump together into larger aggregates known as flocs.", faceHero: "operator" },
@@ -708,10 +711,22 @@ const flocPositions = [
 
 
 // Events
+
+const deleteTalkButtons = { 
+    type: "custom",
+    action: (map) => {
+        // Delete button spaces around the operator
+        delete map.buttonSpaces[utils.asGridCoords(31.5, 17)];
+        delete map.buttonSpaces[utils.asGridCoords(32.5, 18)];
+        delete map.buttonSpaces[utils.asGridCoords(33.5, 17)];
+    }
+}
+
 const introLevel1Event = {
     text: "Talk",
     action: "startCutscene",
     events: [
+        deleteTalkButtons,
         { type: "textMessage", text: "Welcome to the water treatment facility!", faceHero: "operator" },
         { type: "textMessage", text: "I'm the operator here. Did you know that your toilet flush travels through an extensive sewer system to get here?" },
         { type: "textMessage", text: "The water you flush goes through multiple treatment stages before it's returned to the environment." },
@@ -727,6 +742,7 @@ const introLevel1Event = {
         }
     ]
 }
+
 // Update the collectDebris1Event to remove all button spaces
 const collectDebris1Event = {
     text: "Collect",
