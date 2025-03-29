@@ -457,7 +457,10 @@ const operatorWalkEvent = [
 
     { type: "custom", action: (map) => { map.updateObjective("Watch the flocs settle to the bottom of the tank with the computer."); } },
 
-    { type: "custom", action: (map) => { map.gameObjects["operator"].behaviorLoop = [ { type: "stand", direction: "down", time: 999999 } ]; }}
+    { type: "custom", action: (map) => { map.gameObjects["operator"].behaviorLoop = [ { type: "stand", direction: "down", time: 999999 } ]; }},
+    { type: "custom", action: (map) => {    map.gameObjects["arrowIndicator"].x = utils.withGrid(38.2);
+                                            map.gameObjects["arrowIndicator"].y = utils.withGrid(23); 
+                                        } },
 ];
 
 const observeSedimentationEvent = {
@@ -467,6 +470,15 @@ const observeSedimentationEvent = {
         {
             type: "custom",
             action: (map) => {
+
+                // Remove the arrow indicator
+                if (map.gameObjects["arrowIndicator"]) {
+                    // Call destroy method to clear any animation intervals
+                    if (map.gameObjects["arrowIndicator"].destroy) {
+                        map.gameObjects["arrowIndicator"].destroy();
+                    }
+                    delete map.gameObjects["arrowIndicator"];
+                }
                 // Remove the button spaces
                 delete map.buttonSpaces[utils.asGridCoords(37.5, 23)];
 
