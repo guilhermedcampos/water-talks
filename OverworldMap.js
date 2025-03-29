@@ -100,7 +100,11 @@ class OverworldMap {
     }
 
     async startCutscene(events) {
+        // Set flag to true at the start
         this.isCutscenePlaying = true;
+        
+        // Remove any active button when starting a cutscene
+        this.removeButton();
 
         // Start a loop of events
         for (let i = 0; i < events.length; i++) {
@@ -109,12 +113,11 @@ class OverworldMap {
             await eventHandler.init();
         }
 
-        // Set flag back to false
+        // Set flag back to false when all events are complete
         this.isCutscenePlaying = false;
 
         // Reset NPC's to their idle behavior
-        Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this))
-
+        Object.values(this.gameObjects).forEach(object => object.doBehaviorEvent(this));
     }
 
     checkForActionCutscene() {
@@ -491,12 +494,14 @@ class OverworldMap {
         document.addEventListener('keydown', (e) => {
             // Check if space key was pressed and there's an active button
             if (e.code === 'Space' && this.activeButton) {
-                // Don't activate "Talk" buttons with space key
-                if (this.activeButton.dataset.buttonType === "Talk") {
+                // Now we'll allow Talk buttons to be activated by space
+                console.log("Space key pressed - activating button:", this.activeButton.dataset.buttonType);
+                
+                // If a cutscene is playing, don't allow additional button clicks
+                if (this.isCutscenePlaying) {
+                    console.log("Cutscene is playing - ignoring button activation");
                     return;
                 }
-                
-                console.log("Space key pressed - activating button");
                 
                 // Simulate a click on the active button
                 this.activeButton.click();
