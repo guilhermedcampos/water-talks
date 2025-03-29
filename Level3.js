@@ -485,18 +485,7 @@ const level3GameObjects = {
             }
         ]
     }),
-};
-
-
-// Create basic walls around the perimeter
-for (let i = 25; i <= 37; i++) {
-    level3Walls[utils.asGridCoords(i, 15)] = true; // Top wall
-    level3Walls[utils.asGridCoords(i, 25)] = true; // Bottom wall
-}
-for (let i = 15; i <= 25; i++) {
-    level3Walls[utils.asGridCoords(25, i)] = true; // Left wall
-    level3Walls[utils.asGridCoords(37, i)] = true; // Right wall
-}
+};  
 
 // Initialize Level3
 const initLevel3Event = { 
@@ -627,6 +616,5 @@ const initLevel3Event = {
 console.log("Exporting Level3 components to global scope");
 window.Level3 = Level3;
 window.level3GameObjects = level3GameObjects;
-window.level3Walls = level3Walls;
 window.initLevel3Event = initLevel3Event;
 console.log("Level3.js fully loaded and initialized");
