@@ -401,6 +401,9 @@ class OverworldMap {
 
         } else if (this.id === "Level5") {
             objectiveText.textContent = "Talk to the operator one last time.";
+
+        } else if (this.id === "Level3") {
+            objectiveText.textContent = "Talk to the operator about filtration.";
         } else {
             console.log("Map id:", this.id);
             objectiveText.textContent = "Flush the toilet"; // Default mission for other maps
