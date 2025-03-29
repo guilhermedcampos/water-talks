@@ -788,7 +788,7 @@ window.OverworldMaps = {
             y: utils.withGrid(17),
         },
         gameObjects: level3GameObjects,
-        walls: {},
+        walls: level3Walls,
         cutSceneSpaces: {},
         buttonSpaces: {},
     },
