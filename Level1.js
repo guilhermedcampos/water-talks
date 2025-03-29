@@ -331,7 +331,15 @@ class Level1 {
                     text: "Talk",
                     action: "startCutscene",
                     events: [
-                        deleteTalkButtons, 
+                        { 
+                            type: "custom",
+                            action: (map) => {
+                                // Delete button spaces around the operator
+                                delete map.buttonSpaces[utils.asGridCoords(31.5, 17)];
+                                delete map.buttonSpaces[utils.asGridCoords(32.5, 18)];
+                                delete map.buttonSpaces[utils.asGridCoords(33.5, 17)];
+                            }
+                        },
                         { type: "textMessage", text: "Great! Follow me now!", faceHero: "operator" },
                         followOperatorEvent,
                     ]
