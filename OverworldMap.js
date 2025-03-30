@@ -406,7 +406,7 @@ class OverworldMap {
             objectiveText.textContent = "Talk to the operator about filtration.";
         } else {
             console.log("Map id:", this.id);
-            objectiveText.textContent = "Flush the toilet"; // Default mission for other maps
+            objectiveText.textContent = "Flush the toilet."; // Default mission for other maps
         }
         objectiveText.style.fontSize = "25px";
         objectiveText.style.color = "#3c3c54";
