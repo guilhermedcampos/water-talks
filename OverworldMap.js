@@ -871,7 +871,7 @@ window.OverworldMaps = {
                                     
                                     // Update objective once conversation is complete
                                     if (map && map.updateObjective) {
-                                        map.updateObjective("Complete the water knowledge quiz");
+                                        map.updateObjective("Complete the water knowledge quiz.");
                                     }
                                 }
                             }
@@ -893,7 +893,7 @@ window.OverworldMaps = {
                             
                             // Update objective when player spawns to make the mission clear
                             if (map && map.updateObjective) {
-                                map.updateObjective("Talk to the operator one last time");
+                                map.updateObjective("Talk to the operator one last time.");
                             }
                         }
                     }
@@ -969,7 +969,7 @@ window.OverworldMaps = {
                             
                             // Update objective once conversation is complete
                             if (map && map.updateObjective) {
-                                map.updateObjective("Complete the water knowledge quiz");
+                                map.updateObjective("Complete the water knowledge quiz.");
                             }
                         }
                     }
@@ -999,7 +999,7 @@ window.OverworldMaps = {
                             
                             // Update objective once conversation is complete
                             if (map && map.updateObjective) {
-                                map.updateObjective("Complete the water knowledge quiz");
+                                map.updateObjective("Complete the water knowledge quiz.");
                             }
                         }
                     }
@@ -1029,7 +1029,7 @@ window.OverworldMaps = {
                             
                             // Update objective once conversation is complete
                             if (map && map.updateObjective) {
-                                map.updateObjective("Complete the water knowledge quiz");
+                                map.updateObjective("Complete the water knowledge quiz.");
                             }
                         }
                     }
@@ -1059,7 +1059,7 @@ window.OverworldMaps = {
                             
                             // Update objective once conversation is complete
                             if (map && map.updateObjective) {
-                                map.updateObjective("Complete the water knowledge quiz");
+                                map.updateObjective("Complete the water knowledge quiz.");
                             }
                         }
                     }

@@ -9,7 +9,7 @@ class Level4{
 }
 
 //constants
-const level3GameObjects = {
+const level4GameObjects = {
     ben: new Person({
         isPlayerControlled: true,
         x: utils.withGrid(36),

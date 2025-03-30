@@ -85,7 +85,7 @@ window.Level5 = {
         
         // Update objective
         if (map && map.updateObjective) {
-            map.updateObjective("Complete the water knowledge quiz");
+            map.updateObjective("Complete the water knowledge quiz.");
         }
         
         // Show first question
@@ -342,7 +342,7 @@ window.Level5 = {
             
             // Update objective
             if (map && map.updateObjective) {
-                map.updateObjective("Journey complete");
+                map.updateObjective("Journey complete!");
             }
             
             // Start the final cutscene and speeches - using the text from OverworldMap.js

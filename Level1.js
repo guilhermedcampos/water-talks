@@ -322,7 +322,7 @@ class Level1 {
         
         if (remainingFlocs === 0) {
             // All flocs observed, instruct the player to report to the operator
-            map.updateObjective("Report your observations to the operator");
+            map.updateObjective("Report your observations to the operator.");
 
             // Define the final dialogue with a button that, when pressed,
             // will trigger the final cutscene.
@@ -354,7 +354,7 @@ class Level1 {
                 map.buttonSpaces[utils.asGridCoords(operatorX - 1, operatorY)] = { ...newDialogue };
             }
         } else {
-            map.updateObjective(`Observe flocs: ${remainingFlocs} remaining`);
+            map.updateObjective(`Observe flocs: ${remainingFlocs} remaining.`);
         }
     }
 
@@ -367,7 +367,7 @@ class Level1 {
         
         if (remainingCoagulants === 0) {
             // All coagulants collected, now direct player to return to operator
-            map.updateObjective("Return to the operator to discuss coagulation");
+            map.updateObjective("Return to the operator to discuss coagulation.");
             
             // Update the operator's dialogue for the next phase
             if (map.gameObjects["operator"]) {
@@ -395,7 +395,7 @@ class Level1 {
                                 Level1.transformCoagulantsToFlocs(map);
                                 
                                 // Update objective to observe floc formation
-                                map.updateObjective("Floc Formation: Observe the growth of flocs and inform the operator");
+                                map.updateObjective("Floc Formation: Observe the growth of flocs and inform the operator.");
                             }
                         }
                     ]
@@ -431,7 +431,7 @@ class Level1 {
             }
         } else {
             // Update objective to show how many coagulants are left to mix
-            map.updateObjective(`Mix coagulants: ${remainingCoagulants} remaining`);
+            map.updateObjective(`Mix coagulants: ${remainingCoagulants} remaining.`);
         }
     }
 
@@ -530,7 +530,7 @@ class Level1 {
         
         if (debrisCount === 0) {
             // All debris collected, update objective
-            map.updateObjective("Return to the operator");
+            map.updateObjective("Return to the operator.");
           
             // Update the operator's dialogue to acknowledge completion and instruct the next stage
             if (map.gameObjects["operator"]) {
@@ -564,7 +564,7 @@ class Level1 {
             }
         } else {
             // Update objective to show how many debris are left.
-            map.updateObjective(`Surface Sweep: ${debrisCount} pieces of debris remaining`);
+            map.updateObjective(`Surface Sweep: ${debrisCount} pieces of debris remaining.`);
         }
     }
 
@@ -759,7 +759,7 @@ const introLevel1Event = {
             type: "custom",
             action: (map) => {
                 map.talkedToOperator = true;
-                map.updateObjective("Surface Sweep: Remove visible debris from the reservoir");
+                map.updateObjective("Surface Sweep: Remove visible debris from the reservoir.");
             }
         }
     ]
@@ -880,7 +880,7 @@ const coagulantsStageEvent = {
       map.coagulantsStageStarted = true;
 
       // Update objective to direct player back to operator.
-      map.updateObjective("Mix coagulants: Check the dispenser for remaining coagulants");
+      map.updateObjective("Mix coagulants: Check the dispenser for remaining coagulants.");
 
       map.gameObjects["arrowIndicator"].x = utils.withGrid(31);
       map.gameObjects["arrowIndicator"].y = utils.withGrid(21);
@@ -913,7 +913,7 @@ const addCoagulantsEvent = {
       Level1.addCoagulants(map, 5);
 
       // Update the objective 
-      map.updateObjective("Mix coagulants");
+      map.updateObjective("Mix coagulants.");
 
       // Remove the arrow indicator
       if (map.gameObjects["arrowIndicator"]) {
@@ -943,7 +943,7 @@ const startCoagulantsEvent = {
                 Level1.addCoagulants(map, 5);
                 
                 // Update objective to direct player back to operator immediately
-                map.updateObjective("Mix coagulants");
+                map.updateObjective("Mix coagulants.");
                 
                 // Remove the arrow indicator
                 if (map.gameObjects["arrowIndicator"]) {
@@ -964,7 +964,7 @@ const startCoagulantsEvent = {
 const followOperatorEvent = { 
     type: "custom",
     action: (map) => {
-        map.updateObjective("Follow the operator to the next stage");
+        map.updateObjective("Follow the operator to the next stage.");
 
         const walkEvents = [];
 

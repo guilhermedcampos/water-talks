@@ -11,7 +11,7 @@ class Level3 {
         // Set initial objective
         if (map && map.updateObjective) {
             console.log("Setting initial objective for Level3");
-            map.updateObjective("Talk to the operator about filtration");
+            map.updateObjective("Talk to the operator about filtration.");
         }
         
         // Initialize operator's position and behavior
@@ -98,9 +98,7 @@ class Level3 {
                     console.log("Updating objective to activate carbon filter");
                     // Update objective
                     if (map && map.updateObjective) {
-                        map.updateObjective("Talk to the operator");
-                    } else {
-                        console.error("map.updateObjective not available");
+                        map.updateObjective("Talk to the operator.");
                     }
                 }
             }
@@ -147,10 +145,8 @@ class Level3 {
                     console.log("Carbon filter dialogue complete, updating objective");
                     // Update objective
                     if (map && map.updateObjective) {
-                        map.updateObjective("Return to the operator");
-                    } else {
-                        console.error("map.updateObjective not available");
-                    }
+                        map.updateObjective("Return to the operator.");
+                    } 
                     
                     // Mark all filters as complete
                     map.filtersCompleted = true;
@@ -210,7 +206,7 @@ class Level3 {
                             console.log("Setting objective to activate sand filter");
                             // Update objective
                             if (map && map.updateObjective) {
-                                map.updateObjective("Activate the sand filter");
+                                map.updateObjective("Activate the sand filter.");
                             } else {
                                 console.error("map.updateObjective not available");
                             }
@@ -229,10 +225,8 @@ class Level3 {
                             console.log("Setting objective to activate gravel filter");
                             // Update objective
                             if (map && map.updateObjective) {
-                                map.updateObjective("Activate the gravel filter");
-                            } else {
-                                console.error("map.updateObjective not available");
-                            }
+                                map.updateObjective("Activate the gravel filter.");
+                            } 
                             map.buttonSpaces[utils.asGridCoords(32.5, 18)] = gravelFilter1;
                             map.buttonSpaces[utils.asGridCoords(33.5, 18)] = gravelFilter2;
                         }
@@ -248,10 +242,8 @@ class Level3 {
                             console.log("Setting objective to activate carbon filter");
                             // Update objective
                             if (map && map.updateObjective) {
-                                map.updateObjective("Activate the carbon filter");
-                            } else {
-                                console.error("map.updateObjective not available");
-                            }
+                                map.updateObjective("Activate the carbon filter.");
+                            } 
                             map.buttonSpaces[utils.asGridCoords(34.5, 18)] = carbonFilter1;
                             map.buttonSpaces[utils.asGridCoords(35.5, 18)] = carbonFilter2;
                         }
@@ -267,10 +259,8 @@ class Level3 {
                             console.log("Setting objective to return to operator");
                             // Update objective
                             if (map && map.updateObjective) {
-                                map.updateObjective("Return to the operator");
-                            } else {
-                                console.error("map.updateObjective not available");
-                            }
+                                map.updateObjective("Return to the operator.");
+                            } 
                         }
                     }
                 ];
