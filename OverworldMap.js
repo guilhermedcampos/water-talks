@@ -606,6 +606,7 @@ window.OverworldMaps = {
         cutSceneSpaces: {
             // Add our teleport event
             [utils.asGridCoords(36.5, 16)]: teleportToLevel5Event,
+            [utils.asGridCoords(38.5, 16)]: initLevel4Event,
             // Transition spots - If player is underwater and steps on those positions, change his sprite to land
             [utils.asGridCoords(36.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
             [utils.asGridCoords(37.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
@@ -804,15 +805,20 @@ window.OverworldMaps = {
     Level4: {
         id: "Level4",
         lowerSrc: "images/maps/Level4Lower.png", 
-        upperSrc: "images/maps/Level4Overlay.png", 
+        upperSrc: "images/maps/Level3Upper.png", 
         spawnpoint: {
-            x: utils.withGrid(36),
-            y: utils.withGrid(17),
+            x: utils.withGrid(37.5),
+            y: utils.withGrid(19),
         },
         gameObjects: level4GameObjects,
         walls: level4Walls,
         cutSceneSpaces: {},
-        buttonSpaces: {},
+        buttonSpaces: {
+            [utils.asGridCoords(34.5, 22)]: level4OperatorTalk, // Top
+            [utils.asGridCoords(33.5, 23)]: level4OperatorTalk, // Left  
+            [utils.asGridCoords(35.5, 23)]: level4OperatorTalk, // Right
+            [utils.asGridCoords(34.5, 24)]: level4OperatorTalk, // Bottom
+        },
     },
 
     /**

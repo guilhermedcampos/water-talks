@@ -305,10 +305,10 @@ class Level3 {
             fadeOverlay.style.opacity = "1";
             
             setTimeout(() => {
-                console.log("Changing map to Level5");
+                console.log("Changing map to Level4");
                 // Move to Level5
                 map.startCutscene([
-                    { type: "changeMap", map: "Level5" }
+                    { type: "changeMap", map: "Level4" }
                 ]);
                 
                 // Fade out
