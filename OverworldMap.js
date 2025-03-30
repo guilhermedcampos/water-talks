@@ -813,9 +813,7 @@ window.OverworldMaps = {
         gameObjects: level4GameObjects,
         walls: level4Walls,
         cutSceneSpaces: {},
-        buttonSpaces: {
-            [utils.asGridCoords(34.5, 22)]: level4OperatorTalk, // Top
-            [utils.asGridCoords(33.5, 23)]: level4OperatorTalk, // Left  
+        buttonSpaces: {  
             [utils.asGridCoords(35.5, 23)]: level4OperatorTalk, // Right
             [utils.asGridCoords(34.5, 24)]: level4OperatorTalk, // Bottom
         },

@@ -459,6 +459,9 @@ const level4Walls = {
     [utils.asGridCoords(38.5, 28)]: true,
     [utils.asGridCoords(39.5, 28)]: true,
     [utils.asGridCoords(40.5, 28)]: true,
+    //extra
+    [utils.asGridCoords(36.5, 29)]: true,
+    [utils.asGridCoords(37.5, 29)]: true,
 
     // Vertical wall right
     [utils.asGridCoords(40.5, 19)]: true,

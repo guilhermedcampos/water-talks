@@ -93,13 +93,9 @@ const level4OperatorTalk = {
                 // Get the operator object
                 const operator = map.gameObjects["operator"];
                 if (operator) {
-                    // Temporarily disable the behaviorLoop
-                    operator.savedBehaviorLoop = operator.behaviorLoop; // Save the current behaviorLoop
                     operator.behaviorLoop = []; // Disable the behaviorLoop
                 }
 
-                delete map.buttonSpaces[utils.asGridCoords(34.5, 22)];
-                delete map.buttonSpaces[utils.asGridCoords(33.5, 23)];
                 delete map.buttonSpaces[utils.asGridCoords(35.5, 23)];
                 delete map.buttonSpaces[utils.asGridCoords(34.5, 24)];
 
@@ -117,6 +113,192 @@ const level4OperatorTalk = {
             type: "custom",
             action: (map) => {
                 map.updateObjective("Add chlorine to the tanks.");
+
+                map.buttonSpaces[utils.asGridCoords(31.5, 24)] = level4ChlorineTask;
+                map.buttonSpaces[utils.asGridCoords(29.5, 24)] = level4ChlorineTask;
+                map.buttonSpaces[utils.asGridCoords(27.5, 24)] = level4ChlorineTask;
+
+                const operator = map.gameObjects["operator"];
+                operator.behaviorLoop = [ { type: "stand", direction: "left", time: 99999 }, ];
+            }
+        },
+    ]
+}
+
+const level4ChlorineTask = {
+    text: "Add Chlorine",
+    action: "startCutscene",
+    events: [
+        {
+            type: "custom",
+            action: (map) => {
+                console.log("Chlorine button clicked");
+
+                delete map.buttonSpaces[utils.asGridCoords(31.5, 24)];
+                delete map.buttonSpaces[utils.asGridCoords(29.5, 24)];
+                delete map.buttonSpaces[utils.asGridCoords(27.5, 24)];
+
+
+                // Remove active button display
+                console.log("Removing active button display");
+                map.removeButton();
+            }
+        },
+        {
+            type: "custom",
+            action: (map) => {
+                map.updateObjective("Return to the operator.");
+
+                map.buttonSpaces[utils.asGridCoords(35.5, 23)] = level4ChlorineTaskComplete;
+                map.buttonSpaces[utils.asGridCoords(34.5, 24)] = level4ChlorineTaskComplete;
+
+                const operator = map.gameObjects["operator"];
+                operator.behaviorLoop = [];
+                operator.behaviorLoop = [
+                    { type: "stand", direction: "down", time: 3000 },
+                    { type: "stand", direction: "right", time: 2000 },
+                ];
+            }
+        },
+    ]
+}
+
+const level4ChlorineTaskComplete = {
+    text: "Talk",
+    action: "startCutscene",
+    events:[
+        {
+            type: "custom",
+            action: (map) => {
+                console.log("Talk button clicked");
+
+                // Get the operator object
+                const operator = map.gameObjects["operator"];
+                if (operator) {
+                    // Temporarily disable the behaviorLoop
+                    operator.behaviorLoop = []; // Disable the behaviorLoop
+                }
+
+                delete map.buttonSpaces[utils.asGridCoords(35.5, 23)];
+                delete map.buttonSpaces[utils.asGridCoords(34.5, 24)];
+
+                // Remove active button display
+                console.log("Removing active button display");
+                map.removeButton();
+            }
+        },
+        { type: "textMessage", text: "Good job! Now let's use UV light to finish the desinfection.", faceHero: "operator" },
+        { type: "textMessage", text: "UV light damages the DNA of pathogens, preventing them from multiplying." },
+        { type: "textMessage", text: "It's a chemical-free method, and it's really effective for eliminating microorganisms like bacteria and viruses." },
+        { type: "textMessage", text: "Go to the shooting range and zap anything harmful that you find with UV light!" },
+        {
+            type: "custom",
+            action: (map) => {
+                map.updateObjective("Shoot UV light at the pathogens.");
+
+                map.buttonSpaces[utils.asGridCoords(30.5, 24)] = level4UVlightTask;
+                map.buttonSpaces[utils.asGridCoords(28.5, 24)] = level4UVlightTask;
+
+                const operator = map.gameObjects["operator"];
+                operator.behaviorLoop = [ { type: "stand", direction: "left", time: 99999 }, ];
+            }
+        },
+    ]
+}
+
+const level4UVlightTask = {
+    text: "Shoot UV light",
+    action: "startCutscene",
+    events: [
+        {
+            type: "custom",
+            action: (map) => {
+                console.log("UV light button clicked");
+
+                delete map.buttonSpaces[utils.asGridCoords(30.5, 24)];
+                delete map.buttonSpaces[utils.asGridCoords(28.5, 24)];
+
+                // Remove active button display
+                console.log("Removing active button display");
+                map.removeButton();
+            }
+        },
+        {
+            type: "custom",
+            action: (map) => {
+                map.updateObjective("Return to the operator.");
+
+                map.buttonSpaces[utils.asGridCoords(35.5, 23)] = level4UVlightTaskComplete;
+                map.buttonSpaces[utils.asGridCoords(34.5, 24)] = level4UVlightTaskComplete;
+
+                const operator = map.gameObjects["operator"];
+                operator.behaviorLoop = [];
+                operator.behaviorLoop = [
+                    { type: "stand", direction: "down", time: 3000 },
+                    { type: "stand", direction: "right", time: 2000 },
+                ];
+            }
+        },
+    ]
+}
+
+const level4UVlightTaskComplete = {
+    text: "Talk",
+    action: "startCutscene",
+    events:[
+        {
+            type: "custom",
+            action: (map) => {
+                console.log("Talk button clicked");
+
+                // Get the operator object
+                const operator = map.gameObjects["operator"];
+                if (operator) {
+                    // Temporarily disable the behaviorLoop
+                    operator.behaviorLoop = []; // Disable the behaviorLoop
+                }
+
+                delete map.buttonSpaces[utils.asGridCoords(35.5, 23)];
+                delete map.buttonSpaces[utils.asGridCoords(34.5, 24)];
+
+                // Remove active button display
+                console.log("Removing active button display");
+                map.removeButton();
+            }
+        },
+        { type: "textMessage", text: "Good shooting! The water is now safe and clean.", faceHero: "operator" },
+        { type: "textMessage", text: "Now we can start distributing it." },
+        { type: "textMessage", text: "Follow me." },
+        {
+            type: "custom",
+            action: (map) => {
+                map.updateObjective("Follow the Operator.");
+
+                delete map.walls[utils.asGridCoords(37.5, 28)];
+                delete map.walls[utils.asGridCoords(36.5, 28)];
+
+                map.cutSceneSpaces[utils.asGridCoords(37.5, 28)] = teleportToLevel5Event;
+                map.cutSceneSpaces[utils.asGridCoords(36.5, 28)] = teleportToLevel5Event;
+
+                const walkingOperator = [];
+
+                walkingOperator.push({ type: "walk", who: "ben", direction: "down" });
+
+                for (let i = 0; i < 3; i++) {
+                    walkingOperator.push({ type: "walk", who: "operator", direction: "right" });
+                }
+                for (let i = 0; i < 5; i++) {
+                    walkingOperator.push({ type: "walk", who: "operator", direction: "down" });
+                }
+                walkingOperator.push({ 
+                    type: "custom",
+                    action: (map) => {
+                        map.walls[utils.asGridCoords(37.5, 28)] = false;
+                        // Delete the operator at the exit point
+                        delete map.gameObjects["operator"];
+                    }
+                });
+                map.startCutscene(walkingOperator);
             }
         },
     ]
