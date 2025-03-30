@@ -800,6 +800,21 @@ window.OverworldMaps = {
             [utils.asGridCoords(27.5, 24)]: OperatorTalk, // Bottom
         },
     },
+
+    Level4: {
+        id: "Level4",
+        lowerSrc: "images/maps/Level4Lower.png", 
+        upperSrc: "images/maps/Level4Overlay.png", 
+        spawnpoint: {
+            x: utils.withGrid(36),
+            y: utils.withGrid(17),
+        },
+        gameObjects: level4GameObjects,
+        walls: level4Walls,
+        cutSceneSpaces: {},
+        buttonSpaces: {},
+    },
+
     /**
      * Level5 - Advanced water treatment facility
      * Represents the advanced treatment processes that water undergoes
