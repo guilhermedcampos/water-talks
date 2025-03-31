@@ -184,14 +184,6 @@ class Level3 {
             return [
                 { type: "textMessage", text: "Excellent job! You've successfully operated all three filtration systems.", faceHero: "operator" },
                 { type: "textMessage", text: "Now our water is nearly ready for distribution. Let's move on to the final stage of water treatment." },
-                { 
-                    type: "custom", 
-                    action: (map) => {
-                        console.log("Initiating transition to next level");
-                        // Play transition animation to next level
-                        Level3.transitionToNextLevel(map);
-                    }
-                },
                 operatorCutsceneEvent
             ];
         }
@@ -370,7 +362,7 @@ const operatorCutsceneEvent = {
         walkEvents.push({ type: "walk", who: "operator", direction: "right" });
 
         // Add multiple walk commands for the operator to move down several tiles
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 3; i++) {
             walkEvents.push({ type: "walk", who: "operator", direction: "down" });
         }
 
@@ -382,6 +374,10 @@ const operatorCutsceneEvent = {
         walkEvents.push({ 
             type: "custom",
             action: (map) => {
+                map.walls[utils.asGridCoords(30.5, 26)] = false;
+                map.walls[utils.asGridCoords(31.5, 26)] = false;
+                map.walls[utils.asGridCoords(30.5, 27)] = true;
+                map.walls[utils.asGridCoords(31.5, 27)] = true;
                 // Delete the operator at the exit point
                 delete map.gameObjects["operator"];
 
@@ -427,17 +423,17 @@ const OperatorTalk = {
                 // Start the cutscene with the dialogue
                 console.log("Starting cutscene with dialogue");
                 map.startCutscene([
-                    ...dialogueEvents,
                     {
                         type: "custom",
                         action: (map) => {
                             // Re-enable the operator's behaviorLoop after the conversation
-                            if (operator && operator.savedBehaviorLoop) {
+                            if (operator && operator.savedBehaviorLoop && !(Level3.currentStage === "carbon" && map.filtersCompleted)) {
                                 operator.behaviorLoop = operator.savedBehaviorLoop;
                                 delete operator.savedBehaviorLoop; // Clean up the saved behaviorLoop
                             }
                         }
-                    }
+                    },
+                    ...dialogueEvents,
                 ]);
 
                 // Set a flag to track that initial conversation happened
