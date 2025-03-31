@@ -1,11 +1,6 @@
 class Level4{
 
     static init(map){
-        // Set initial objective
-        if (map && map.updateObjective) {
-            console.log("Setting initial objective for Level4");
-            map.updateObjective("Talk to the operator about desinfection.");
-        }
     }
 
     static shootUVLight(map){
@@ -50,13 +45,13 @@ class Level4{
 
     static drawBacteria(ctx, map) {
         const bacteriaPositions = [
-            { x: 30.5, y: 20},
-            { x: 33.5, y: 21},
-            { x: 32.5, y: 22}, 
-            { x: 28.5, y: 23},
-            { x: 29.5, y: 24},
-            { x: 31.5, y: 25},
-            { x: 27.5, y: 22}, 
+            { x: 30.5, y: 20 },
+            { x: 33.5, y: 22 },
+            { x: 31.5, y: 21 },
+            { x: 28.5, y: 24 },
+            { x: 29.5, y: 23 },
+            { x: 32.5, y: 25 },
+            { x: 27.5, y: 21 },
         ];
 
         bacteriaPositions.forEach((position, index) => {
@@ -157,7 +152,7 @@ const level4GameObjects = {
     bacteria1: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria1",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -165,7 +160,7 @@ const level4GameObjects = {
     bacteria2: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria2",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -173,7 +168,7 @@ const level4GameObjects = {
     bacteria3: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria3",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -181,7 +176,7 @@ const level4GameObjects = {
     bacteria4: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria4",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -189,7 +184,7 @@ const level4GameObjects = {
     bacteria5: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria5",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -197,7 +192,7 @@ const level4GameObjects = {
     bacteria6: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria6",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -205,7 +200,7 @@ const level4GameObjects = {
     bacteria7: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria7",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -299,6 +294,40 @@ const level4OperatorTalk = {
                 map.buttonSpaces[utils.asGridCoords(31.5, 24)] = level4ChlorineTask;
                 map.buttonSpaces[utils.asGridCoords(29.5, 24)] = level4ChlorineTask;
                 map.buttonSpaces[utils.asGridCoords(27.5, 24)] = level4ChlorineTask;
+                
+                // Add the arrow indicator over the buttons 
+                map.gameObjects["arrowIndicator1"] = new AnimatedGifSprite({
+                    x: utils.withGrid(31.5), 
+                    y: utils.withGrid(23), 
+                    src: "images/waterAssets/arrowDown.gif",
+                    frameCount: 6,
+                    animationSpeed: 130,
+                    id: "arrowIndicator",
+                    behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                    collides: false,
+                });
+
+                map.gameObjects["arrowIndicator2"] = new AnimatedGifSprite({
+                    x: utils.withGrid(29.5), 
+                    y: utils.withGrid(23), 
+                    src: "images/waterAssets/arrowDown.gif",
+                    frameCount: 6,
+                    animationSpeed: 130,
+                    id: "arrowIndicator",
+                    behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                    collides: false,
+                });
+
+                map.gameObjects["arrowIndicator3"] = new AnimatedGifSprite({
+                    x: utils.withGrid(27.5), 
+                    y: utils.withGrid(23), 
+                    src: "images/waterAssets/arrowDown.gif",
+                    frameCount: 6,
+                    animationSpeed: 130,
+                    id: "arrowIndicator",
+                    behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                    collides: false,
+                });
 
                 const operator = map.gameObjects["operator"];
                 operator.behaviorLoop = [ { type: "stand", direction: "left", time: 99999 }, ];
@@ -320,6 +349,10 @@ const level4ChlorineTask = {
                 delete map.buttonSpaces[utils.asGridCoords(29.5, 24)];
                 delete map.buttonSpaces[utils.asGridCoords(27.5, 24)];
 
+                // Remove the arrow indicators
+                delete map.gameObjects["arrowIndicator1"];
+                delete map.gameObjects["arrowIndicator2"];
+                delete map.gameObjects["arrowIndicator3"];
 
                 // Remove active button display
                 console.log("Removing active button display");
@@ -333,7 +366,7 @@ const level4ChlorineTask = {
 
                 map.buttonSpaces[utils.asGridCoords(35.5, 23)] = level4ChlorineTaskComplete;
                 map.buttonSpaces[utils.asGridCoords(34.5, 24)] = level4ChlorineTaskComplete;
-
+                
                 const operator = map.gameObjects["operator"];
                 operator.behaviorLoop = [];
                 operator.behaviorLoop = [
@@ -381,6 +414,29 @@ const level4ChlorineTaskComplete = {
                 map.buttonSpaces[utils.asGridCoords(30.5, 24)] = level4UVlightTask;
                 map.buttonSpaces[utils.asGridCoords(28.5, 24)] = level4UVlightTask;
 
+                // Add the arrow indicator over the buttons
+                map.gameObjects["arrowIndicator1"] = new AnimatedGifSprite({
+                    x: utils.withGrid(30.5), 
+                    y: utils.withGrid(23), 
+                    src: "images/waterAssets/arrowDown.gif",
+                    frameCount: 6,
+                    animationSpeed: 130,
+                    id: "arrowIndicator",
+                    behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                    collides: false,
+                });
+
+                map.gameObjects["arrowIndicator2"] = new AnimatedGifSprite({
+                    x: utils.withGrid(28.5), 
+                    y: utils.withGrid(23), 
+                    src: "images/waterAssets/arrowDown.gif",
+                    frameCount: 6,
+                    animationSpeed: 130,
+                    id: "arrowIndicator",
+                    behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                    collides: false,
+                });
+
                 const operator = map.gameObjects["operator"];
                 operator.behaviorLoop = [ { type: "stand", direction: "left", time: 99999 }, ];
             }
@@ -399,6 +455,10 @@ const level4UVlightTask = {
 
                 delete map.buttonSpaces[utils.asGridCoords(30.5, 24)];
                 delete map.buttonSpaces[utils.asGridCoords(28.5, 24)];
+
+                // Remove the arrow indicators
+                delete map.gameObjects["arrowIndicator1"];
+                delete map.gameObjects["arrowIndicator2"];
 
                 // Remove active button display
                 console.log("Removing active button display");
