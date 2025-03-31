@@ -1,7 +1,6 @@
 // Global variable for background music
 let backgroundMusic = new Audio("sounds/background_music.mp3");
 backgroundMusic.loop = true; // Enable looping
-backgroundMusic,volume = 0.2; // Set volume (0.0 to 1.0)
 
 let stopMusic = false; // Global variable to control music
 let backgroundMusicStarted = false; // Tracks if the music has started
