@@ -574,11 +574,11 @@ const level4EndGame = {
             action: (map) => {
                 map.updateObjective("Follow the Operator.");
 
-                delete map.walls[utils.asGridCoords(37.5, 28)];
-                delete map.walls[utils.asGridCoords(36.5, 28)];
+                delete map.walls[utils.asGridCoords(37.5, 27)];
+                delete map.walls[utils.asGridCoords(36.5, 27)];
 
-                map.cutSceneSpaces[utils.asGridCoords(37.5, 28)] = teleportToLevel5Event;
-                map.cutSceneSpaces[utils.asGridCoords(36.5, 28)] = teleportToLevel5Event;
+                map.cutSceneSpaces[utils.asGridCoords(37.5, 27)] = teleportToLevel5Event;
+                map.cutSceneSpaces[utils.asGridCoords(36.5, 27)] = teleportToLevel5Event;
 
                 const walkingOperator = [];
 
@@ -587,13 +587,13 @@ const level4EndGame = {
                 for (let i = 0; i < 3; i++) {
                     walkingOperator.push({ type: "walk", who: "operator", direction: "right" });
                 }
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < 4; i++) {
                     walkingOperator.push({ type: "walk", who: "operator", direction: "down" });
                 }
                 walkingOperator.push({ 
                     type: "custom",
                     action: (map) => {
-                        map.walls[utils.asGridCoords(37.5, 28)] = false;
+                        map.walls[utils.asGridCoords(37.5, 27)] = false;
                         // Delete the operator at the exit point
                         delete map.gameObjects["operator"];
                     }
