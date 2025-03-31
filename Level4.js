@@ -294,6 +294,40 @@ const level4OperatorTalk = {
                 map.buttonSpaces[utils.asGridCoords(31.5, 24)] = level4ChlorineTask;
                 map.buttonSpaces[utils.asGridCoords(29.5, 24)] = level4ChlorineTask;
                 map.buttonSpaces[utils.asGridCoords(27.5, 24)] = level4ChlorineTask;
+                
+                // Add the arrow indicator over the buttons 
+                map.gameObjects["arrowIndicator1"] = new AnimatedGifSprite({
+                    x: utils.withGrid(31.5), 
+                    y: utils.withGrid(23), 
+                    src: "images/waterAssets/arrowDown.gif",
+                    frameCount: 6,
+                    animationSpeed: 130,
+                    id: "arrowIndicator",
+                    behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                    collides: false,
+                });
+
+                map.gameObjects["arrowIndicator2"] = new AnimatedGifSprite({
+                    x: utils.withGrid(29.5), 
+                    y: utils.withGrid(23), 
+                    src: "images/waterAssets/arrowDown.gif",
+                    frameCount: 6,
+                    animationSpeed: 130,
+                    id: "arrowIndicator",
+                    behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                    collides: false,
+                });
+
+                map.gameObjects["arrowIndicator3"] = new AnimatedGifSprite({
+                    x: utils.withGrid(27.5), 
+                    y: utils.withGrid(23), 
+                    src: "images/waterAssets/arrowDown.gif",
+                    frameCount: 6,
+                    animationSpeed: 130,
+                    id: "arrowIndicator",
+                    behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                    collides: false,
+                });
 
                 const operator = map.gameObjects["operator"];
                 operator.behaviorLoop = [ { type: "stand", direction: "left", time: 99999 }, ];
@@ -315,6 +349,10 @@ const level4ChlorineTask = {
                 delete map.buttonSpaces[utils.asGridCoords(29.5, 24)];
                 delete map.buttonSpaces[utils.asGridCoords(27.5, 24)];
 
+                // Remove the arrow indicators
+                delete map.gameObjects["arrowIndicator1"];
+                delete map.gameObjects["arrowIndicator2"];
+                delete map.gameObjects["arrowIndicator3"];
 
                 // Remove active button display
                 console.log("Removing active button display");
@@ -328,7 +366,7 @@ const level4ChlorineTask = {
 
                 map.buttonSpaces[utils.asGridCoords(35.5, 23)] = level4ChlorineTaskComplete;
                 map.buttonSpaces[utils.asGridCoords(34.5, 24)] = level4ChlorineTaskComplete;
-
+                
                 const operator = map.gameObjects["operator"];
                 operator.behaviorLoop = [];
                 operator.behaviorLoop = [
@@ -376,6 +414,29 @@ const level4ChlorineTaskComplete = {
                 map.buttonSpaces[utils.asGridCoords(30.5, 24)] = level4UVlightTask;
                 map.buttonSpaces[utils.asGridCoords(28.5, 24)] = level4UVlightTask;
 
+                // Add the arrow indicator over the buttons
+                map.gameObjects["arrowIndicator1"] = new AnimatedGifSprite({
+                    x: utils.withGrid(30.5), 
+                    y: utils.withGrid(23), 
+                    src: "images/waterAssets/arrowDown.gif",
+                    frameCount: 6,
+                    animationSpeed: 130,
+                    id: "arrowIndicator",
+                    behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                    collides: false,
+                });
+
+                map.gameObjects["arrowIndicator2"] = new AnimatedGifSprite({
+                    x: utils.withGrid(28.5), 
+                    y: utils.withGrid(23), 
+                    src: "images/waterAssets/arrowDown.gif",
+                    frameCount: 6,
+                    animationSpeed: 130,
+                    id: "arrowIndicator",
+                    behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                    collides: false,
+                });
+
                 const operator = map.gameObjects["operator"];
                 operator.behaviorLoop = [ { type: "stand", direction: "left", time: 99999 }, ];
             }
@@ -394,6 +455,10 @@ const level4UVlightTask = {
 
                 delete map.buttonSpaces[utils.asGridCoords(30.5, 24)];
                 delete map.buttonSpaces[utils.asGridCoords(28.5, 24)];
+
+                // Remove the arrow indicators
+                delete map.gameObjects["arrowIndicator1"];
+                delete map.gameObjects["arrowIndicator2"];
 
                 // Remove active button display
                 console.log("Removing active button display");
