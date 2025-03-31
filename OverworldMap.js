@@ -326,16 +326,21 @@ class OverworldMap {
         } else {
             this.flushCutsceneStarted = true;
         }
+
+        // Stop background music
+        stopBackgroundMusic();
+
         // Start showing the flush messages immediately
         Level1.showFlushMessages(this, messages);
 
-        // Wait for flush messages to finish before changing the map
+        // Wait for flush messages to finish before resuming the background music
         const messagesTime = messages.length * 4000; // ~4 seconds per message (typing + pause)
         
         setTimeout(() => {
             // Ensure the button is removed before loading the new map
             this.removeButton();
-            
+
+
             // Update the objective before changing maps
             this.updateObjective("Find where the water goes");
             
@@ -348,6 +353,12 @@ class OverworldMap {
                 // The map reference has changed, so we need to access it through overworld
                 if (this.overworld && this.overworld.map) {
                     this.overworld.map.updateObjective("Talk to water treatment operator");
+
+                setTimeout(() => {
+                    // Resume background music
+                    playBackgroundMusic();
+                }, 4200);
+                
                 }
             }, 1000); // Give time for map to load
         }, messagesTime);

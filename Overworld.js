@@ -1,3 +1,11 @@
+// Global variable for background music
+let backgroundMusic = new Audio("sounds/background_music.mp3");
+backgroundMusic.loop = true; // Enable looping
+backgroundMusic,volume = 0.2; // Set volume (0.0 to 1.0)
+
+let stopMusic = false; // Global variable to control music
+let backgroundMusicStarted = false; // Tracks if the music has started
+
 class Overworld {
     // Constructor
     constructor(config) {
@@ -171,10 +179,42 @@ class Overworld {
         this.bindActionInput();
         this.bindHeroPositionPositionCheck();
 
+        // Add event listeners for user interaction to start background music
+        const startMusicOnInteraction = () => {
+            playBackgroundMusic();
+            // Remove the event listeners after the music starts
+            window.removeEventListener("keydown", startMusicOnInteraction);
+            window.removeEventListener("click", startMusicOnInteraction);
+        };
+
+        window.addEventListener("keydown", startMusicOnInteraction);
+        window.addEventListener("click", startMusicOnInteraction);
+        
         // Start the game loop
         this.startGameLoop();
-        
-        // Now that cutscene is done, zoom to position
-        console.log("Cutscene complete, starting zoom effect");
+
     }   
+}
+
+// Helper function to play background music
+function playBackgroundMusic() {
+    if (stopMusic || backgroundMusicStarted) {
+        console.log("Background music not started: stopMusic =", stopMusic, "backgroundMusicStarted =", backgroundMusicStarted);
+        return; // Do not play if stopped or already started
+    }
+    backgroundMusic.play().then(() => {
+        backgroundMusicStarted = true; // Mark music as started
+        console.log("Background music started");
+    }).catch((error) => {
+        console.error("Error playing background music:", error);
+    });
+}
+
+// Helper function to stop background music
+function stopBackgroundMusic(reset = false) {
+    backgroundMusic.pause();
+    backgroundMusicStarted = false; // Mark music as stopped
+    if (reset) {
+        backgroundMusic.currentTime = 0; // Reset to the beginning only if reset is true
+    }
 }
