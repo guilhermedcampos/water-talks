@@ -39,6 +39,10 @@ class Level3 {
         // Remove the buttons
         console.log("Removing active button");
         map.removeButton();
+
+        // Remove the arrow indicators
+        console.log("Removing arrow indicators");
+        delete map.gameObjects["arrowIndicator1"];
         
         // Start dialogue sequence after animation
         console.log("Setting timeout for dialogue sequence");
@@ -81,6 +85,10 @@ class Level3 {
         // Remove the buttons
         console.log("Removing active button");
         map.removeButton();
+
+        // Remove the arrow indicators
+        console.log("Removing arrow indicators");
+        delete map.gameObjects["arrowIndicator2"];
         
         // Start dialogue sequence after animation
         console.log("Setting timeout for dialogue sequence");
@@ -125,6 +133,10 @@ class Level3 {
         // Remove the buttons
         console.log("Removing active button");
         map.removeButton();
+
+        // Remove the arrow indicators
+        console.log("Removing arrow indicators");
+        delete map.gameObjects["arrowIndicator3"];
 
         
         // Start dialogue sequence after animation
@@ -212,6 +224,19 @@ class Level3 {
                             }
                             map.buttonSpaces[utils.asGridCoords(30.5, 18)] = sandFilter1;
                             map.buttonSpaces[utils.asGridCoords(31.5, 18)] = sandFilter2;
+
+                            // Add arrows to indicate the direction of the sand filter
+                            map.gameObjects["arrowIndicator1"] = new AnimatedGifSprite({
+                                x: utils.withGrid(30.7), 
+                                y: utils.withGrid(16),
+                                src: "images/waterAssets/arrowDown.gif",
+                                frameCount: 6,
+                                animationSpeed: 130,
+                                id: "arrowIndicator",
+                                behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                                collides: false,
+                            });
+
                         }
                     }
                 ];
@@ -229,6 +254,19 @@ class Level3 {
                             } 
                             map.buttonSpaces[utils.asGridCoords(32.5, 18)] = gravelFilter1;
                             map.buttonSpaces[utils.asGridCoords(33.5, 18)] = gravelFilter2;
+
+                            // Add arrows to indicate the direction of the gravel filter
+                            map.gameObjects["arrowIndicator2"] = new AnimatedGifSprite({
+                                x: utils.withGrid(33), 
+                                y: utils.withGrid(16),
+                                src: "images/waterAssets/arrowDown.gif",
+                                frameCount: 6,
+                                animationSpeed: 130,
+                                id: "arrowIndicator",
+                                behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                                collides: false,
+                            });
+
                         }
                     }
                 ];
@@ -246,6 +284,18 @@ class Level3 {
                             } 
                             map.buttonSpaces[utils.asGridCoords(34.5, 18)] = carbonFilter1;
                             map.buttonSpaces[utils.asGridCoords(35.5, 18)] = carbonFilter2;
+
+                            // Add arrows to indicate the direction of the carbon filter
+                            map.gameObjects["arrowIndicator3"] = new AnimatedGifSprite({
+                                x: utils.withGrid(35.1), 
+                                y: utils.withGrid(16),
+                                src: "images/waterAssets/arrowDown.gif",
+                                frameCount: 6,
+                                animationSpeed: 130,
+                                id: "arrowIndicator",
+                                behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+                                collides: false,
+                            });
                         }
                     }
                 ];
