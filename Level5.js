@@ -13,9 +13,9 @@ window.Level5 = {
         {
             question: "What is the approximate length of Lisbon's water distribution network?",
             options: [
-                "About 450 kilometers",
+                "About 475 kilometers",
                 "About 1,449 kilometers",
-                "About 2,500 kilometers"
+                "About 2,567 kilometers"
             ],
             correctAnswer: 1, // Index of correct answer (0-based)
             explanation: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines, connecting 13 reservoirs and managed by 11 pumping stations."
@@ -24,10 +24,11 @@ window.Level5 = {
             question: "What was the first step in the water treatment process you observed?",
             options: [
                 "Adding chemicals to the water",
-                "Removing large debris and screening",
-                "Filtering through sand"
+                "Filtering through sand",
+                "Removing large debris and screening"
+                
             ],
-            correctAnswer: 1,
+            correctAnswer: 2,
             explanation: "The first step in water treatment is physical screening to remove large debris and objects from the water."
         },
         {
@@ -59,6 +60,56 @@ window.Level5 = {
             ],
             correctAnswer: 2,
             explanation: "After treatment, water requires continuous monitoring and maintenance to prevent leaks and ensure optimal pressure throughout the distribution system."
+        },
+        {
+            question: "What is the second phase of water treatment?",
+            options: [
+                "Sedimentation",
+                "Filtration",
+                "Disinfection"
+            ],
+            correctAnswer: 0,
+            explanation: "The second phase of water treatment is sedimentation, where flocs settle at the bottom of the tank."
+        },
+        {
+            question: "What happens during the sedimentation process in water treatment?",
+            options: [
+                "Particles are filtered through layers of sand and gravel",
+                "Water is disinfected with chlorine or ozone",
+                "Heavier particles settle at the bottom of the tank, forming sludge"
+            ],
+            correctAnswer: 2,
+            explanation: "During sedimentation, heavier particles settle at the bottom of the tank, forming sludge, while clearer water rises to the top for further treatment."
+        },
+        {
+            question: "What is the primary purpose of the filtration process in water treatment?",
+            options: [
+                "To chemically neutralize dissolved contaminants",
+                "To trap and remove fine particles and some microorganisms left after sedimentation",
+                "To ensure the water has an optimal mineral balance for consumption"
+            ],
+            correctAnswer: 1,
+            explanation: "The filtration process traps and removes fine particles and some microorganisms that may have escaped sedimentation, ensuring cleaner water."
+        },
+        {
+            question: "What is the purpose of using UV light in water disinfection?",
+            options: [
+                "To damage the DNA of pathogens, preventing them from multiplying",
+                "To remove large debris from the water",
+                "To add minerals to the water for better taste"
+            ],
+            correctAnswer: 0, 
+            explanation: "UV light damages the DNA of pathogens, such as bacteria and viruses, preventing them from multiplying and ensuring the water is safe to drink."
+        },
+        {
+            question: "What is the role of activated carbon in water filtration?",
+            options: [
+                "It removes large debris from the water",
+                "It chemically attracts and binds contaminants to its surface",
+                "It adds minerals to the water for better taste"
+            ],
+            correctAnswer: 1, 
+            explanation: "Activated carbon works through adsorption, chemically attracting and binding contaminants like chlorine and organic compounds to its surface, ensuring cleaner water."
         }
     ],
     
@@ -546,3 +597,46 @@ window.Level5 = {
         }
     }
 };
+
+// Events
+
+const startQuizEvent = {
+    text: "Talk",
+    action: "startCutscene",
+    events: [   
+        {
+        type: "custom",
+        action: (map) => {
+            delete map.buttonSpaces[utils.asGridCoords(30.5, 20)];
+            delete map.buttonSpaces[utils.asGridCoords(31.5, 21)];
+            delete map.buttonSpaces[utils.asGridCoords(32.5, 20)];
+            delete map.buttonSpaces[utils.asGridCoords(31.5, 19)];
+        }
+
+        },
+                { type: "textMessage", text: "Welcome to the lifeblood of our community. From the bustling streets of Lisbon to serene farms like this,", faceHero: "operator" },
+                { type: "textMessage", text: "our mission is to deliver clean, safe water to every home, field, and creature." },
+                { type: "textMessage", text: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines," },
+                { type: "textMessage", text: "connecting 13 reservoirs and managed by 11 pumping stations." },
+                { type: "textMessage", text: "This extensive system ensures that around 104,285 supply branches efficiently deliver water throughout the city." },
+                { type: "textMessage", text: "Our journey doesn't end at purification." },
+                { type: "textMessage", text: "Continuous monitoring and maintenance prevent leaks and ensure optimal pressure," },
+                { type: "textMessage", text: "By understanding and supporting this system, you help Lisbon thrive." },
+                { type: "textMessage", text: "Now, let's see if you've learned anything from this journey. Are you ready for a quick test?" },
+        { 
+            type: "custom", 
+            action: (map) => {
+                // Set flag that player has talked to operator
+                map.talkedToOperator = true;
+                
+                // Start the quiz after clicking the Talk button
+                Level5.startQuiz(map);
+                
+                // Update objective once conversation is complete
+                if (map && map.updateObjective) {
+                    map.updateObjective("Complete the water knowledge quiz.");
+                }
+            }
+        }
+    ]
+}

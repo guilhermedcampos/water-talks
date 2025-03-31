@@ -852,36 +852,6 @@ window.OverworldMaps = {
                     { type: "stand", direction: "down", time: 2000 },
                     { type: "stand", direction: "left", time: 1000 },
                 ],
-                talking: [
-                    {
-                        events: [
-                            { type: "textMessage", text: "Welcome to the lifeblood of our community. From the bustling streets of Lisbon to serene farms like this,", faceHero: "operator" },
-                            { type: "textMessage", text: "our mission is to deliver clean, safe water to every home, field, and creature." },
-                            { type: "textMessage", text: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines," },
-                            { type: "textMessage", text: "connecting 13 reservoirs and managed by 11 pumping stations." },
-                            { type: "textMessage", text: "This extensive system ensures that around 104,285 supply branches efficiently deliver water throughout the city." },
-                            { type: "textMessage", text: "Our journey doesn't end at purification." },
-                            { type: "textMessage", text: "Continuous monitoring and maintenance prevent leaks and ensure optimal pressure," },
-                            { type: "textMessage", text: "By understanding and supporting this system, you help Lisbon thrive." },
-                            { type: "textMessage", text: "Now, let's see if you've learned anything from this journey. Are you ready for a quick test?" },
-                            { 
-                                type: "custom", 
-                                action: (map) => {
-                                    // Set a flag indicating player has talked to the operator
-                                    map.talkedToOperator = true;
-                                    
-                                    // Start the quiz after talking to the operator
-                                    Level5.startQuiz(map);
-                                    
-                                    // Update objective once conversation is complete
-                                    if (map && map.updateObjective) {
-                                        map.updateObjective("Complete the water knowledge quiz.");
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                ]
             }),
         },
         walls: level5Walls,
@@ -949,126 +919,10 @@ window.OverworldMaps = {
         },
         buttonSpaces: {
             // Talk button positions all around the operator
-            [utils.asGridCoords(30.5, 20)]: {
-                text: "Talk",
-                action: "startCutscene",
-                events: [
-                            { type: "textMessage", text: "Welcome to the lifeblood of our community. From the bustling streets of Lisbon to serene farms like this,", faceHero: "operator" },
-                            { type: "textMessage", text: "our mission is to deliver clean, safe water to every home, field, and creature." },
-                            { type: "textMessage", text: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines," },
-                            { type: "textMessage", text: "connecting 13 reservoirs and managed by 11 pumping stations." },
-                            { type: "textMessage", text: "This extensive system ensures that around 104,285 supply branches efficiently deliver water throughout the city." },
-                            { type: "textMessage", text: "Our journey doesn't end at purification." },
-                            { type: "textMessage", text: "Continuous monitoring and maintenance prevent leaks and ensure optimal pressure," },
-                            { type: "textMessage", text: "By understanding and supporting this system, you help Lisbon thrive." },
-                            { type: "textMessage", text: "Now, let's see if you've learned anything from this journey. Are you ready for a quick test?" },
-                    { 
-                        type: "custom", 
-                        action: (map) => {
-                            // Set flag that player has talked to operator
-                            map.talkedToOperator = true;
-                            
-                            // Start the quiz after clicking the Talk button
-                            Level5.startQuiz(map);
-                            
-                            // Update objective once conversation is complete
-                            if (map && map.updateObjective) {
-                                map.updateObjective("Complete the water knowledge quiz.");
-                            }
-                        }
-                    }
-                ]
-            },
-            [utils.asGridCoords(31.5, 21)]: {
-                text: "Talk",
-                action: "startCutscene",
-                events: [
-                    { type: "textMessage", text: "Welcome to the lifeblood of our community. From the bustling streets of Lisbon to serene farms like this,", faceHero: "operator" },
-                            { type: "textMessage", text: "our mission is to deliver clean, safe water to every home, field, and creature." },
-                            { type: "textMessage", text: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines," },
-                            { type: "textMessage", text: "connecting 13 reservoirs and managed by 11 pumping stations." },
-                            { type: "textMessage", text: "This extensive system ensures that around 104,285 supply branches efficiently deliver water throughout the city." },
-                            { type: "textMessage", text: "Our journey doesn't end at purification." },
-                            { type: "textMessage", text: "Continuous monitoring and maintenance prevent leaks and ensure optimal pressure," },
-                            { type: "textMessage", text: "By understanding and supporting this system, you help Lisbon thrive." },
-                            { type: "textMessage", text: "Now, let's see if you've learned anything from this journey. Are you ready for a quick test?" },
-                    { 
-                        type: "custom", 
-                        action: (map) => {
-                            // Set flag that player has talked to operator
-                            map.talkedToOperator = true;
-                            
-                            // Start the quiz after clicking the Talk button
-                            Level5.startQuiz(map);
-                            
-                            // Update objective once conversation is complete
-                            if (map && map.updateObjective) {
-                                map.updateObjective("Complete the water knowledge quiz.");
-                            }
-                        }
-                    }
-                ]
-            },
-            [utils.asGridCoords(32.5, 20)]: {
-                text: "Talk",
-                action: "startCutscene",
-                events: [
-                    { type: "textMessage", text: "Welcome to the lifeblood of our community. From the bustling streets of Lisbon to serene farms like this,", faceHero: "operator" },
-                            { type: "textMessage", text: "our mission is to deliver clean, safe water to every home, field, and creature." },
-                            { type: "textMessage", text: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines," },
-                            { type: "textMessage", text: "connecting 13 reservoirs and managed by 11 pumping stations." },
-                            { type: "textMessage", text: "This extensive system ensures that around 104,285 supply branches efficiently deliver water throughout the city." },
-                            { type: "textMessage", text: "Our journey doesn't end at purification." },
-                            { type: "textMessage", text: "Continuous monitoring and maintenance prevent leaks and ensure optimal pressure," },
-                            { type: "textMessage", text: "By understanding and supporting this system, you help Lisbon thrive." },
-                            { type: "textMessage", text: "Now, let's see if you've learned anything from this journey. Are you ready for a quick test?" },
-                    { 
-                        type: "custom", 
-                        action: (map) => {
-                            // Set flag that player has talked to operator
-                            map.talkedToOperator = true;
-                            
-                            // Start the quiz after clicking the Talk button
-                            Level5.startQuiz(map);
-                            
-                            // Update objective once conversation is complete
-                            if (map && map.updateObjective) {
-                                map.updateObjective("Complete the water knowledge quiz.");
-                            }
-                        }
-                    }
-                ]
-            },
-            [utils.asGridCoords(31.5, 19)]: {
-                text: "Talk",
-                action: "startCutscene",
-                events: [
-                    { type: "textMessage", text: "Welcome to the lifeblood of our community. From the bustling streets of Lisbon to serene farms like this,", faceHero: "operator" },
-                            { type: "textMessage", text: "our mission is to deliver clean, safe water to every home, field, and creature." },
-                            { type: "textMessage", text: "Lisbon's water distribution network spans approximately 1,449 kilometers of pipelines," },
-                            { type: "textMessage", text: "connecting 13 reservoirs and managed by 11 pumping stations." },
-                            { type: "textMessage", text: "This extensive system ensures that around 104,285 supply branches efficiently deliver water throughout the city." },
-                            { type: "textMessage", text: "Our journey doesn't end at purification." },
-                            { type: "textMessage", text: "Continuous monitoring and maintenance prevent leaks and ensure optimal pressure," },
-                            { type: "textMessage", text: "By understanding and supporting this system, you help Lisbon thrive." },
-                            { type: "textMessage", text: "Now, let's see if you've learned anything from this journey. Are you ready for a quick test?" },
-                            { 
-                        type: "custom", 
-                        action: (map) => {
-                            // Set flag that player has talked to operator
-                            map.talkedToOperator = true;
-                            
-                            // Start the quiz after clicking the Talk button
-                            Level5.startQuiz(map);
-                            
-                            // Update objective once conversation is complete
-                            if (map && map.updateObjective) {
-                                map.updateObjective("Complete the water knowledge quiz.");
-                            }
-                        }
-                    }
-                ]
-            },
+            [utils.asGridCoords(30.5, 20)]: startQuizEvent,
+            [utils.asGridCoords(31.5, 21)]: startQuizEvent,
+            [utils.asGridCoords(32.5, 20)]: startQuizEvent,
+            [utils.asGridCoords(31.5, 19)]: startQuizEvent,
         },
         
         // Add conditional method to check if button should be shown
