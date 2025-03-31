@@ -191,7 +191,8 @@ class Level3 {
                         // Play transition animation to next level
                         Level3.transitionToNextLevel(map);
                     }
-                }
+                },
+                operatorCutsceneEvent
             ];
         }
         
@@ -353,6 +354,42 @@ class Level3 {
                 }, 1000);
             }, 2000);
         }, 500);
+    }
+}
+
+const operatorCutsceneEvent = { 
+    type: "custom",
+    action: (map) => {
+        map.updateObjective("Follow the operator to the next stage.");
+
+        const walkEvents = [];
+
+        walkEvents.push({ type: "walk", who: "ben", direction: "up" });
+        walkEvents.push({ type: "walk", who: "operator", direction: "right" });
+        walkEvents.push({ type: "walk", who: "operator", direction: "right" });
+        walkEvents.push({ type: "walk", who: "operator", direction: "right" });
+
+        // Add multiple walk commands for the operator to move down several tiles
+        for (let i = 0; i < 6; i++) {
+            walkEvents.push({ type: "walk", who: "operator", direction: "down" });
+        }
+
+        // Remove the wall at the exit point to allow the player to leave
+        delete map.walls[utils.asGridCoords(30.5, 26)];
+        delete map.walls[utils.asGridCoords(31.5, 26)];
+
+        // Add a final event to delete the operator AFTER the walking is complete
+        walkEvents.push({ 
+            type: "custom",
+            action: (map) => {
+                // Delete the operator at the exit point
+                delete map.gameObjects["operator"];
+
+            }
+        });
+
+        // Start the cutscene with all events including the deletion at the end
+        map.startCutscene(walkEvents);
     }
 }
 
