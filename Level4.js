@@ -157,7 +157,7 @@ const level4GameObjects = {
     bacteria1: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria1.png",
         id: "bacteria1",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
