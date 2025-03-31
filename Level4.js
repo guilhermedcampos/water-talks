@@ -1,11 +1,6 @@
 class Level4{
 
     static init(map){
-        // Set initial objective
-        if (map && map.updateObjective) {
-            console.log("Setting initial objective for Level4");
-            map.updateObjective("Talk to the operator about desinfection.");
-        }
     }
 
     static shootUVLight(map){
@@ -50,13 +45,13 @@ class Level4{
 
     static drawBacteria(ctx, map) {
         const bacteriaPositions = [
-            { x: 30.5, y: 20},
-            { x: 33.5, y: 21},
-            { x: 32.5, y: 22}, 
-            { x: 28.5, y: 23},
-            { x: 29.5, y: 24},
-            { x: 31.5, y: 25},
-            { x: 27.5, y: 22}, 
+            { x: 30.5, y: 20 },
+            { x: 33.5, y: 22 },
+            { x: 31.5, y: 21 },
+            { x: 28.5, y: 24 },
+            { x: 29.5, y: 23 },
+            { x: 32.5, y: 25 },
+            { x: 27.5, y: 21 },
         ];
 
         bacteriaPositions.forEach((position, index) => {
@@ -157,7 +152,7 @@ const level4GameObjects = {
     bacteria1: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria1.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria1",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -165,7 +160,7 @@ const level4GameObjects = {
     bacteria2: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria2",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -173,7 +168,7 @@ const level4GameObjects = {
     bacteria3: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria3",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -181,7 +176,7 @@ const level4GameObjects = {
     bacteria4: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria4",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -189,7 +184,7 @@ const level4GameObjects = {
     bacteria5: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria5",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -197,7 +192,7 @@ const level4GameObjects = {
     bacteria6: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria6",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
@@ -205,7 +200,7 @@ const level4GameObjects = {
     bacteria7: new Person({
         x: utils.withGrid(-10),
         y: utils.withGrid(-10),
-        src: "images/waterAssets/bacteria.png",
+        src: "images/waterAssets/bacteria2.png",
         id: "bacteria7",
         behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
         collides: false,
