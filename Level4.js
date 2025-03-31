@@ -1,10 +1,134 @@
 class Level4{
+
     static init(map){
         // Set initial objective
         if (map && map.updateObjective) {
             console.log("Setting initial objective for Level4");
             map.updateObjective("Talk to the operator about desinfection.");
         }
+    }
+
+    static shootUVLight(map){
+        // Make Ben uncontrollable
+        map.gameObjects["ben"].isPlayerControlled = false;
+
+        // Move Ben and operator off the grid temporarily
+        const curBen = [ map.gameObjects["ben"].x, map.gameObjects["ben"].y];
+        map.gameObjects["ben"].x = utils.withGrid(-10);
+        map.gameObjects["ben"].y = utils.withGrid(-10);
+
+        const curOperator = [map.gameObjects["operator"].x, map.gameObjects["operator"].y];
+        map.gameObjects["operator"].x = utils.withGrid(-10);
+        map.gameObjects["operator"].y = utils.withGrid(-10);
+
+        // Change the lowerSrc to the sedimentation overlay image
+        map.lowerImage.src = "images/maps/Level4ShootingUV.png";
+        map.isCutscenePlaying = true;
+
+        // Get the canvas context
+        const ctx = document.querySelector(".game-canvas").getContext("2d");
+
+        // Force the map to re-render to reflect the changes
+        map.drawLowerImage(ctx, map.gameObjects["ben"]);
+
+        // Change the camera focus to a different position
+        map.cameraPerson = { x: utils.withGrid(31.5), y: utils.withGrid(23) };
+
+        Level4.removeWalls(map);
+
+        Level4.drawBacteria(ctx, map, 0);
+
+        setTimeout(() => {
+            Level4.killBacteria(map);
+        }, 1000);
+        
+        setTimeout(() => {
+            Level4.returnToLevel4(curBen, curOperator, map);
+        }, 10000);
+
+    }
+
+    static drawBacteria(ctx, map) {
+        const bacteriaPositions = [
+            { x: 30.5, y: 20},
+            { x: 33.5, y: 21},
+            { x: 32.5, y: 22}, 
+            { x: 28.5, y: 23},
+            { x: 29.5, y: 24},
+            { x: 31.5, y: 25},
+            { x: 27.5, y: 22}, 
+        ];
+
+        bacteriaPositions.forEach((position, index) => {
+            const bacteriaId = `bacteria${index + 1}`;
+            const bacteria = map.gameObjects[bacteriaId];
+            bacteria.x = utils.withGrid(position.x);
+            bacteria.y = utils.withGrid(position.y);
+        });
+    }
+
+    static killBacteria(map){
+        for(let i = 1; i <= 7; i++){
+            setTimeout(() => {
+                const bacteriaId = `bacteria${i}`;
+                const bacteria = map.gameObjects[bacteriaId];
+                if (bacteria) {
+                    bacteria.x = utils.withGrid(-10);
+                    bacteria.y = utils.withGrid(-10);
+                }
+            }, 1000 * i);
+        }
+    }
+
+    static removeWalls(map){
+        // Pool
+        delete map.walls[utils.asGridCoords(33.5, 19)];
+        delete map.walls[utils.asGridCoords(33.5, 20)];
+        delete map.walls[utils.asGridCoords(33.5, 21)];
+        delete map.walls[utils.asGridCoords(33.5, 22)];
+
+        //Counter
+        delete map.walls[utils.asGridCoords(33.5, 23)];
+        delete map.walls[utils.asGridCoords(32.5, 23)];
+        delete map.walls[utils.asGridCoords(31.5, 23)]; 
+        delete map.walls[utils.asGridCoords(30.5, 23)];
+        delete map.walls[utils.asGridCoords(29.5, 23)];
+        delete map.walls[utils.asGridCoords(28.5, 23)];
+        delete map.walls[utils.asGridCoords(27.5, 23)];
+    }
+
+    static returnToLevel4(curBen, curOperator, map){
+        // Change the lowerSrc back to the normal image 
+        map.lowerImage.src = "images/maps/Level4Lower.png";
+
+        // Force the map to re-render to reflect the changes
+        const ctx = document.querySelector(".game-canvas").getContext("2d");
+        map.drawLowerImage(ctx, map.gameObjects["ben"]);
+
+        // Add the walls back to the map
+        map.walls[utils.asGridCoords(33.5, 19)] = true;
+        map.walls[utils.asGridCoords(33.5, 20)] = true;
+        map.walls[utils.asGridCoords(33.5, 21)] = true;
+        map.walls[utils.asGridCoords(33.5, 22)] = true;
+        map.walls[utils.asGridCoords(33.5, 23)] = true;
+        map.walls[utils.asGridCoords(32.5, 23)] = true;
+        map.walls[utils.asGridCoords(31.5, 23)] = true;
+        map.walls[utils.asGridCoords(30.5, 23)] = true;
+        map.walls[utils.asGridCoords(29.5, 23)] = true;
+        map.walls[utils.asGridCoords(28.5, 23)] = true;
+        map.walls[utils.asGridCoords(27.5, 23)] = true;
+
+        // Move Ben and operator back to the grid
+        map.gameObjects["ben"].x = curBen[0];
+        map.gameObjects["ben"].y = curBen[1];
+        map.gameObjects["ben"].isPlayerControlled = true;
+
+        map.gameObjects["operator"].x = curOperator[0];
+        map.gameObjects["operator"].y = curOperator[1];
+
+        // Change the camera focus back to Ben
+        map.cameraPerson = map.gameObjects["ben"];
+        map.isCutscenePlaying = false;
     }
 }
 
@@ -27,6 +151,64 @@ const level4GameObjects = {
             { type: "stand", direction: "down", time: 3000 },
             { type: "stand", direction: "right", time: 2000 },
         ],
+    }),
+
+    // Define bacteria
+    bacteria1: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/bacteria.png",
+        id: "bacteria1",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    bacteria2: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/bacteria.png",
+        id: "bacteria2",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    bacteria3: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/bacteria.png",
+        id: "bacteria3",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    bacteria4: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/bacteria.png",
+        id: "bacteria4",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    bacteria5: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/bacteria.png",
+        id: "bacteria5",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    bacteria6: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/bacteria.png",
+        id: "bacteria6",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
+    }),
+    bacteria7: new Person({
+        x: utils.withGrid(-10),
+        y: utils.withGrid(-10),
+        src: "images/waterAssets/bacteria.png",
+        id: "bacteria7",
+        behaviorLoop: [{ type: "stand", direction: "down", time: 999999 }],
+        collides: false,
     }),
 }
 
@@ -222,6 +404,12 @@ const level4UVlightTask = {
                 console.log("Removing active button display");
                 map.removeButton();
             }
+        },
+        {
+            type: "custom",
+            action: (map) => {
+                Level4.shootUVLight(map);
+            } 
         },
         {
             type: "custom",
