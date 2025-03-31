@@ -33,13 +33,7 @@ class Level4{
 
         Level4.drawBacteria(ctx, map, 0);
 
-        setTimeout(() => {
-            Level4.killBacteria(map);
-        }, 1000);
-        
-        setTimeout(() => {
-            Level4.returnToLevel4(curBen, curOperator, map);
-        }, 10000);
+        Level4.shootBacteria(map);
 
     }
 
@@ -75,6 +69,57 @@ class Level4{
         }
     }
 
+    static shootBacteria(map) {
+        const bacteriaIds = ["bacteria1", "bacteria2", "bacteria3", "bacteria4", "bacteria5", "bacteria6", "bacteria7"];
+        let remainingBacteria = bacteriaIds.length;
+    
+        // Add a click event listener to the canvas
+        const canvas = document.querySelector(".game-canvas");
+
+        const handleClick = (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const clickX = (event.clientX - rect.left) / 4 + 332; // Adjust for scaling
+            const clickY = (event.clientY - rect.top) / 4 + 276; // Adjust for scaling
+
+            console.log(`Click position: (${clickX}, ${clickY})`);
+    
+            // Check if the click is on any bacteria
+            bacteriaIds.forEach((bacteriaId) => {
+                const bacteria = map.gameObjects[bacteriaId];
+                if (bacteria) {
+                    const bacteriaX = bacteria.x;
+                    const bacteriaY = bacteria.y;
+
+                    console.log(`Bacteria ${bacteriaId} position: (${bacteriaX}, ${bacteriaY})`);
+    
+                    // Check if the click is within the bacteria's grid cell
+                    if (
+                        clickX >= bacteriaX &&
+                        clickX <= bacteriaX + 16 &&
+                        clickY >= bacteriaY &&
+                        clickY <= bacteriaY + 16
+                    ) {
+                        // Remove the bacteria
+                        bacteria.x = utils.withGrid(-10);
+                        bacteria.y = utils.withGrid(-10);
+                        remainingBacteria--;
+    
+                        // Check if all bacteria are removed
+                        if (remainingBacteria === 0) {
+                            // Remove the click event listener
+                            canvas.removeEventListener("click", handleClick);
+    
+                            // Trigger the level4UVlightTaskComplete event
+                            map.startCutscene(level4UVlightTaskComplete.events);
+                        }
+                    }
+                }
+            });
+        };
+    
+        canvas.addEventListener("click", handleClick);
+    }
+
     static removeWalls(map){
         // Pool
         delete map.walls[utils.asGridCoords(33.5, 19)];
@@ -92,7 +137,7 @@ class Level4{
         delete map.walls[utils.asGridCoords(27.5, 23)];
     }
 
-    static returnToLevel4(curBen, curOperator, map){
+    static returnToLevel4(map){
         // Change the lowerSrc back to the normal image 
         map.lowerImage.src = "images/maps/Level4Lower.png";
 
@@ -114,12 +159,12 @@ class Level4{
         map.walls[utils.asGridCoords(27.5, 23)] = true;
 
         // Move Ben and operator back to the grid
-        map.gameObjects["ben"].x = curBen[0];
-        map.gameObjects["ben"].y = curBen[1];
+        map.gameObjects["ben"].x = utils.withGrid(30.5);
+        map.gameObjects["ben"].y = utils.withGrid(24);
         map.gameObjects["ben"].isPlayerControlled = true;
 
-        map.gameObjects["operator"].x = curOperator[0];
-        map.gameObjects["operator"].y = curOperator[1];
+        map.gameObjects["operator"].x = utils.withGrid(34.5);
+        map.gameObjects["operator"].y = utils.withGrid(23);
 
         // Change the camera focus back to Ben
         map.cameraPerson = map.gameObjects["ben"];
@@ -471,13 +516,20 @@ const level4UVlightTask = {
                 Level4.shootUVLight(map);
             } 
         },
+    ]
+}
+
+const level4UVlightTaskComplete = {
+    events: [
         {
             type: "custom",
             action: (map) => {
+                Level4.returnToLevel4(map);
+
                 map.updateObjective("Return to the operator.");
 
-                map.buttonSpaces[utils.asGridCoords(35.5, 23)] = level4UVlightTaskComplete;
-                map.buttonSpaces[utils.asGridCoords(34.5, 24)] = level4UVlightTaskComplete;
+                map.buttonSpaces[utils.asGridCoords(35.5, 23)] = level4EndGame;
+                map.buttonSpaces[utils.asGridCoords(34.5, 24)] = level4EndGame;
 
                 const operator = map.gameObjects["operator"];
                 operator.behaviorLoop = [];
@@ -490,7 +542,7 @@ const level4UVlightTask = {
     ]
 }
 
-const level4UVlightTaskComplete = {
+const level4EndGame = {
     text: "Talk",
     action: "startCutscene",
     events:[
