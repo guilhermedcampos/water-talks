@@ -86,12 +86,10 @@ class Level3 {
         console.log("Setting timeout for dialogue sequence");
 
         map.startCutscene([
-            { type: "textMessage", text: "Great job activating the gravel filter!", faceHero: "operator" },
-            { type: "textMessage", text: "Gravel filters use larger particles than sand filters." },
-            { type: "textMessage", text: "They're excellent for removing larger debris and preparing water for finer filtration." },
-            { type: "textMessage", text: "Gravel filters often serve as a pre-filter in multi-stage filtration systems." },
-            { type: "textMessage", text: "The difference between sand and gravel is that gravel allows for faster water flow but catches only larger particles." },
-            { type: "textMessage", text: "Now for our final filtration medium - activated carbon. This one works quite differently..." },
+            { type: "textMessage", text: "Great job activating the gravel filter! Gravel filters use larger particles than sand filters.", faceHero: "operator" },
+            { type: "textMessage", text: "They're excellent for removing larger debris and preparing water for finer filtration in multi-stage systems." },
+            { type: "textMessage", text: "Gravel allows for faster water flow but only catches larger particles, unlike sand filters." },
+            { type: "textMessage", text: "Now for our final filtration medium - activated carbon. It works differently, using adsorption to purify water." },
             { 
                 type: "custom", 
                 action: (map) => {
@@ -130,15 +128,10 @@ class Level3 {
         // Start dialogue sequence after animation
         console.log("Setting timeout for dialogue sequence");
         map.startCutscene([
-            { type: "textMessage", text: "Excellent! You've activated the carbon filter.", faceHero: "operator" },
-            { type: "textMessage", text: "Activated carbon is remarkable for water purification." },
-            { type: "textMessage", text: "Unlike sand and gravel that work through mechanical filtration, carbon uses adsorption." },
-            { type: "textMessage", text: "This means it chemically attracts and binds contaminants to its surface." },
+            { type: "textMessage", text: "Excellent! You've activated the carbon filter. Activated carbon is remarkable for water purification.", faceHero: "operator" },
+            { type: "textMessage", text: "Unlike sand and gravel, carbon uses adsorption to chemically attract and bind contaminants to its surface." },
             { type: "textMessage", text: "Carbon is especially effective at removing chlorine, volatile organic compounds, and unpleasant tastes and odors." },
-            { type: "textMessage", text: "By combining these three filtration methods - sand, gravel, and carbon - we create a comprehensive filtration system." },
-            { type: "textMessage", text: "Each medium targets different contaminants, ensuring thoroughly clean water." },
-            { type: "textMessage", text: "You've now seen how we use multiple filtration methods to ensure water quality." },
-            { type: "textMessage", text: "Let's move forward to the next stage of water treatment." },
+            { type: "textMessage", text: "With sand, gravel, and carbon, we have a filtration system that ensures clean water." },
             { 
                 type: "custom", 
                 action: (map) => {
@@ -178,8 +171,7 @@ class Level3 {
             console.log("Returning final completion dialogue");
             return [
                 { type: "textMessage", text: "Excellent job! You've successfully operated all three filtration systems.", faceHero: "operator" },
-                { type: "textMessage", text: "Now our water has gone through complete filtration and is nearly ready for distribution." },
-                { type: "textMessage", text: "Let's move on to the final stage of water treatment." },
+                { type: "textMessage", text: "Now our water is nearly ready for distribution. Let's move on to the final stage of water treatment." },
                 { 
                     type: "custom", 
                     action: (map) => {
@@ -217,8 +209,7 @@ class Level3 {
                 ];
             case "sand":
                 return [
-                    { type: "textMessage", text: "Good progress! Now, please activate the gravel filter.", faceHero: "operator" },
-                    { type: "textMessage", text: "Look for the green tank." },
+                    { type: "textMessage", text: "Good progress! Now, please activate the gravel filter. Look for the green tank.", faceHero: "operator" },
                     { 
                         type: "custom", 
                         action: (map) => {
@@ -234,8 +225,7 @@ class Level3 {
                 ];
             case "gravel":
                 return [
-                    { type: "textMessage", text: "Almost there! Now activate the carbon filter to complete the filtration process.", faceHero: "operator" },
-                    { type: "textMessage", text: "The blue tank is what you're looking for." },
+                    { type: "textMessage", text: "Now activate the carbon filter to complete the filtration process. Look for the blue tank.", faceHero: "operator" },
                     { 
                         type: "custom", 
                         action: (map) => {

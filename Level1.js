@@ -751,9 +751,7 @@ const introLevel1Event = {
         },
         { type: "textMessage", text: "Welcome to the water treatment facility!", faceHero: "operator" },
         { type: "textMessage", text: "I'm the operator here. Did you know that your toilet flush travels through an extensive sewer system to get here?" },
-        { type: "textMessage", text: "The water you flush goes through multiple treatment stages before it's returned to the environment." },
         { type: "textMessage", text: "Your first task is to cleanse this reservoir of visible impurities." },
-        { type: "textMessage", text: "Please, collect and dispose of any floating debris or trash contaminating these waters." },
         // Update objective after conversation
         { 
             type: "custom",
