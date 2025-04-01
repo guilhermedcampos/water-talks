@@ -213,7 +213,7 @@ class OverworldMap {
         button.style.color = "#3c3c54";
         button.style.border = "4px solid black";// Thicker border
         button.style.borderColor = "#3c3c54";
-        button.style.borderRadius = "0px"; // Square corners for pixel look
+        button.style.borderRadius = "12px"; // Square corners for pixel look
         button.style.cursor = "pointer";
         
         // Pixelify Sans font styling - bigger text
@@ -619,9 +619,6 @@ window.OverworldMaps = {
             [utils.asGridCoords(34.5, 12)]: startCoagulantsEvent,
         },
         cutSceneSpaces: {
-            // Add our teleport event
-            [utils.asGridCoords(36.5, 16)]: teleportToLevel5Event,
-            [utils.asGridCoords(38.5, 16)]: initLevel4Event,
             // Transition spots - If player is underwater and steps on those positions, change his sprite to land
             [utils.asGridCoords(36.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
             [utils.asGridCoords(37.5, 17)]: Level1.changeSpriteEvent("Level1", "land"),
@@ -705,9 +702,7 @@ window.OverworldMaps = {
             [utils.asGridCoords(43.5, 25)]: Level1.changeSpriteEvent("Level1", "underwater"),
             [utils.asGridCoords(39.5, 17)]: Level1.changeSpriteEvent("Level1", "underwater"),
             [utils.asGridCoords(40.5, 17)]: Level1.changeSpriteEvent("Level1", "underwater"),
-            // Change Map position
-            [utils.asGridCoords(35.5, 24)]: initLevel3Event,
-            [utils.asGridCoords(34.5, 25)]: initLevel2Event,
+
             [utils.asGridCoords(33.5, 25)]: initLevel2Event,
             [utils.asGridCoords(32.5, 25)]: initLevel2Event,
         }

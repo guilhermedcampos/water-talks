@@ -74,34 +74,16 @@
         // Story scenes
         const scenes = [
             {
-                type: "dialog",
-                speaker: "Benjamin",
-                text: "Another day, another endless scroll through social media. Who cares about water conservation? It's not like I'm wasting that much..."
+                type: "voiceover",
+                text: "Lisbon is facing a water crisis. Reservoirs are running dry, and urgent action is needed."
             },
             {
                 type: "voiceover",
-                text: "Suddenly, his phone buzzes with a notification."
-            },
-            {
-                type: "notification",
-                text: "ALERT: Lisbon's water reserves critically low. Immediate action required!"
+                text: "You, Benjamin, have been chosen to explore the city's water system and ensure its survival."
             },
             {
                 type: "voiceover",
-                text: "Benjamin chuckles dismissively, silencing the notification."
-            },
-            {
-                type: "dialog",
-                speaker: "Benjamin",
-                text: "Always some crisis. They'll figure it out."
-            },
-            {
-                type: "voiceover",
-                text: "He returns to his phone, oblivious to the consequences of his apathy."
-            },
-            {
-                type: "voiceover",
-                text: "Benjamin's indifference sets the stage for an unexpected journey beneath the streets of Lisbon."
+                text: "Your journey begins now. The future of Lisbon's water is in your hands."
             }
         ];
         

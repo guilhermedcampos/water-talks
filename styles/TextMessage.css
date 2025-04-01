@@ -1,32 +1,36 @@
 .TextMessage {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 48px; /* Reduced height to ensure it fits within game border */
-  padding: 6px 48px 6px 8px; /* Reduced padding to save space */
+  left: -4px; /* Slightly overlap the left border */
+  right: -4px; /* Slightly overlap the right border */
+  bottom: -4px; /* Slightly overlap the bottom border */
+  height: 60px; /* Increased height for more space */
+  padding: 10px 48px 10px 12px; /* Increased padding for better spacing */
   background: white;
   color: #3c3c54;
   font-family: 'Pixelify Sans', sans-serif;
   overflow: hidden; /* Prevent text overflow */
+  border-radius: 12px; /* Slightly larger rounded corners */
+  border: 2px solid #3c3c54; /* Thicker black outline */
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); /* Slightly stronger shadow for depth */
+  z-index: 100; /* Ensure it appears above other elements */
 }
 
 .TextMessage_p {
   margin: 0;
-  font-size: 9px; /* Even smaller font size to guarantee it fits */
-  letter-spacing: 0.3px; /* Reduced letter spacing */
-  line-height: 1.3; /* Tighter line height */
-  max-width: calc(100% - 50px); /* Make more room for button */
+  font-size: 8px; /* Slightly larger font size for readability */
+  letter-spacing: 0.4px; /* Adjusted letter spacing */
+  line-height: 1.5; /* Increased line height for better readability */
+  max-width: calc(100% - 60px); /* Adjusted to fit the larger box */
   overflow: hidden; /* Prevent text overflow */
   text-overflow: ellipsis; /* Add ellipsis for overflow text */
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 2 lines */
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
   -webkit-box-orient: vertical;
 }
 
 .TextMessage span {
   display: inline-block;
-  margin-right: 1px; /* Further reduced margin between characters */
+  margin-right: 1px; /* Reduced margin between characters */
 }
 
 .TextMessage span.releaved {
@@ -36,12 +40,12 @@
 
 .TextMessage_button {
   margin: 0;
-  font-size: 8px; /* Even smaller button text */
-  padding: 2px 6px; /* Smaller padding */
+  font-size: 7px; /* Slightly larger button text */
+  padding: 2px 6px; /* Increased padding for better clickability */
   -webkit-appearance: none;
   background: white;
-  border: 2px solid #3c3c54;
-  border-radius: 0px;
+  border: 1.5px solid #3c3c54;
+  border-radius: 4px; /* Slightly larger rounded corners for the button */
   color: #3c3c54;
   font-family: 'Pixelify Sans', sans-serif;
   font-weight: bold;
@@ -50,8 +54,8 @@
   
   /* Position in bottom right corner with proper spacing */
   position: absolute;
-  right: 6px;
-  bottom: 6px;
+  right: 10px;
+  bottom: 10px;
   
   transition: all 0.2s ease;
 }

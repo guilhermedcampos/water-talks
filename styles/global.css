@@ -42,7 +42,6 @@ body {
   image-rendering: pixelated;
 }
 
-/* Common button styling for game-wide consistency */
 .game-button {
   background-color: var(--button-background);
   color: var(--button-text);
@@ -53,7 +52,7 @@ body {
   letter-spacing: 1px;
   text-transform: uppercase;
   font-weight: bold;
-  border-radius: 0px;
+  border-radius: 0px; 
   cursor: pointer;
   transition: all 0.2s ease;
 }
