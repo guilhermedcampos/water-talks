@@ -360,6 +360,8 @@ const level3Walls = {
     [utils.asGridCoords(29.5, 26)]: true,
     [utils.asGridCoords(30.5, 26)]: true,
     [utils.asGridCoords(31.5, 26)]: true,
+    [utils.asGridCoords(30.5, 27)]: true,
+    [utils.asGridCoords(31.5, 27)]: true,
     [utils.asGridCoords(32.5, 26)]: true,
     [utils.asGridCoords(33.5, 26)]: true,
     [utils.asGridCoords(34.5, 26)]: true,

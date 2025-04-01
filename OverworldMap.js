@@ -706,6 +706,7 @@ window.OverworldMaps = {
             [utils.asGridCoords(39.5, 17)]: Level1.changeSpriteEvent("Level1", "underwater"),
             [utils.asGridCoords(40.5, 17)]: Level1.changeSpriteEvent("Level1", "underwater"),
             // Change Map position
+            [utils.asGridCoords(35.5, 24)]: initLevel3Event,
             [utils.asGridCoords(34.5, 25)]: initLevel2Event,
             [utils.asGridCoords(33.5, 25)]: initLevel2Event,
             [utils.asGridCoords(32.5, 25)]: initLevel2Event,
@@ -809,8 +810,8 @@ window.OverworldMaps = {
         gameObjects: level3GameObjects,
         walls: level3Walls,
         cutSceneSpaces: {
-            [utils.asGridCoords(31.5, 26)]: initLevel4Event,
-            [utils.asGridCoords(30.5, 26)]: initLevel4Event,
+            [utils.asGridCoords(31.5, 25)]: initLevel4Event,
+            [utils.asGridCoords(30.5, 25)]: initLevel4Event,
         },
         buttonSpaces: {
             [utils.asGridCoords(27.5, 22)]: OperatorTalk, // Top

@@ -362,7 +362,7 @@ const operatorCutsceneEvent = {
         walkEvents.push({ type: "walk", who: "operator", direction: "right" });
 
         // Add multiple walk commands for the operator to move down several tiles
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
             walkEvents.push({ type: "walk", who: "operator", direction: "down" });
         }
 
@@ -376,11 +376,10 @@ const operatorCutsceneEvent = {
             action: (map) => {
                 map.walls[utils.asGridCoords(30.5, 26)] = false;
                 map.walls[utils.asGridCoords(31.5, 26)] = false;
-                map.walls[utils.asGridCoords(30.5, 27)] = true;
-                map.walls[utils.asGridCoords(31.5, 27)] = true;
+                map.walls[utils.asGridCoords(30.5, 25)] = false;
+                delete map.walls[utils.asGridCoords(30.5, 25)];
                 // Delete the operator at the exit point
                 delete map.gameObjects["operator"];
-
             }
         });
 
@@ -423,6 +422,7 @@ const OperatorTalk = {
                 // Start the cutscene with the dialogue
                 console.log("Starting cutscene with dialogue");
                 map.startCutscene([
+                    ...dialogueEvents,
                     {
                         type: "custom",
                         action: (map) => {
@@ -433,7 +433,7 @@ const OperatorTalk = {
                             }
                         }
                     },
-                    ...dialogueEvents,
+                    
                 ]);
 
                 // Set a flag to track that initial conversation happened
