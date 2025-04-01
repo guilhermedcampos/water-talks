@@ -55,8 +55,8 @@ window.Level5 = {
             question: "What happens after water is treated at the treatment plant?",
             options: [
                 "It flows directly to homes",
-                "It is stored in underground tanks",
-                "It is distributed through a network of pipes with continuous monitoring"
+                "It undergoes a final round of chemical processing to add minerals",
+                "It is stored and then distributed through a network of pipes with continuous monitoring"
             ],
             correctAnswer: 2,
             explanation: "After treatment, water requires continuous monitoring and maintenance to prevent leaks and ensure optimal pressure throughout the distribution system."
