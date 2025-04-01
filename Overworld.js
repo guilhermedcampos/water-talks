@@ -15,44 +15,40 @@ class Overworld {
     }
 
     // Game Loop
-    startGameLoop () {
+    startGameLoop() {
         const step = () => {
-
             // Clear the canvas
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             // Establish the camera person (the player)
             const cameraPerson = this.map.cameraPerson || this.map.gameObjects.ben;
 
-            // Update the game objects, sort by y position so that the lower objects are drawn first
-            // avoiding the need for z-index
-            Object.values(this.map.gameObjects).sort((a,b) => 
-                {return a.y - b.y;}).forEach(gameObject => {
-                    gameObject.update({
-                        arrow: this.directionInput.direction,
-                        map: this.map,
+            // Update the game objects
+            Object.values(this.map.gameObjects).forEach(gameObject => {
+                gameObject.update({
+                    arrow: this.directionInput.direction,
+                    map: this.map,
                 });
             });
 
             // Draw the lower layer
             this.map.drawLowerImage(this.ctx, cameraPerson);
 
-            // Draw the game objects
-            Object.values(this.map.gameObjects).forEach(gameObject => {
-                gameObject.sprite.draw(this.ctx, cameraPerson);
-            });
+            // Sort game objects by their y position before drawing
+            Object.values(this.map.gameObjects)
+                .sort((a, b) => a.y - b.y) // Sort by y position
+                .forEach(gameObject => {
+                    gameObject.sprite.draw(this.ctx, cameraPerson);
+                });
 
             // Draw the upper layer
             this.map.drawUpperImage(this.ctx, cameraPerson);
-
-            // Call this in your game update loop or after player movement
-            this.map.checkForButtonTrigger();
 
             // Request the next frame
             requestAnimationFrame(() => {
                 step();
             });
-        }
+        };
         step();
     }
 
