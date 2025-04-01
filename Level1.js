@@ -29,7 +29,7 @@ class Level1 {
         map.isCutscenePlaying = true;
         messages = messages || [
             "Every drop counts... but where does it go?",
-            "Every day, Lisbon treats over 550 million liters of water...",
+            "Lisbon is responsible for water distribution to over 350 thousand customers...",
             "From your home to the treatment plant, every flush tells a story...",
             "What you waste ... must be cleaned."
         ];
